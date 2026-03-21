@@ -56,7 +56,7 @@ const HeroSection = () => {
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-primary sm:text-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              AI-powered kitchen prep intelligence
+              Precision prep planning, powered by AI
             </span>
           </motion.div>
 
@@ -65,17 +65,20 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.07, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display max-w-[760px] text-[2.25rem] font-semibold leading-[1.07] tracking-[-0.03em] sm:text-[3rem] md:text-[3.75rem] lg:text-[4.25rem]"
-            style={{
-              background:
-                "linear-gradient(160deg, #F5F5F7 0%, #F5F5F7 50%, rgba(245,245,247,0.42) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="font-display max-w-[800px] text-[2.25rem] font-semibold leading-[1.07] tracking-[-0.03em] sm:text-[3rem] md:text-[3.75rem] lg:text-[4.25rem]"
           >
-            Your kitchen knows
-            <br />
+            <span
+              style={{
+                background:
+                  "linear-gradient(160deg, #F5F5F7 0%, #F5F5F7 55%, rgba(245,245,247,0.45) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Prep with confidence.
+              <br />
+            </span>
             <span
               style={{
                 background:
@@ -85,7 +88,7 @@ const HeroSection = () => {
                 backgroundClip: "text",
               }}
             >
-              what to cook tomorrow.
+              Know exactly what — and how much — to cook.
             </span>
           </motion.h1>
 
@@ -96,7 +99,7 @@ const HeroSection = () => {
             transition={{ duration: 0.55, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[480px] text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]"
           >
-            PrepIQ reads your sales history, demand signals, and chef patterns to generate a precise prep plan — every morning, before service starts.
+            Every morning, PrepIQ gives your team a precise prep plan — built from your sales history, demand signals, and real kitchen patterns. No guesswork. No waste.
           </motion.p>
 
           {/* Proof chips */}
