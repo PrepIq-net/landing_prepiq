@@ -80,40 +80,26 @@ const HeroIntelligencePreview = () => {
   }, [phaseIdx]);
 
   return (
-    <div className="w-full rounded-xl sm:rounded-2xl border border-border bg-card overflow-hidden shadow-l2">
-      {/* Top chrome bar */}
-      <div className="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3.5 border-b border-border bg-accent/50">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex gap-1.5">
-            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-muted-foreground/20" />
-            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-muted-foreground/20" />
-            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-muted-foreground/20" />
-          </div>
-          <div className="h-4 w-px bg-border hidden sm:block" />
-          <div className="hidden sm:flex items-center gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-primary" />
-            <span className="text-xs font-semibold text-foreground tracking-tight">PrepIQ</span>
-          </div>
-        </div>
-
-        {/* Phase tabs */}
+    <div className="w-full bg-card overflow-hidden">
+      {/* Phase tab bar — sits inside the outer browser chrome */}
+      <div className="flex items-center justify-between border-b border-border/60 bg-accent/30 px-4 sm:px-6 py-2.5">
+        {/* Phase tabs — desktop */}
         <div className="hidden sm:flex items-center gap-1">
           {phases.map((p, i) => (
             <button
               key={p.key}
               onClick={() => setPhaseIdx(i)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all duration-300 ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
                 i === phaseIdx
                   ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground/50 hover:text-muted-foreground"
+                  : "text-muted-foreground/40 hover:text-muted-foreground"
               }`}
             >
               {p.label}
             </button>
           ))}
         </div>
-
-        {/* Mobile phase indicator */}
+        {/* Mobile phase dots */}
         <div className="flex sm:hidden items-center gap-1.5">
           {phases.map((_, i) => (
             <div
@@ -124,10 +110,13 @@ const HeroIntelligencePreview = () => {
             />
           ))}
         </div>
+        <span className="text-[10px] text-muted-foreground/40 hidden sm:block">
+          {phases[phaseIdx].label}
+        </span>
       </div>
 
-      {/* Main content — taller */}
-      <div className="h-[340px] sm:h-[380px] md:h-[420px] overflow-hidden">
+      {/* Main content */}
+      <div className="h-[320px] sm:h-[360px] md:h-[400px] overflow-hidden">
         <AnimatePresence mode="wait">
           {/* ─── FORECAST ─── */}
           {phase === "forecast" && (
