@@ -75,7 +75,7 @@ const WhyPrepIQSection = () => (
         transition={{ duration: 0.5, delay: 0.45 }}
         className="mt-8 sm:mt-14 text-xs sm:text-sm text-muted-foreground italic border-l-2 border-primary/30 pl-3 sm:pl-4 text-left"
       >
-        People trust mission-driven products. PrepIQ exists because kitchens deserve the same intelligence the world's best supply chains already use.
+        PrepIQ exists because kitchens deserve the same intelligence the world's best supply chains already use.
       </motion.p>
     </div>
   </section>

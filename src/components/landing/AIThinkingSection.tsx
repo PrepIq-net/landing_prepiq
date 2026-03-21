@@ -237,7 +237,7 @@ const AIThinkingSection = () => {
             className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed"
           >
             Every morning, PrepIQ analyzes signals your team could never track
-            manually. Toggle signals on and off to see how the forecast adapts.
+            manually.
           </motion.p>
         </div>
 
@@ -584,7 +584,7 @@ const AIThinkingSection = () => {
           transition={{ delay: 0.5 }}
           className="text-center text-[11px] sm:text-xs text-muted-foreground/50 mt-8 sm:mt-10 px-2"
         >
-          ↑ Try toggling signals off — including Branch Network Intelligence —
+          ↑ Try toggling signals off —
           to see how the forecast changes in real-time
         </motion.p>
       </div>
