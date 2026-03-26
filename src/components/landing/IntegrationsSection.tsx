@@ -1,19 +1,17 @@
 import { motion } from "framer-motion";
 import { CloudUpload, Code, CreditCard } from "iconoir-react";
-
-const steps = [
-  { num: "01", title: "Create organization", desc: "Set up your kitchen in under 2 minutes." },
-  { num: "02", title: "Connect POS or upload sales", desc: "We support major POS systems and CSV uploads." },
-  { num: "03", title: "Get today's forecast", desc: "Start seeing intelligent prep suggestions immediately." },
-];
-
-const connectors = [
-  { icon: CreditCard, label: "POS Systems" },
-  { icon: CloudUpload, label: "CSV Upload" },
-  { icon: Code, label: "REST API" },
-];
+import { useTranslation } from "react-i18next";
 
 const IntegrationsSection = () => {
+  const { t } = useTranslation();
+
+  const steps = (t("integrations.steps", { returnObjects: true }) as any[]) || [];
+
+  const connectors = [
+    { icon: CreditCard, label: t("integrations.connectors.pos") },
+    { icon: CloudUpload, label: t("integrations.connectors.csv") },
+    { icon: Code, label: t("integrations.connectors.api") },
+  ];
   return (
     <section id="integrations" className="py-20 md:py-28 border-t border-border/50 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
@@ -28,7 +26,7 @@ const IntegrationsSection = () => {
           className="text-center mb-12 md:mb-16 px-2"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-            Integrations
+            {t("integrations.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-5 leading-tight lg:leading-[1.15]">
             <motion.span
@@ -38,9 +36,9 @@ const IntegrationsSection = () => {
               transition={{ delay: 0.1 }}
               className="block sm:inline"
             >
-              Connect Your POS.{" "}
+              {t("integrations.titleLine1")}{" "}
               <span className="relative inline-block">
-                <span className="text-primary">Start Forecasting.</span>
+                <span className="text-primary">{t("integrations.titleLine2")}</span>
                 <motion.span
                   className="absolute -bottom-1 left-0 h-[2px] bg-primary/40 rounded-full"
                   initial={{ width: 0 }}
@@ -58,7 +56,7 @@ const IntegrationsSection = () => {
             transition={{ delay: 0.3 }}
             className="text-sm sm:text-[15px] text-muted-foreground max-w-lg mx-auto leading-relaxed"
           >
-            Three ways to get your data into PrepIQ.
+            {t("integrations.subtitle")}
           </motion.p>
         </motion.div>
 
