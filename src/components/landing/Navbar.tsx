@@ -2,15 +2,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, Xmark } from "iconoir-react";
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
-
-const navLinks = [
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Intelligence", href: "#intelligence" },
-  { label: "Pricing", href: "#value" },
-  { label: "Integrations", href: "#integrations" },
-];
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const Navbar = () => {
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { label: t("navbar.howItWorks"), href: "#how-it-works" },
+    { label: t("navbar.intelligence"), href: "#intelligence" },
+    { label: t("navbar.pricing"), href: "#value" },
+    { label: t("navbar.integrations"), href: "#integrations" },
+  ];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
@@ -73,22 +76,26 @@ const Navbar = () => {
 
         {/* Desktop CTAs */}
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           <Button variant="ghost" size="sm">
-            Log In
+            {t("navbar.logIn")}
           </Button>
           <Button variant="hero" size="sm">
-            Start Free
+            {t("navbar.startFree")}
           </Button>
         </div>
 
         {/* Mobile toggle */}
-        <button
-          className="md:hidden text-foreground p-1.5 -mr-1.5 rounded-lg hover:bg-accent transition-colors"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <Xmark className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
+          <button
+            className="text-foreground p-1.5 -mr-1.5 rounded-lg hover:bg-accent transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <Xmark className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile overlay */}
@@ -131,8 +138,12 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-2.5 pt-6 mt-6 border-t border-border/50">
-                <Button variant="ghost" size="sm" className="w-full justify-center">Log In</Button>
-                <Button variant="hero" size="sm" className="w-full justify-center">Start Free</Button>
+                <Button variant="ghost" size="sm" className="w-full justify-center">
+                  {t("navbar.logIn")}
+                </Button>
+                <Button variant="hero" size="sm" className="w-full justify-center">
+                  {t("navbar.startFree")}
+                </Button>
               </div>
             </div>
           </motion.div>

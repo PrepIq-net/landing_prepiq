@@ -1,24 +1,28 @@
-const footerLinks = {
-  Product: [
-    { label: "How It Works", href: "#how-it-works" },
-    { label: "Intelligence", href: "#intelligence" },
-    { label: "Pricing", href: "#value" },
-    { label: "Integrations", href: "#integrations" },
-  ],
-  Company: [
-    { label: "About", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Contact", href: "#" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms of Service", href: "/terms-of-service" },
-    { label: "Security", href: "/security" },
-  ],
-};
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
+  const footerLinks = {
+    [t("footer.headings.product")]: [
+      { label: t("navbar.howItWorks"), href: "#how-it-works" },
+      { label: t("navbar.intelligence"), href: "#intelligence" },
+      { label: t("navbar.pricing"), href: "#value" },
+      { label: t("navbar.integrations"), href: "#integrations" },
+    ],
+    [t("footer.headings.company")]: [
+      { label: t("footer.links.about"), href: "#" },
+      { label: t("footer.links.blog"), href: "#" },
+      { label: t("footer.links.careers"), href: "#" },
+      { label: t("footer.links.contact"), href: "#" },
+    ],
+    [t("footer.headings.legal")]: [
+      { label: t("footer.links.privacy"), href: "/privacy-policy" },
+      { label: t("footer.links.terms"), href: "/terms-of-service" },
+      { label: t("footer.links.security"), href: "/security" },
+    ],
+  };
+
   return (
     <footer className="border-t border-border/50 relative overflow-hidden">
       {/* Giant watermark */}
@@ -39,11 +43,11 @@ const Footer = () => {
               <span className="font-display text-lg font-semibold text-foreground">PrepIQ</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Daily prep intelligence for kitchens that take food operations seriously. Predict demand, reduce waste, protect margins.
+              {t("footer.description")}
             </p>
             <div className="flex items-center gap-1.5">
               <div className="h-2 w-2 rounded-full bg-success" />
-              <span className="text-xs text-muted-foreground">All systems operational</span>
+              <span className="text-xs text-muted-foreground">{t("footer.status")}</span>
             </div>
           </div>
 
@@ -74,7 +78,7 @@ const Footer = () => {
       <div className="border-t border-border/50 relative">
         <div className="section-container flex flex-col items-center gap-4 py-6 md:flex-row md:justify-between">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} PrepIQ. All rights reserved.
+            © {new Date().getFullYear()} PrepIQ. {t("footer.rights")}
           </p>
           <div className="flex items-center gap-5">
             {["Twitter", "LinkedIn", "GitHub"].map((social) => (
