@@ -3,17 +3,19 @@ import { Mail, Phone, MapPin, ArrowRight, CheckCircle2, Building2, Users, Loader
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslation, Trans } from "react-i18next";
 
 const WEB3FORMS_KEY = "ccacc9ed-7685-4d71-bef2-55f5c3013efc";
 
-const contactInfo = [
-  { icon: Mail, label: "Email", value: "hello@prepiq.com", href: "mailto:hello@prepiq.com" },
-  { icon: Phone, label: "Phone", value: "+1 (800) 773-7749", href: "tel:+18007737749" },
-  { icon: MapPin, label: "Office", value: "San Francisco, CA", href: "#" },
-];
-
-
 const ContactSection = () => {
+  const { t, i18n } = useTranslation();
+
+  const contactInfo = [
+    { icon: Mail, label: t("contact.email"), value: "hello@prepiq.com", href: "mailto:hello@prepiq.com" },
+    { icon: Phone, label: t("contact.phone", "Phone"), value: "+1 (800) 773-7749", href: "tel:+18007737749" },
+    { icon: MapPin, label: t("contact.office", "Office"), value: "San Francisco, CA", href: "#" },
+  ];
+
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string | null>(null);
@@ -38,6 +40,7 @@ const ContactSection = () => {
           company: company.trim(),
           locations: selectedLocations || "Not specified",
           message: message.trim(),
+          language: i18n.language,
         }),
       });
 
@@ -79,15 +82,16 @@ const ContactSection = () => {
           >
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-                Get In Touch
+                {t("contact.getInTouch")}
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-                Let's Talk About{" "}
-                <span className="text-gradient-gold">Your Kitchen</span>
+                <Trans
+                  i18nKey="contact.title"
+                  components={{ gold: <span className="text-gradient-gold" /> }}
+                />
               </h2>
               <p className="text-muted-foreground max-w-md leading-relaxed text-sm sm:text-base">
-                Whether you run one kitchen or fifty — we'd love to show you what
-                PrepIQ can do for your operations.
+                {t("contact.subtitle")}
               </p>
             </div>
 
@@ -124,7 +128,7 @@ const ContactSection = () => {
               className="flex items-center gap-2.5"
             >
               <div className="h-2 w-2 rounded-full bg-[hsl(var(--success))] animate-pulse" />
-              <span className="text-xs text-muted-foreground/60">Typically responds within 2 hours</span>
+              <span className="text-xs text-muted-foreground/60">{t("contact.trustPoint")}</span>
             </motion.div>
           </motion.div>
 
@@ -141,9 +145,9 @@ const ContactSection = () => {
               <div className="px-5 sm:px-8 md:px-10 py-4 sm:py-5 border-b border-border/50 bg-accent/30 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-                  <span className="text-sm font-medium text-foreground">Contact PrepIQ</span>
+                  <span className="text-sm font-medium text-foreground">{t("contact.formHeader")}</span>
                 </div>
-                <span className="text-[10px] sm:text-xs text-muted-foreground/40 hidden sm:inline">All fields optional except email</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground/40 hidden sm:inline">{t("contact.optionalEmail")}</span>
               </div>
 
               <form onSubmit={handleSubmit} className="p-5 sm:p-8 md:p-10 space-y-5 sm:space-y-6">
@@ -152,11 +156,11 @@ const ContactSection = () => {
                   <div className="space-y-2.5">
                     <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
                       <Users className="h-3 w-3" />
-                      Name
+                      {t("contact.name")}
                     </label>
                     <input
                       type="text"
-                      placeholder="Your name"
+                      placeholder={t("contact.placeholderName")}
                       maxLength={100}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -166,11 +170,11 @@ const ContactSection = () => {
                   <div className="space-y-2.5">
                     <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
                       <Mail className="h-3 w-3" />
-                      Email <span className="text-destructive">*</span>
+                      {t("contact.email")} <span className="text-destructive">*</span>
                     </label>
                     <input
                       type="email"
-                      placeholder="you@restaurant.com"
+                      placeholder={t("contact.placeholderEmail")}
                       required
                       maxLength={255}
                       value={email}
@@ -184,11 +188,11 @@ const ContactSection = () => {
                 <div className="space-y-2.5">
                   <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
                     <Building2 className="h-3 w-3" />
-                    Company
+                    {t("contact.company")}
                   </label>
                   <input
                     type="text"
-                    placeholder="Restaurant or brand name"
+                    placeholder={t("contact.placeholderCompany")}
                     maxLength={200}
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
@@ -199,7 +203,7 @@ const ContactSection = () => {
                 {/* Locations selector */}
                 <div className="space-y-3">
                   <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
-                    How many locations?
+                    {t("contact.locations")}
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
                     {["1", "2–5", "6–20", "20+"].map((opt) => (
@@ -222,11 +226,11 @@ const ContactSection = () => {
                 {/* Message */}
                 <div className="space-y-2.5">
                   <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
-                    Message
+                    {t("contact.message")}
                   </label>
                   <textarea
                     rows={4}
-                    placeholder="Tell us about your kitchen operations, current challenges, or what you'd like to achieve..."
+                    placeholder={t("contact.placeholderMessage")}
                     maxLength={1000}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -245,8 +249,8 @@ const ContactSection = () => {
                       className="rounded-xl bg-[hsl(var(--success)/.08)] border border-[hsl(var(--success)/.15)] p-5 text-center"
                     >
                       <CheckCircle2 className="h-6 w-6 text-[hsl(var(--success))] mx-auto mb-2" />
-                      <p className="text-sm font-medium text-foreground">Message sent!</p>
-                      <p className="text-xs text-muted-foreground mt-1">We'll get back to you within 2 hours.</p>
+                      <p className="text-sm font-medium text-foreground">{t("contact.sent")}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{t("contact.sentSubtitle")}</p>
                     </motion.div>
                   ) : (
                     <motion.div key="button" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -261,18 +265,18 @@ const ContactSection = () => {
                           {loading ? (
                             <>
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              Sending...
+                              {t("contact.sending")}
                             </>
                           ) : (
                             <>
-                              Send Message
+                              {t("contact.send")}
                               <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                             </>
                           )}
                         </span>
                       </Button>
                       <p className="text-[11px] text-muted-foreground/30 text-center mt-3">
-                        No spam. No sales pressure. Just a conversation about your kitchen.
+                        {t("contact.noSpam")}
                       </p>
                     </motion.div>
                   )}

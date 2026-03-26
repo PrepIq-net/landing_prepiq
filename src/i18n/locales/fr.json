@@ -1,0 +1,87 @@
+{
+  "navbar": {
+    "howItWorks": "Comment ça marche",
+    "intelligence": "Intelligence",
+    "pricing": "Tarification",
+    "integrations": "Intégrations",
+    "logIn": "Connexion",
+    "startFree": "Essayer Gratuitement"
+  },
+  "hero": {
+    "badge": "Planification de précision, propulsée par l'IA",
+    "titleLine1": "Préparez avec confiance.",
+    "titleLine2": "Sachez exactement quoi — et combien — cuisiner.",
+    "subtitle": "Chaque matin, PrepIQ donne à votre équipe un plan de préparation précis — élaboré à partir de votre historique de ventes, des signaux de demande et des modèles réels de cuisine. Pas de devinettes. Pas de gaspillage.",
+    "proof": {
+      "lessWaste": "Moins de gaspillage",
+      "noStockouts": "Pas de ruptures de stock",
+      "betterMargins": "Meilleures marges"
+    },
+    "ctaStart": "Essayer Gratuitement",
+    "ctaDemo": "Réserver une démo de 10 min",
+    "stats": {
+      "accuracy": "Précision des prévisions",
+      "waste": "Gaspillage alimentaire",
+      "stockouts": "Ruptures de stock moy/sem"
+    }
+  },
+  "footer": {
+    "description": "Intelligence quotidienne de préparation pour les cuisines qui prennent les opérations alimentaires au sérieux. Prédisez la demande, réduisez le gaspillage, protégez les marges.",
+    "status": "Tous les systèmes sont opérationnels",
+    "rights": "Tous droits réservés.",
+    "headings": {
+      "product": "Produit",
+      "company": "Entreprise",
+      "legal": "Légal"
+    },
+    "links": {
+      "about": "À propos",
+      "blog": "Blog",
+      "careers": "Carrières",
+      "contact": "Contact",
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions d'utilisation",
+      "security": "Sécurité"
+    }
+  },
+  "integrations": {
+    "badge": "Intégrations",
+    "titleLine1": "Connectez Votre POS.",
+    "titleLine2": "Commencez à Prévoir.",
+    "subtitle": "Trois façons de transmettre vos données à PrepIQ.",
+    "connectors": {
+      "pos": "Systèmes POS",
+      "csv": "Téléchargement CSV",
+      "api": "API REST"
+    },
+    "steps": [
+      { "num": "01", "title": "Créer une organisation", "desc": "Configurez votre cuisine en moins de 2 minutes." },
+      { "num": "02", "title": "Connectez le POS ou importez les ventes", "desc": "Nous prenons en charge les principaux systèmes POS et les imports CSV." },
+      { "num": "03", "title": "Obtenez la prévision d'aujourd'hui", "desc": "Commencez à voir des suggestions de préparation intelligentes immédiatement." }
+    ]
+  },
+  "contact": {
+    "getInTouch": "Contactez-nous",
+    "title": "Parlons de <gold>Votre Cuisine</gold>",
+    "subtitle": "Que vous gériez une cuisine ou cinquante, nous aimerions vous montrer ce que PrepIQ peut faire pour vos opérations.",
+    "email": "Email",
+    "phone": "Téléphone",
+    "office": "Bureau",
+    "trustPoint": "Répond généralement en moins de 2 heures",
+    "formHeader": "Contactez PrepIQ",
+    "optionalEmail": "Tous les champs sont facultatifs sauf l'email",
+    "name": "Nom",
+    "placeholderName": "Votre nom",
+    "placeholderEmail": "vous@restaurant.com",
+    "company": "Entreprise",
+    "placeholderCompany": "Nom du restaurant ou de la marque",
+    "locations": "Combien d'emplacements ?",
+    "message": "Message",
+    "placeholderMessage": "Parlez-nous de vos opérations de cuisine, de vos défis actuels ou de ce que vous aimeriez accomplir...",
+    "sent": "Message envoyé !",
+    "sentSubtitle": "Nous vous répondrons dans les 2 heures.",
+    "sending": "Envoi en cours...",
+    "send": "Envoyer le message",
+    "noSpam": "Pas de spam. Pas de pression commerciale. Juste une conversation sur votre cuisine."
+  }
+}

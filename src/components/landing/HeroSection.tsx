@@ -4,15 +4,17 @@ import { ArrowRight } from "lucide-react";
 import HeroIntelligencePreview from "./HeroIntelligencePreview";
 import { useState } from "react";
 import CalendlyModal from "./CalendlyModal";
-
-const stats = [
-  { value: "92%", label: "Forecast accuracy" },
-  { value: "−34%", label: "Food waste" },
-  { value: "0", label: "Stockouts avg/week" },
-];
+import { useTranslation } from "react-i18next";
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const [demoOpen, setDemoOpen] = useState(false);
+
+  const stats = [
+    { value: "92%", label: t("hero.stats.accuracy") },
+    { value: "−34%", label: t("hero.stats.waste") },
+    { value: "0", label: t("hero.stats.stockouts") },
+  ];
 
   return (
     <>
@@ -56,7 +58,7 @@ const HeroSection = () => {
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-primary sm:text-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Precision prep planning, powered by AI
+              {t("hero.badge")}
             </span>
           </motion.div>
 
@@ -76,7 +78,7 @@ const HeroSection = () => {
                 backgroundClip: "text",
               }}
             >
-              Prep with confidence.
+              {t("hero.titleLine1")}
               <br />
             </span>
             <span
@@ -88,7 +90,7 @@ const HeroSection = () => {
                 backgroundClip: "text",
               }}
             >
-              Know exactly what — and how much — to cook.
+              {t("hero.titleLine2")}
             </span>
           </motion.h1>
 
@@ -99,7 +101,7 @@ const HeroSection = () => {
             transition={{ duration: 0.55, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[480px] text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]"
           >
-            Every morning, PrepIQ gives your team a precise prep plan — built from your sales history, demand signals, and real kitchen patterns. No guesswork. No waste.
+            {t("hero.subtitle")}
           </motion.p>
 
           {/* Proof chips */}
@@ -109,7 +111,11 @@ const HeroSection = () => {
             transition={{ duration: 0.45, delay: 0.24 }}
             className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-xs text-muted-foreground sm:text-sm"
           >
-            {["Less waste", "No stockouts", "Better margins"].map((item) => (
+            {[
+              t("hero.proof.lessWaste"),
+              t("hero.proof.noStockouts"),
+              t("hero.proof.betterMargins"),
+            ].map((item) => (
               <span key={item} className="flex items-center gap-1.5">
                 <span className="text-primary">✓</span>
                 {item}
@@ -126,7 +132,7 @@ const HeroSection = () => {
           >
             <Button variant="hero" size="xl" className="group w-full sm:w-auto rounded-xl">
               <span className="flex items-center gap-2">
-                Start Free
+                {t("hero.ctaStart")}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </span>
             </Button>
@@ -136,7 +142,7 @@ const HeroSection = () => {
               onClick={() => setDemoOpen(true)}
               className="w-full sm:w-auto rounded-xl"
             >
-              Book a 10-min Demo
+              {t("hero.ctaDemo")}
             </Button>
           </motion.div>
 

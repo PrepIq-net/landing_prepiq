@@ -1,0 +1,87 @@
+{
+  "navbar": {
+    "howItWorks": "How It Works",
+    "intelligence": "Intelligence",
+    "pricing": "Pricing",
+    "integrations": "Integrations",
+    "logIn": "Log In",
+    "startFree": "Start Free"
+  },
+  "hero": {
+    "badge": "Precision prep planning, powered by AI",
+    "titleLine1": "Prep with confidence.",
+    "titleLine2": "Know exactly what — and how much — to cook.",
+    "subtitle": "Every morning, PrepIQ gives your team a precise prep plan — built from your sales history, demand signals, and real kitchen patterns. No guesswork. No waste.",
+    "proof": {
+      "lessWaste": "Less waste",
+      "noStockouts": "No stockouts",
+      "betterMargins": "Better margins"
+    },
+    "ctaStart": "Start Free",
+    "ctaDemo": "Book a 10-min Demo",
+    "stats": {
+      "accuracy": "Forecast accuracy",
+      "waste": "Food waste",
+      "stockouts": "Stockouts avg/week"
+    }
+  },
+  "footer": {
+    "description": "Daily prep intelligence for kitchens that take food operations seriously. Predict demand, reduce waste, protect margins.",
+    "status": "All systems operational",
+    "rights": "All rights reserved.",
+    "headings": {
+      "product": "Product",
+      "company": "Company",
+      "legal": "Legal"
+    },
+    "links": {
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "security": "Security"
+    }
+  },
+  "integrations": {
+    "badge": "Integrations",
+    "titleLine1": "Connect Your POS.",
+    "titleLine2": "Start Forecasting.",
+    "subtitle": "Three ways to get your data into PrepIQ.",
+    "connectors": {
+      "pos": "POS Systems",
+      "csv": "CSV Upload",
+      "api": "REST API"
+    },
+    "steps": [
+      { "num": "01", "title": "Create organization", "desc": "Set up your kitchen in under 2 minutes." },
+      { "num": "02", "title": "Connect POS or upload sales", "desc": "We support major POS systems and CSV uploads." },
+      { "num": "03", "title": "Get today's forecast", "desc": "Start seeing intelligent prep suggestions immediately." }
+    ]
+  },
+  "contact": {
+    "getInTouch": "Get In Touch",
+    "title": "Let's Talk About <gold>Your Kitchen</gold>",
+    "subtitle": "Whether you run one kitchen or fifty — we'd love to show you what PrepIQ can do for your operations.",
+    "email": "Email",
+    "phone": "Phone",
+    "office": "Office",
+    "trustPoint": "Typically responds within 2 hours",
+    "formHeader": "Contact PrepIQ",
+    "optionalEmail": "All fields optional except email",
+    "name": "Name",
+    "placeholderName": "Your name",
+    "placeholderEmail": "you@restaurant.com",
+    "company": "Company",
+    "placeholderCompany": "Restaurant or brand name",
+    "locations": "How many locations?",
+    "message": "Message",
+    "placeholderMessage": "Tell us about your kitchen operations, current challenges, or what you'd like to achieve...",
+    "sent": "Message sent!",
+    "sentSubtitle": "We'll get back to you within 2 hours.",
+    "sending": "Sending...",
+    "send": "Send Message",
+    "noSpam": "No spam. No sales pressure. Just a conversation about your kitchen."
+  }
+}
