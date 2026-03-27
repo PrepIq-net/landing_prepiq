@@ -1,50 +1,55 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, TrendingDown, AlertTriangle, Clock, Package, DollarSign } from "lucide-react";
-
-const alerts = [
-  {
-    type: "Waste Risk",
-    icon: TrendingDown,
-    color: "hsl(var(--warning))",
-    bg: "hsl(var(--warning) / 0.08)",
-    border: "hsl(var(--warning) / 0.15)",
-    item: "Rice",
-    detail: "Demand trending 12% lower than forecast. Next batch likely to produce 4kg excess.",
-    action: "Delay next batch 45 minutes.",
-    impact: "$14",
-  },
-  {
-    type: "Stockout Risk",
-    icon: AlertTriangle,
-    color: "hsl(var(--destructive))",
-    bg: "hsl(var(--destructive) / 0.08)",
-    border: "hsl(var(--destructive) / 0.15)",
-    item: "Chicken",
-    detail: "Trending 18% above forecast. Sellout expected at 7:20 PM.",
-    action: "Prepare +12 pieces now.",
-    impact: "$38",
-  },
-  {
-    type: "Margin Leak",
-    icon: DollarSign,
-    color: "hsl(var(--info))",
-    bg: "hsl(var(--info) / 0.08)",
-    border: "hsl(var(--info) / 0.15)",
-    item: "Vegetables",
-    detail: "Waste has occurred 4 days in a row. Pattern detected.",
-    action: "Reduce base prep by 1.5kg.",
-    impact: "$22",
-  },
-];
-
-const leakTypes = [
-  { icon: Package, label: "Overprep Waste", saved: "$1,840" },
-  { icon: AlertTriangle, label: "Stockout Recovery", saved: "$1,200" },
-  { icon: Clock, label: "Bad Batch Timing", saved: "$620" },
-  { icon: TrendingDown, label: "Demand Drift", saved: "$480" },
-];
+import { useTranslation } from "react-i18next";
 
 const MarginGuardSection = () => {
+  const { t, i18n } = useTranslation();
+
+  const alerts = [
+    {
+      type: t("marginGuard.alerts.waste.type"),
+      icon: TrendingDown,
+      color: "hsl(var(--warning))",
+      bg: "hsl(var(--warning) / 0.08)",
+      border: "hsl(var(--warning) / 0.15)",
+      item: t("aiThinking.items.rice"),
+      detail: t("marginGuard.alerts.waste.detail"),
+      action: t("marginGuard.alerts.waste.action"),
+      impact: i18n.resolvedLanguage === 'fr' ? "14 €" : "$14",
+    },
+    {
+      type: t("marginGuard.alerts.stockout.type"),
+      icon: AlertTriangle,
+      color: "hsl(var(--destructive))",
+      bg: "hsl(var(--destructive) / 0.08)",
+      border: "hsl(var(--destructive) / 0.15)",
+      item: t("aiThinking.items.chicken"),
+      detail: t("marginGuard.alerts.stockout.detail"),
+      action: t("marginGuard.alerts.stockout.action"),
+      impact: i18n.resolvedLanguage === 'fr' ? "38 €" : "$38",
+    },
+    {
+      type: t("marginGuard.alerts.leak.type"),
+      icon: DollarSign,
+      color: "hsl(var(--info))",
+      bg: "hsl(var(--info) / 0.08)",
+      border: "hsl(var(--info) / 0.15)",
+      item: t("aiThinking.items.vegetables"),
+      detail: t("marginGuard.alerts.leak.detail"),
+      action: t("marginGuard.alerts.leak.action"),
+      impact: i18n.resolvedLanguage === 'fr' ? "22 €" : "$22",
+    },
+  ];
+
+  const leakTypes = [
+    { icon: Package, label: t("marginGuard.leakTypes.overprep"), saved: i18n.resolvedLanguage === 'fr' ? "1 840 €" : "$1,840" },
+    { icon: AlertTriangle, label: t("marginGuard.leakTypes.stockout"), saved: i18n.resolvedLanguage === 'fr' ? "1 200 €" : "$1,200" },
+    { icon: Clock, label: t("marginGuard.leakTypes.batch"), saved: i18n.resolvedLanguage === 'fr' ? "620 €" : "$620" },
+    { icon: TrendingDown, label: t("marginGuard.leakTypes.drift"), saved: i18n.resolvedLanguage === 'fr' ? "480 €" : "$480" },
+  ];
+
+  const steps = t("marginGuard.steps", { returnObjects: true }) as string[];
+
   return (
     <section className="py-20 md:py-32 border-t border-border/50 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
@@ -60,13 +65,13 @@ const MarginGuardSection = () => {
           className="text-center mb-6 px-2"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-4 sm:mb-5 block">
-            Margin Guard
+            {t("marginGuard.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-            AI That Protects Your Profit
+            {t("marginGuard.title")}
           </h2>
           <p className="text-sm sm:text-[15px] text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            PrepIQ doesn't just forecast — it watches every prep decision and catches margin leaks before they cost you money.
+            {t("marginGuard.subtitle")}
           </p>
         </motion.div>
 
@@ -78,7 +83,7 @@ const MarginGuardSection = () => {
           transition={{ delay: 0.1 }}
           className="flex items-center justify-center gap-2 sm:gap-3 md:gap-5 mb-10 sm:mb-16 mt-8 sm:mt-10"
         >
-          {["Predict", "Detect", "Correct"].map((step, i) => (
+          {steps.map((step, i) => (
             <div key={step} className="flex items-center gap-2 sm:gap-3 md:gap-5">
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -86,7 +91,7 @@ const MarginGuardSection = () => {
                 </div>
                 <span className="text-xs sm:text-sm font-medium text-foreground">{step}</span>
               </div>
-              {i < 2 && (
+              {i < steps.length - 1 && (
                 <div className="w-5 sm:w-8 md:w-12 h-px bg-border" />
               )}
             </div>
@@ -122,12 +127,12 @@ const MarginGuardSection = () => {
                       </span>
                       <span className="text-xs sm:text-sm font-medium text-foreground">{alert.item}</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-semibold text-foreground">{alert.impact} at risk</span>
+                    <span className="text-xs sm:text-sm font-semibold text-foreground">{t("marginGuard.atRisk", { amount: alert.impact })}</span>
                   </div>
                   <p className="text-xs sm:text-[13px] text-muted-foreground leading-relaxed mb-2.5 sm:mb-3">{alert.detail}</p>
                   <div className="flex items-center gap-2 rounded-lg bg-accent/60 px-2.5 sm:px-3 py-1.5 sm:py-2">
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary shrink-0" />
-                    <span className="text-[11px] sm:text-[12px] text-foreground font-medium">Suggested: {alert.action}</span>
+                    <span className="text-[11px] sm:text-[12px] text-foreground font-medium">{t("marginGuard.suggested", { action: alert.action })}</span>
                   </div>
                 </div>
               </div>
@@ -143,7 +148,7 @@ const MarginGuardSection = () => {
           className="max-w-2xl mx-auto"
         >
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground/40 font-medium mb-4 sm:mb-5 text-center">
-            Monthly Margin Protection
+            {t("marginGuard.monthlyProtection")}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
             {leakTypes.map((leak) => (
@@ -158,10 +163,10 @@ const MarginGuardSection = () => {
             ))}
           </div>
           <div className="text-center mt-4 sm:mt-6 rounded-xl border border-primary/20 bg-primary/[0.04] p-4 sm:p-5">
-            <p className="text-[10px] sm:text-[11px] text-muted-foreground/50 uppercase tracking-wider mb-1">Total Monthly Protection</p>
-            <p className="text-2xl sm:text-3xl font-semibold text-foreground">$4,140</p>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground/50 uppercase tracking-wider mb-1">{t("marginGuard.totalProtection")}</p>
+            <p className="text-2xl sm:text-3xl font-semibold text-foreground">{i18n.resolvedLanguage === 'fr' ? "4 140 €" : "$4,140"}</p>
             <p className="text-[11px] sm:text-[12px] text-muted-foreground/60 mt-1">
-              PrepIQ pays for itself in the first 48 hours.
+              {t("marginGuard.roiNote")}
             </p>
           </div>
         </motion.div>

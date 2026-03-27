@@ -1,34 +1,37 @@
 import { motion } from "framer-motion";
 import { Building, Shop, Bonfire, StatsReport } from "iconoir-react";
-
-const personas = [
-  {
-    icon: Building,
-    title: "Multi-Branch Restaurants",
-    desc: "Centralize prep intelligence across all locations. One dashboard, every kitchen aligned.",
-    stat: "6+ locations managed",
-  },
-  {
-    icon: Shop,
-    title: "Growing Food Brands",
-    desc: "Scale production without scaling waste. Let data drive your daily output.",
-    stat: "2× faster scaling",
-  },
-  {
-    icon: Bonfire,
-    title: "Data-Aware Chefs",
-    desc: "Make prep decisions backed by real data, not memory. Stay in control, always.",
-    stat: "92% accuracy avg.",
-  },
-  {
-    icon: StatsReport,
-    title: "Operations Managers",
-    desc: "See cost impact and forecast accuracy daily. Know exactly where margin leaks.",
-    stat: "Real-time visibility",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const WhoItsForSection = () => {
+  const { t } = useTranslation();
+
+  const personas = [
+    {
+      icon: Building,
+      title: t("whoItsFor.personas.multiBranch.title"),
+      desc: t("whoItsFor.personas.multiBranch.desc"),
+      stat: t("whoItsFor.personas.multiBranch.stat"),
+    },
+    {
+      icon: Shop,
+      title: t("whoItsFor.personas.brands.title"),
+      desc: t("whoItsFor.personas.brands.desc"),
+      stat: t("whoItsFor.personas.brands.stat"),
+    },
+    {
+      icon: Bonfire,
+      title: t("whoItsFor.personas.chefs.title"),
+      desc: t("whoItsFor.personas.chefs.desc"),
+      stat: t("whoItsFor.personas.chefs.stat"),
+    },
+    {
+      icon: StatsReport,
+      title: t("whoItsFor.personas.ops.title"),
+      desc: t("whoItsFor.personas.ops.desc"),
+      stat: t("whoItsFor.personas.ops.stat"),
+    },
+  ];
+
   return (
     <section className="py-28 border-t border-border/50 relative overflow-hidden">
       {/* Ambient glow */}
@@ -42,13 +45,13 @@ const WhoItsForSection = () => {
           className="text-center mb-16"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-4 block">
-            Purpose-Built
+            {t("whoItsFor.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 leading-tight lg:leading-[1.15]">
-            Who It's For
+            {t("whoItsFor.title")}
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            Built for teams who take food operations seriously — from single kitchens to global networks.
+            {t("whoItsFor.subtitle")}
           </p>
         </motion.div>
 

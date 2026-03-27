@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const logos = [
   {
@@ -70,6 +71,7 @@ const logos = [
 ];
 
 const LogoTickerSection = () => {
+  const { t } = useTranslation();
   // Triple for seamless loop
   const tripled = [...logos, ...logos, ...logos];
 
@@ -83,7 +85,7 @@ const LogoTickerSection = () => {
         className="section-container px-4 sm:px-6 mb-10"
       >
         <p className="text-center text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary/60 font-medium">
-          Works with your existing stack
+          {t("logoTicker.title")}
         </p>
       </motion.div>
 

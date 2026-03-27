@@ -1,23 +1,26 @@
 import { motion } from "framer-motion";
 import { Globe, Clock, Language, Building } from "iconoir-react";
-
-const features = [
-  { icon: Globe, label: "Multi-currency", desc: "Supports USD, EUR, GBP, AED, NGN and more. Costs stay local." },
-  { icon: Clock, label: "Timezone aware", desc: "Forecasts align to your kitchen's operating hours, wherever you are." },
-  { icon: Language, label: "Localized forecasts", desc: "Regional holidays, local events, and cultural patterns built in." },
-  { icon: Building, label: "Multi-branch support", desc: "Roll up or drill down. Compare performance across your network." },
-];
-
-const regions = [
-  { flag: "🇺🇸", name: "North America" },
-  { flag: "🇬🇧", name: "Europe" },
-  { flag: "🇦🇪", name: "Middle East" },
-  { flag: "🇳🇬", name: "Africa" },
-  { flag: "🇸🇬", name: "Asia Pacific" },
-  { flag: "🇧🇷", name: "Latin America" },
-];
+import { useTranslation } from "react-i18next";
 
 const GlobalReadySection = () => {
+  const { t } = useTranslation();
+
+  const features = [
+    { icon: Globe, label: t("globalReady.features.currency.label"), desc: t("globalReady.features.currency.desc") },
+    { icon: Clock, label: t("globalReady.features.timezone.label"), desc: t("globalReady.features.timezone.desc") },
+    { icon: Language, label: t("globalReady.features.localized.label"), desc: t("globalReady.features.localized.desc") },
+    { icon: Building, label: t("globalReady.features.support.label"), desc: t("globalReady.features.support.desc") },
+  ];
+
+  const regions = [
+    { flag: "🇺🇸", name: t("globalReady.regions.na") },
+    { flag: "🇬🇧", name: t("globalReady.regions.eu") },
+    { flag: "🇦🇪", name: t("globalReady.regions.me") },
+    { flag: "🇳🇬", name: t("globalReady.regions.af") },
+    { flag: "🇸🇬", name: t("globalReady.regions.ap") },
+    { flag: "🇧🇷", name: t("globalReady.regions.la") },
+  ];
+
   return (
     <section className="py-20 md:py-28 border-t border-border/50 relative overflow-hidden">
       {/* Globe-like ambient glow */}
@@ -31,13 +34,13 @@ const GlobalReadySection = () => {
           className="text-center mb-10 md:mb-16 px-2"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-4 block">
-            Global Ready
+            {t("globalReady.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 leading-tight lg:leading-[1.15]">
-            Built for Global Kitchens
+            {t("globalReady.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            PrepIQ adapts to your region, your currency, and your kitchen's rhythm.
+            {t("globalReady.subtitle")}
           </p>
         </motion.div>
 

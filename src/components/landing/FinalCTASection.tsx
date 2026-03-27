@@ -3,15 +3,21 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import CalendlyModal from "./CalendlyModal";
-
-const proofs = [
-  "30-day free pilot — no credit card",
-  "Live in under 48 hours",
-  "Works with any POS system",
-];
+import { useTranslation, Trans } from "react-i18next";
 
 const FinalCTASection = () => {
+  const { t, i18n } = useTranslation();
   const [demoOpen, setDemoOpen] = useState(false);
+
+  const proofs = i18n.resolvedLanguage === 'fr' ? [
+    "Essai gratuit de 30 jours — sans CB",
+    "Opérationnel en moins de 48h",
+    "Compatible avec tout système POS",
+  ] : [
+    "30-day free pilot — no credit card",
+    "Live in under 48 hours",
+    "Works with any POS system",
+  ];
 
   return (
     <>
@@ -41,18 +47,19 @@ const FinalCTASection = () => {
               className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/[0.06] px-3 sm:px-4 py-1.5 mb-6 sm:mb-8"
             >
               <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse" />
-              <span className="text-[11px] sm:text-xs font-medium text-primary">Trusted by kitchens reducing waste daily</span>
+              <span className="text-[11px] sm:text-xs font-medium text-primary">{t("finalCTA.badge")}</span>
             </motion.div>
 
             {/* Headline */}
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground leading-tight lg:leading-[1.15] mb-4 sm:mb-6">
-              See Your Kitchen's{" "}
-              <span className="text-gradient-gold">Intelligence</span> Today.
+              <Trans
+                i18nKey="finalCTA.title"
+                components={{ gold: <span className="text-gradient-gold" /> }}
+              />
             </h2>
 
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed mb-8 sm:mb-10">
-              Stop guessing. Start every morning with a clear, data-backed prep plan
-              that protects your margins.
+              {t("finalCTA.subtitle")}
             </p>
 
             {/* CTAs */}
@@ -65,12 +72,12 @@ const FinalCTASection = () => {
             >
               <Button variant="hero" size="xl" className="group w-full sm:w-auto">
                 <span className="flex items-center gap-2">
-                  Start Free Pilot
+                  {t("finalCTA.ctaStart")}
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Button>
               <Button variant="hero-outline" size="xl" onClick={() => setDemoOpen(true)} className="w-full sm:w-auto">
-                Book a 10-min Demo
+                {t("finalCTA.ctaDemo")}
               </Button>
             </motion.div>
 
