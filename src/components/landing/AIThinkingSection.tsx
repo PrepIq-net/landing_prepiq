@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Network,
 } from "lucide-react";
+import { useTranslation, Trans } from "react-i18next";
 
 interface Signal {
   id: string;
@@ -31,101 +32,108 @@ interface PrepItem {
   emoji: string;
 }
 
-const PREP_ITEMS: PrepItem[] = [
-  { id: "chicken", name: "Chicken", unit: "pieces", base: 40, emoji: "🍗" },
-  { id: "soup", name: "Soup", unit: "litres", base: 12, emoji: "🍲" },
-  { id: "vegetables", name: "Vegetables", unit: "kg", base: 8, emoji: "🥬" },
-  { id: "rice", name: "Rice", unit: "kg", base: 15, emoji: "🍚" },
-];
-
-const INITIAL_SIGNALS: Signal[] = [
-  {
-    id: "day",
-    icon: <Calendar className="h-4 w-4" />,
-    label: "Tuesday Pattern",
-    detail: "Historically 6% lower foot traffic",
-    enabled: true,
-    effects: {
-      chicken: { delta: -2, reason: "Lower weekday traffic" },
-      rice: { delta: -1, reason: "Reduced midday orders" },
-    },
-  },
-  {
-    id: "weather",
-    icon: <Cloud className="h-4 w-4" />,
-    label: "Rain at 2 PM",
-    detail: "+18% soup demand on rainy days",
-    enabled: true,
-    effects: {
-      soup: { delta: 2, reason: "Rainy day comfort food spike" },
-      chicken: { delta: -1, reason: "Fewer walk-ins during rain" },
-    },
-  },
-  {
-    id: "trend",
-    icon: <TrendingUp className="h-4 w-4" />,
-    label: "Chicken Trending",
-    detail: "+7% demand over last 7 days",
-    enabled: true,
-    effects: {
-      chicken: { delta: 4, reason: "Sustained weekly demand growth" },
-    },
-  },
-  {
-    id: "event",
-    icon: <Trophy className="h-4 w-4" />,
-    label: "Local Match Tonight",
-    detail: "Evening rush expected +22%",
-    enabled: true,
-    effects: {
-      chicken: { delta: 3, reason: "Game-day order surge" },
-      rice: { delta: 2, reason: "Combo meals spike on match days" },
-    },
-  },
-  {
-    id: "stockout",
-    icon: <AlertTriangle className="h-4 w-4" />,
-    label: "Vegetable Stockout Yesterday",
-    detail: "Under-prep flagged, 14 orders missed",
-    enabled: true,
-    effects: {
-      vegetables: { delta: 3, reason: "Compensate for yesterday's shortfall" },
-    },
-  },
-  {
-    id: "chef",
-    icon: <ChefHat className="h-4 w-4" />,
-    label: "Chef Override History",
-    detail: "Chef increased vegetables 80% of Tuesdays",
-    enabled: true,
-    effects: {
-      vegetables: { delta: 1, reason: "Chef's recurring Tuesday adjustment" },
-    },
-  },
-  {
-    id: "network",
-    icon: <Network className="h-4 w-4" />,
-    label: "Branch Network Intelligence",
-    detail: "London branch wasted 6kg chicken on rainy Tuesdays",
-    enabled: true,
-    effects: {
-      chicken: { delta: -3, reason: "London's rainy-Tuesday waste pattern applied" },
-      soup: { delta: 2, reason: "Dubai saw +30% soup demand in similar weather" },
-      rice: { delta: -1, reason: "Sydney's Tuesday rice over-prep insight" },
-    },
-  },
-];
-
 const AIThinkingSection = () => {
-  const [signals, setSignals] = useState<Signal[]>(INITIAL_SIGNALS);
+  const { t } = useTranslation();
+
+  const PREP_ITEMS: PrepItem[] = useMemo(() => [
+    { id: "chicken", name: t("aiThinking.items.chicken"), unit: t("aiThinking.items.units.pieces"), base: 40, emoji: "🍗" },
+    { id: "soup", name: t("aiThinking.items.soup"), unit: t("aiThinking.items.units.litres"), base: 12, emoji: "🍲" },
+    { id: "vegetables", name: t("aiThinking.items.vegetables"), unit: t("aiThinking.items.units.kg"), base: 8, emoji: "🥬" },
+    { id: "rice", name: t("aiThinking.items.rice"), unit: t("aiThinking.items.units.kg"), base: 15, emoji: "🍚" },
+  ], [t]);
+
+  const [enabledSignalIds, setEnabledSignalIds] = useState<Set<string>>(new Set([
+    "day", "weather", "trend", "event", "stockout", "chef", "network"
+  ]));
+
+  const signals = useMemo(() => {
+    const allSignals = [
+      {
+        id: "day",
+        icon: <Calendar className="h-4 w-4" />,
+        label: t("aiThinking.signals.day.label"),
+        detail: t("aiThinking.signals.day.detail"),
+        effects: {
+          chicken: { delta: -2, reason: t("aiThinking.reasons.lowerTraffic") },
+          rice: { delta: -1, reason: t("aiThinking.reasons.reducedMidday") },
+        },
+      },
+      {
+        id: "weather",
+        icon: <Cloud className="h-4 w-4" />,
+        label: t("aiThinking.signals.weather.label"),
+        detail: t("aiThinking.signals.weather.detail"),
+        effects: {
+          soup: { delta: 2, reason: t("aiThinking.reasons.rainyComfort") },
+          chicken: { delta: -1, reason: t("aiThinking.reasons.fewerWalkins") },
+        },
+      },
+      {
+        id: "trend",
+        icon: <TrendingUp className="h-4 w-4" />,
+        label: t("aiThinking.signals.trend.label"),
+        detail: t("aiThinking.signals.trend.detail"),
+        effects: {
+          chicken: { delta: 4, reason: t("aiThinking.reasons.sustainedGrowth") },
+        },
+      },
+      {
+        id: "event",
+        icon: <Trophy className="h-4 w-4" />,
+        label: t("aiThinking.signals.event.label"),
+        detail: t("aiThinking.signals.event.detail"),
+        effects: {
+          chicken: { delta: 3, reason: t("aiThinking.reasons.gameDaySurge") },
+          rice: { delta: 2, reason: t("aiThinking.reasons.comboSpike") },
+        },
+      },
+      {
+        id: "stockout",
+        icon: <AlertTriangle className="h-4 w-4" />,
+        label: t("aiThinking.signals.stockout.label"),
+        detail: t("aiThinking.signals.stockout.detail"),
+        effects: {
+          vegetables: { delta: 3, reason: t("aiThinking.reasons.shortfallComp") },
+        },
+      },
+      {
+        id: "chef",
+        icon: <ChefHat className="h-4 w-4" />,
+        label: t("aiThinking.signals.chef.label"),
+        detail: t("aiThinking.signals.chef.detail"),
+        effects: {
+          vegetables: { delta: 1, reason: t("aiThinking.reasons.chefRecurring") },
+        },
+      },
+      {
+        id: "network",
+        icon: <Network className="h-4 w-4" />,
+        label: t("aiThinking.signals.network.label"),
+        detail: t("aiThinking.signals.network.detail"),
+        effects: {
+          chicken: { delta: -3, reason: t("aiThinking.reasons.londonWaste") },
+          soup: { delta: 2, reason: t("aiThinking.reasons.dubaiSoup") },
+          rice: { delta: -1, reason: t("aiThinking.reasons.sydneyRice") },
+        },
+      },
+    ];
+
+    return allSignals.map(s => ({
+      ...s,
+      enabled: enabledSignalIds.has(s.id)
+    }));
+  }, [t, enabledSignalIds]);
   const [isProcessing, setIsProcessing] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const toggleSignal = useCallback((id: string) => {
     // Immediately toggle the signal visually
-    setSignals((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s))
-    );
+    setEnabledSignalIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
     
     // Show processing state with simulated latency
     setIsProcessing(true);
@@ -168,33 +176,25 @@ const AIThinkingSection = () => {
     const enabled = new Set(enabledSignals.map((s) => s.id));
 
     if (enabled.has("weather"))
-      insights.push("Demand volatility expected — comfort food bias detected.");
+      insights.push(t("aiThinking.insights.weather"));
     if (enabled.has("trend"))
-      insights.push("Chicken demand in sustained upward trend.");
+      insights.push(t("aiThinking.insights.trend"));
     if (enabled.has("stockout"))
-      insights.push(
-        "Yesterday's vegetable stockout signals chronic under-prep risk."
-      );
+      insights.push(t("aiThinking.insights.stockout"));
     if (enabled.has("event"))
-      insights.push(
-        "Local event detected — evening rush pattern from similar events."
-      );
+      insights.push(t("aiThinking.insights.event"));
     if (enabled.has("day"))
-      insights.push("Tuesday baseline historically lower than weekend.");
+      insights.push(t("aiThinking.insights.day"));
     if (enabled.has("chef"))
-      insights.push(
-        "Chef override patterns suggest recurring Tuesday adjustment."
-      );
+      insights.push(t("aiThinking.insights.chef"));
     if (enabled.has("network"))
-      insights.push(
-        "Cross-branch intelligence: 3 locations flagged similar patterns — adjustments auto-applied."
-      );
+      insights.push(t("aiThinking.insights.network"));
 
     if (insights.length === 0)
-      insights.push("Insufficient signals for high-confidence forecast.");
+      insights.push(t("aiThinking.insights.insufficient"));
 
     return insights;
-  }, [enabledSignals]);
+  }, [enabledSignals, t]);
 
   return (
     <section className="relative py-20 md:py-32 overflow-hidden">
@@ -225,8 +225,10 @@ const AIThinkingSection = () => {
             transition={{ delay: 0.05 }}
             className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold leading-tight lg:leading-[1.15] tracking-[-0.02em] text-foreground font-display mb-3 sm:mb-4"
           >
-            What PrepIQ Sees{" "}
-            <span className="text-gradient-gold">Before Your Kitchen Opens</span>
+            <Trans
+              i18nKey="aiThinking.title"
+              components={{ gold: <span className="text-gradient-gold" /> }}
+            />
           </motion.h2>
 
           <motion.p
@@ -236,8 +238,7 @@ const AIThinkingSection = () => {
             transition={{ delay: 0.1 }}
             className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed"
           >
-            Every morning, PrepIQ analyzes signals your team could never track
-            manually.
+            {t("aiThinking.subtitle")}
           </motion.p>
         </div>
 
@@ -254,7 +255,7 @@ const AIThinkingSection = () => {
             <div className="flex items-center gap-2 mb-4 sm:mb-5">
               <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
               <span className="text-[10px] sm:text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
-                Signals Detected
+                {t("aiThinking.signalsDetected")}
               </span>
             </div>
 
@@ -323,7 +324,7 @@ const AIThinkingSection = () => {
             <div className="flex items-center gap-2 mb-4 sm:mb-5">
               <Brain className="h-3.5 w-3.5 text-primary" />
               <span className="text-[10px] sm:text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
-                PrepIQ Analysis
+                {t("aiThinking.analysis")}
               </span>
             </div>
 
@@ -351,17 +352,16 @@ const AIThinkingSection = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                       >
-                        Re-analyzing signals…
+                        {t("aiThinking.reanalyzing")}
                       </motion.span>
                     ) : (
                       <>
-                        Analyzing {enabledSignals.length} signal
-                        {enabledSignals.length !== 1 ? "s" : ""}
+                        {t("aiThinking.analyzing", { count: enabledSignals.length })}
                       </>
                     )}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isProcessing ? "Updating forecast model…" : "Cross-referencing patterns…"}
+                    {isProcessing ? t("aiThinking.updatingModel") : t("aiThinking.crossReferencing")}
                   </p>
                 </div>
               </div>
@@ -385,7 +385,7 @@ const AIThinkingSection = () => {
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] text-muted-foreground">Recalculating…</span>
+                    <span className="text-[10px] text-muted-foreground">{t("aiThinking.recalculating")}</span>
                   </div>
                 </motion.div>
               )}
@@ -418,7 +418,7 @@ const AIThinkingSection = () => {
               <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-border/50">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs text-muted-foreground">
-                    Forecast Confidence
+                    {t("aiThinking.forecastConfidence")}
                   </span>
                   <motion.span
                     key={confidence}
@@ -438,8 +438,8 @@ const AIThinkingSection = () => {
                 </div>
                 <p className="text-[10px] text-muted-foreground/60 mt-1.5">
                   {enabledSignals.length === signals.length
-                    ? "All signals active — maximum confidence"
-                    : `${signals.length - enabledSignals.length} signal${signals.length - enabledSignals.length !== 1 ? "s" : ""} disabled — toggle on for higher confidence`}
+                    ? t("aiThinking.allSignalsActive")
+                    : t("aiThinking.signalsDisabled", { count: signals.length - enabledSignals.length })}
                 </p>
               </div>
             </div>
@@ -464,7 +464,7 @@ const AIThinkingSection = () => {
             <div className="flex items-center gap-2 mb-4 sm:mb-5">
               <div className="h-2 w-2 rounded-full bg-[hsl(var(--success))]" />
               <span className="text-[10px] sm:text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground">
-                Suggested Prep
+                {t("aiThinking.suggestedPrep")}
               </span>
             </div>
 
@@ -519,8 +519,7 @@ const AIThinkingSection = () => {
                               : "text-destructive"
                           }`}
                         >
-                          {item.delta > 0 ? "+" : ""}
-                          {item.delta} {item.unit} vs baseline
+                          {t("aiThinking.vsBaseline", { amount: (item.delta > 0 ? "+" : "") + item.delta, unit: item.unit })}
                         </span>
                       </motion.div>
                     )}
@@ -562,7 +561,7 @@ const AIThinkingSection = () => {
               className="mt-3 sm:mt-4 rounded-xl border border-primary/20 bg-primary/[0.04] p-3 sm:p-4 text-center"
             >
               <p className="text-xs text-muted-foreground mb-1">
-                Overall Forecast Confidence
+                {t("aiThinking.overallConfidence")}
               </p>
               <motion.p
                 key={confidence}
@@ -584,8 +583,7 @@ const AIThinkingSection = () => {
           transition={{ delay: 0.5 }}
           className="text-center text-[11px] sm:text-xs text-muted-foreground/50 mt-8 sm:mt-10 px-2"
         >
-          ↑ Try toggling signals off —
-          to see how the forecast changes in real-time
+          {t("aiThinking.bottomHint")}
         </motion.p>
       </div>
     </section>

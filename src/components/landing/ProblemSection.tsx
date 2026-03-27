@@ -1,46 +1,49 @@
 import { motion } from "framer-motion";
 import { WarningTriangle, MinusCircle, PageEdit } from "iconoir-react";
-
-const problems = [
-  {
-    icon: WarningTriangle,
-    title: "Overprep",
-    result: "Waste",
-    desc: "Throwing away food and money every single day. Margins bleed silently.",
-    impact: "$2,400",
-    impactLabel: "avg. monthly waste",
-    color: "text-destructive",
-    bg: "bg-destructive/10",
-    borderHover: "hover:border-destructive/30",
-    glowFrom: "from-destructive/[0.04]",
-  },
-  {
-    icon: MinusCircle,
-    title: "Underprep",
-    result: "Stockouts",
-    desc: "Losing revenue when your best items run out at peak. Customers don't come back.",
-    impact: "14%",
-    impactLabel: "revenue lost to stockouts",
-    color: "text-[hsl(var(--warning))]",
-    bg: "bg-[hsl(var(--warning)/.1)]",
-    borderHover: "hover:border-[hsl(var(--warning)/.3)]",
-    glowFrom: "from-[hsl(var(--warning)/.04)]",
-  },
-  {
-    icon: PageEdit,
-    title: "Manual Spreadsheets",
-    result: "No Learning",
-    desc: "The same guessing game, repeated every morning. Yesterday teaches nothing.",
-    impact: "0%",
-    impactLabel: "improvement over time",
-    color: "text-muted-foreground",
-    bg: "bg-muted",
-    borderHover: "hover:border-muted-foreground/20",
-    glowFrom: "from-muted-foreground/[0.03]",
-  },
-];
+import { useTranslation, Trans } from "react-i18next";
 
 const ProblemSection = () => {
+  const { t } = useTranslation();
+
+  const problems = [
+    {
+      icon: WarningTriangle,
+      title: t("problem.items.overprep.title"),
+      result: t("problem.items.overprep.result"),
+      desc: t("problem.items.overprep.desc"),
+      impact: t("problem.items.overprep.impact"),
+      impactLabel: t("problem.items.overprep.impactLabel"),
+      color: "text-destructive",
+      bg: "bg-destructive/10",
+      borderHover: "hover:border-destructive/30",
+      glowFrom: "from-destructive/[0.04]",
+    },
+    {
+      icon: MinusCircle,
+      title: t("problem.items.underprep.title"),
+      result: t("problem.items.underprep.result"),
+      desc: t("problem.items.underprep.desc"),
+      impact: t("problem.items.underprep.impact"),
+      impactLabel: t("problem.items.underprep.impactLabel"),
+      color: "text-[hsl(var(--warning))]",
+      bg: "bg-[hsl(var(--warning)/.1)]",
+      borderHover: "hover:border-[hsl(var(--warning)/.3)]",
+      glowFrom: "from-[hsl(var(--warning)/.04)]",
+    },
+    {
+      icon: PageEdit,
+      title: t("problem.items.spreadsheets.title"),
+      result: t("problem.items.spreadsheets.result"),
+      desc: t("problem.items.spreadsheets.desc"),
+      impact: t("problem.items.spreadsheets.impact"),
+      impactLabel: t("problem.items.spreadsheets.impactLabel"),
+      color: "text-muted-foreground",
+      bg: "bg-muted",
+      borderHover: "hover:border-muted-foreground/20",
+      glowFrom: "from-muted-foreground/[0.03]",
+    },
+  ];
+
   return (
     <section className="py-20 md:py-28 border-t border-border/50">
       <div className="section-container px-4 sm:px-6">
@@ -51,13 +54,13 @@ const ProblemSection = () => {
           className="text-center mb-10 md:mb-16 px-2"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4 block">
-            The Problem
+            {t("problem.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
-            Most kitchens still prep on instinct.
+            {t("problem.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            The result? Predictable losses that compound every day.
+            {t("problem.subtitle")}
           </p>
         </motion.div>
 
@@ -101,7 +104,10 @@ const ProblemSection = () => {
           className="text-center mt-10 sm:mt-14 px-2"
         >
           <p className="text-base sm:text-lg text-foreground font-medium">
-            PrepIQ replaces guessing with <span className="text-gradient-gold">daily intelligence</span>.
+            <Trans
+              i18nKey="problem.cta"
+              components={{ gold: <span className="text-gradient-gold" /> }}
+            />
           </p>
         </motion.div>
       </div>

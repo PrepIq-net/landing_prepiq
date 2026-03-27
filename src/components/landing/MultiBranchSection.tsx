@@ -2,21 +2,8 @@ import { motion } from "framer-motion";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
-
-const branches = [
-  { name: "Manhattan", country: "USA", flag: "🇺🇸", lat: 40.76, lng: -73.97, accuracy: 96, saved: "$5,100", margin: "+3.4%", items: 165 },
-  { name: "London Bridge", country: "UK", flag: "🇬🇧", lat: 51.51, lng: -0.09, accuracy: 93, saved: "$3,800", margin: "+2.7%", items: 118 },
-  { name: "Dubai Marina", country: "UAE", flag: "🇦🇪", lat: 25.08, lng: 55.14, accuracy: 94, saved: "$4,200", margin: "+3.1%", items: 142 },
-  { name: "Lagos", country: "Nigeria", flag: "🇳🇬", lat: 6.45, lng: 3.40, accuracy: 90, saved: "$2,600", margin: "+2.3%", items: 89 },
-  { name: "Sydney", country: "Australia", flag: "🇦🇺", lat: -33.87, lng: 151.21, accuracy: 92, saved: "$3,100", margin: "+2.5%", items: 108 },
-];
-
-const networkStats = [
-  { label: "Avg. Margin Uplift", value: "+2.8%", sub: "across all branches" },
-  { label: "Monthly Waste Saved", value: "$22,500", sub: "network-wide" },
-  { label: "Forecast Accuracy", value: "92.5%", sub: "weighted average" },
-];
+import { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const createPinIcon = (isActive: boolean) =>
   L.divIcon({
@@ -46,6 +33,22 @@ const createPinIcon = (isActive: boolean) =>
   });
 
 const MultiBranchSection = () => {
+  const { t, i18n } = useTranslation();
+
+  const branches = useMemo(() => [
+    { name: "Manhattan", country: i18n.resolvedLanguage === 'fr' ? "États-Unis" : "USA", flag: "🇺🇸", lat: 40.76, lng: -73.97, accuracy: 96, saved: i18n.resolvedLanguage === 'fr' ? "5 100 €" : "$5,100", margin: "+3.4%", items: 165 },
+    { name: "London Bridge", country: i18n.resolvedLanguage === 'fr' ? "Royaume-Uni" : "UK", flag: "🇬🇧", lat: 51.51, lng: -0.09, accuracy: 93, saved: i18n.resolvedLanguage === 'fr' ? "3 800 €" : "$3,800", margin: "+2.7%", items: 118 },
+    { name: "Dubai Marina", country: i18n.resolvedLanguage === 'fr' ? "Émirats Arabes Unis" : "UAE", flag: "🇦🇪", lat: 25.08, lng: 55.14, accuracy: 94, saved: i18n.resolvedLanguage === 'fr' ? "4 200 €" : "$4,200", margin: "+3.1%", items: 142 },
+    { name: "Lagos", country: "Nigeria", flag: "🇳🇬", lat: 6.45, lng: 3.40, accuracy: 90, saved: i18n.resolvedLanguage === 'fr' ? "2 600 €" : "$2,600", margin: "+2.3%", items: 89 },
+    { name: "Sydney", country: i18n.resolvedLanguage === 'fr' ? "Australie" : "Australia", flag: "🇦🇺", lat: -33.87, lng: 151.21, accuracy: 92, saved: i18n.resolvedLanguage === 'fr' ? "3 100 €" : "$3,100", margin: "+2.5%", items: 108 },
+  ], [i18n.resolvedLanguage]);
+
+  const networkStats = useMemo(() => [
+    { label: t("multiBranch.stats.margin"), value: "+2.8%", sub: t("multiBranch.stats.allBranches") },
+    { label: t("multiBranch.stats.waste"), value: i18n.resolvedLanguage === 'fr' ? "22 500 €" : "$22,500", sub: t("multiBranch.stats.networkWide") },
+    { label: t("multiBranch.stats.accuracy"), value: "92.5%", sub: t("multiBranch.stats.weightedAvg") },
+  ], [t, i18n.resolvedLanguage]);
+
   const [activeBranch, setActiveBranch] = useState<string | null>(null);
 
   useEffect(() => {
@@ -62,14 +65,13 @@ const MultiBranchSection = () => {
           className="text-center mb-10 md:mb-16 px-2"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-4 block">
-            Scale Globally
+            {t("multiBranch.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
-            Multi-Branch Intelligence
+            {t("multiBranch.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            One dashboard. Every kitchen. Real-time visibility into forecast accuracy,
-            waste savings, and margin impact across your entire network.
+            {t("multiBranch.subtitle")}
           </p>
         </motion.div>
 
@@ -120,7 +122,7 @@ const MultiBranchSection = () => {
                         {/* Accuracy bar */}
                         <div className="mb-3">
                           <div className="flex justify-between text-[10px] mb-1">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>Forecast Accuracy</span>
+                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.accuracy")}</span>
                             <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.accuracy}%</span>
                           </div>
                           <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(240 4% 17%)" }}>
@@ -136,15 +138,15 @@ const MultiBranchSection = () => {
 
                         <div className="space-y-1.5 border-t pt-2.5" style={{ borderColor: "hsl(240 4% 17%)" }}>
                           <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>Monthly Saved</span>
+                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.monthlySaved")}</span>
                             <span className="font-semibold" style={{ color: "hsl(153 39% 50%)" }}>{branch.saved}</span>
                           </div>
                           <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>Margin Impact</span>
+                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.marginImpact")}</span>
                             <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.margin}</span>
                           </div>
                           <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>Items Tracked</span>
+                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.itemsTracked")}</span>
                             <span className="font-medium" style={{ color: "hsl(240 5% 96%)" }}>{branch.items}</span>
                           </div>
                         </div>
@@ -163,14 +165,14 @@ const MultiBranchSection = () => {
               {/* Live badge */}
               <div className="absolute top-3 left-3 z-[500] flex items-center gap-2 rounded-lg border border-border/60 bg-card/80 backdrop-blur-md px-3 py-1.5">
                 <div className="h-2 w-2 rounded-full bg-[hsl(var(--success))] animate-pulse" />
-                <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">5 branches live</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">{t("multiBranch.liveBadge", { count: branches.length })}</span>
               </div>
             </div>
 
             {/* Branch list sidebar */}
             <div className="border-t lg:border-t-0 lg:border-l border-border bg-card/60 backdrop-blur-sm">
               <div className="px-4 py-3 border-b border-border/50">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-medium">Network Branches</p>
+                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-medium">{t("multiBranch.sidebarTitle")}</p>
               </div>
               <div className="divide-y divide-border/30">
                 {branches.map((branch) => (
@@ -189,8 +191,8 @@ const MultiBranchSection = () => {
                       <span className="text-[10px] font-semibold text-primary">{branch.accuracy}%</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-[hsl(var(--success))]">{branch.saved}/mo</span>
-                      <span className="text-[10px] text-muted-foreground">{branch.margin} margin</span>
+                      <span className="text-[10px] text-[hsl(var(--success))]">{t("multiBranch.savedMo", { amount: branch.saved })}</span>
+                      <span className="text-[10px] text-muted-foreground">{t("multiBranch.margin", { amount: branch.margin })}</span>
                     </div>
                     {/* Mini accuracy bar */}
                     <div className="mt-1.5 h-1 rounded-full overflow-hidden bg-secondary">

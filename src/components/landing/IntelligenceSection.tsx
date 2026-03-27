@@ -7,17 +7,20 @@ import {
   User,
   WarningTriangle,
 } from "iconoir-react";
-
-const signals = [
-  { icon: DatabaseScript, label: "Last 30 days of sales", desc: "Every transaction teaches the forecast engine what your kitchen actually sells." },
-  { icon: Calendar, label: "Day-of-week demand patterns", desc: "Tuesday lunch ≠ Saturday dinner. PrepIQ knows the difference." },
-  { icon: Cloud, label: "Weather shifts", desc: "Rain at 2 PM? Soup demand historically rises 18% on wet days." },
-  { icon: GraphUp, label: "Local events & holidays", desc: "A nearby football match tonight means chicken demand spikes." },
-  { icon: WarningTriangle, label: "Recent stockouts", desc: "Yesterday's salmon stockout? PrepIQ auto-adjusts so it doesn't repeat." },
-  { icon: User, label: "Chef adjustments", desc: "Every override a chef makes trains the model to be smarter next time." },
-];
+import { useTranslation } from "react-i18next";
 
 const IntelligenceSection = () => {
+  const { t } = useTranslation();
+
+  const signals = [
+    { icon: DatabaseScript, label: t("intelligence.signals.sales.label"), desc: t("intelligence.signals.sales.desc") },
+    { icon: Calendar, label: t("intelligence.signals.patterns.label"), desc: t("intelligence.signals.patterns.desc") },
+    { icon: Cloud, label: t("intelligence.signals.weather.label"), desc: t("intelligence.signals.weather.desc") },
+    { icon: GraphUp, label: t("intelligence.signals.events.label"), desc: t("intelligence.signals.events.desc") },
+    { icon: WarningTriangle, label: t("intelligence.signals.stockouts.label"), desc: t("intelligence.signals.stockouts.desc") },
+    { icon: User, label: t("intelligence.signals.chef.label"), desc: t("intelligence.signals.chef.desc") },
+  ];
+
   return (
     <section id="intelligence" className="py-20 md:py-32 border-t border-border/50 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
@@ -33,13 +36,13 @@ const IntelligenceSection = () => {
           className="text-center mb-6 px-2"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-4 sm:mb-5 block">
-            Intelligence Layer
+            {t("intelligence.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-            What PrepIQ Listens To
+            {t("intelligence.title")}
           </h2>
           <p className="text-sm sm:text-[15px] text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            PrepIQ considers signals your team could never track manually — and turns them into one reliable forecast every morning.
+            {t("intelligence.subtitle")}
           </p>
         </motion.div>
 
@@ -71,7 +74,7 @@ const IntelligenceSection = () => {
           transition={{ delay: 0.5 }}
           className="text-center text-[11px] sm:text-xs text-muted-foreground/40 mt-8 sm:mt-12 px-2"
         >
-          Signal weights are dynamic — they shift as PrepIQ learns your kitchen's unique patterns.
+          {t("intelligence.footer")}
         </motion.p>
       </div>
     </section>

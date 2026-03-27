@@ -1,42 +1,44 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HelpCircle, FireFlame, Xmark, Trash, Cpu, Bell, Check, Percentage } from "iconoir-react";
-
-const WITHOUT_TIMELINE = [
-  { time: "6:00 AM", label: "Chef guesses prep quantities based on gut feel", icon: HelpCircle, detail: "No data, no forecast" },
-  { time: "11:45 AM", label: "Salmon selling fast — no one notices", icon: FireFlame, detail: "No alerts or tracking" },
-  { time: "7:10 PM", label: "Soup sold out — customers walk away", icon: Xmark, detail: "Lost revenue: ~$64" },
-  { time: "10:00 PM", label: "5 kg produce wasted, thrown in the bin", icon: Trash, detail: "Waste cost: $42" },
-];
-
-const WITH_TIMELINE = [
-  { time: "6:00 AM", label: "AI forecast generated from 8 data signals", icon: Cpu, detail: "Confidence: 96%" },
-  { time: "11:45 AM", label: "Live alert: salmon trending above forecast", icon: Bell, detail: "Auto-notification sent" },
-  { time: "7:10 PM", label: "Prep adjusted early — zero stockouts today", icon: Check, detail: "All items available" },
-  { time: "10:00 PM", label: "Only 0.8 kg waste — forecast was 96% accurate", icon: Percentage, detail: "Model updated for tomorrow" },
-];
-
-const WITHOUT_STATS = [
-  { label: "Waste", value: "$42", negative: true },
-  { label: "Stockouts", value: "2 items", negative: true },
-  { label: "Lost Revenue", value: "$64", negative: true },
-  { label: "Net Impact", value: "−$106", negative: true },
-];
-
-const WITH_STATS = [
-  { label: "Waste", value: "$9", negative: false },
-  { label: "Stockouts", value: "0", negative: false },
-  { label: "Recovered", value: "+$64", negative: false },
-  { label: "Net Impact", value: "+$55", negative: false },
-];
-
-const SLIDER_DATA = {
-  off: { prep: "30 kg", sold: "24 kg", waste: "6 kg", wasteCost: "$42", accuracy: "—" },
-  on: { prep: "25 kg", sold: "24 kg", waste: "1 kg", wasteCost: "$7", accuracy: "96%" },
-};
+import { useTranslation, Trans } from "react-i18next";
 
 const KitchenTestSection = () => {
+  const { t } = useTranslation();
   const [intelligenceOn, setIntelligenceOn] = useState(false);
+
+  const WITHOUT_TIMELINE = [
+    { time: "6:00 AM", label: t("kitchenTest.timeline.without.0.label"), icon: HelpCircle, detail: t("kitchenTest.timeline.without.0.detail") },
+    { time: "11:45 AM", label: t("kitchenTest.timeline.without.1.label"), icon: FireFlame, detail: t("kitchenTest.timeline.without.1.detail") },
+    { time: "7:10 PM", label: t("kitchenTest.timeline.without.2.label", { amount: "$64" }), icon: Xmark, detail: t("kitchenTest.timeline.without.2.detail", { amount: "$64" }) },
+    { time: "10:00 PM", label: t("kitchenTest.timeline.without.3.label", { amount: "$42" }), icon: Trash, detail: t("kitchenTest.timeline.without.3.detail", { amount: "$42" }) },
+  ];
+
+  const WITH_TIMELINE = [
+    { time: "6:00 AM", label: t("kitchenTest.timeline.with.0.label"), icon: Cpu, detail: t("kitchenTest.timeline.with.0.detail") },
+    { time: "11:45 AM", label: t("kitchenTest.timeline.with.1.label"), icon: Bell, detail: t("kitchenTest.timeline.with.1.detail") },
+    { time: "7:10 PM", label: t("kitchenTest.timeline.with.2.label"), icon: Check, detail: t("kitchenTest.timeline.with.2.detail") },
+    { time: "10:00 PM", label: t("kitchenTest.timeline.with.3.label"), icon: Percentage, detail: t("kitchenTest.timeline.with.3.detail") },
+  ];
+
+  const WITHOUT_STATS = [
+    { label: t("kitchenTest.stats.waste"), value: "$42", negative: true },
+    { label: t("kitchenTest.stats.stockouts"), value: "2 items", negative: true },
+    { label: t("kitchenTest.stats.lostRevenue"), value: "$64", negative: true },
+    { label: t("kitchenTest.netImpact"), value: "−$106", negative: true },
+  ];
+
+  const WITH_STATS = [
+    { label: t("kitchenTest.stats.waste"), value: "$9", negative: false },
+    { label: t("kitchenTest.stats.stockouts"), value: "0", negative: false },
+    { label: t("kitchenTest.stats.recovered"), value: "+$64", negative: false },
+    { label: t("kitchenTest.netImpact"), value: "+$55", negative: false },
+  ];
+
+  const SLIDER_DATA = {
+    off: { prep: "30 kg", sold: "24 kg", waste: "6 kg", wasteCost: "$42", accuracy: "—" },
+    on: { prep: "25 kg", sold: "24 kg", waste: "1 kg", wasteCost: "$7", accuracy: "96%" },
+  };
 
   const timeline = intelligenceOn ? WITH_TIMELINE : WITHOUT_TIMELINE;
   const stats = intelligenceOn ? WITH_STATS : WITHOUT_STATS;
@@ -60,7 +62,7 @@ const KitchenTestSection = () => {
             viewport={{ once: true }}
             className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-4"
           >
-            The 5-Second Kitchen Test
+            {t("kitchenTest.badge")}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -69,8 +71,10 @@ const KitchenTestSection = () => {
             transition={{ delay: 0.05 }}
             className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]"
           >
-            One Kitchen. One Day.{" "}
-            <span className="text-gradient-gold">Two Outcomes.</span>
+            <Trans
+              i18nKey="kitchenTest.title"
+              components={{ gold: <span className="text-gradient-gold" /> }}
+            />
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -79,7 +83,7 @@ const KitchenTestSection = () => {
             transition={{ delay: 0.1 }}
             className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed"
           >
-            Toggle to see what changes when your kitchen has intelligence.
+            {t("kitchenTest.subtitle")}
           </motion.p>
         </div>
 
@@ -92,7 +96,7 @@ const KitchenTestSection = () => {
           className="flex items-center justify-center gap-3 sm:gap-5 mb-8 sm:mb-14"
         >
           <span className={`text-xs sm:text-sm font-medium transition-all duration-300 ${!intelligenceOn ? "text-destructive" : "text-muted-foreground/30"}`}>
-            Without PrepIQ
+            {t("kitchenTest.toggleWithout")}
           </span>
           <button
             onClick={() => setIntelligenceOn(!intelligenceOn)}
@@ -109,7 +113,7 @@ const KitchenTestSection = () => {
             />
           </button>
           <span className={`text-xs sm:text-sm font-medium transition-all duration-300 ${intelligenceOn ? "text-[hsl(var(--success))]" : "text-muted-foreground/30"}`}>
-            With PrepIQ
+            {t("kitchenTest.toggleWith")}
           </span>
         </motion.div>
 
@@ -124,10 +128,10 @@ const KitchenTestSection = () => {
                   intelligenceOn ? "bg-[hsl(var(--success))] animate-pulse" : "bg-destructive"
                 }`} />
                 <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-widest">
-                  {intelligenceOn ? "Intelligent Day" : "Traditional Day"}
+                  {intelligenceOn ? t("kitchenTest.intelligentDay") : t("kitchenTest.traditionalDay")}
                 </span>
               </div>
-              <span className="text-[10px] sm:text-xs text-muted-foreground/50">6 AM → 10 PM</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground/50">{t("kitchenTest.timeRange")}</span>
             </div>
 
             <div className="p-4 sm:p-6 md:p-7 space-y-4 sm:space-y-6">
@@ -182,7 +186,7 @@ const KitchenTestSection = () => {
               {/* Rice prep example */}
               <div className="pt-4 sm:pt-5 border-t border-border/50">
                 <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground/40 mb-3 sm:mb-4 font-medium">
-                  Rice Prep Example
+                  {t("kitchenTest.riceExample")}
                 </p>
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -193,13 +197,13 @@ const KitchenTestSection = () => {
                     className="grid grid-cols-3 gap-2.5 sm:gap-5"
                   >
                     {[
-                      { label: "Prepped", value: sliderData.prep },
-                      { label: "Sold", value: sliderData.sold },
-                      { label: "Waste", value: sliderData.waste },
+                      { label: t("kitchenTest.prepped"), value: sliderData.prep },
+                      { label: t("kitchenTest.sold"), value: sliderData.sold },
+                      { label: t("kitchenTest.waste"), value: sliderData.waste },
                     ].map((d) => (
                       <div key={d.label} className="text-center rounded-xl bg-accent/30 border border-border/20 py-3 sm:py-4 px-2 sm:px-3">
                         <p className={`text-lg sm:text-2xl font-semibold ${
-                          d.label === "Waste"
+                          d.label === t("kitchenTest.waste")
                             ? (intelligenceOn ? "text-[hsl(var(--success))]" : "text-destructive")
                             : "text-foreground"
                         }`}>
@@ -218,7 +222,7 @@ const KitchenTestSection = () => {
           <div className="rounded-xl sm:rounded-2xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden shadow-[0_8px_32px_-8px_hsl(0_0%_0%/0.2)] flex flex-col">
             {/* Card header */}
             <div className="px-4 sm:px-7 py-3 sm:py-4 border-b border-border/50 bg-accent/40">
-              <span className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground/40 font-medium">End of Day</span>
+              <span className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground/40 font-medium">{t("kitchenTest.endOfDay")}</span>
             </div>
 
             <div className="p-4 sm:p-6 md:p-7 flex-1 flex flex-col justify-between">
@@ -243,7 +247,7 @@ const KitchenTestSection = () => {
                           {stat.value}
                         </span>
                       </div>
-                      {stat.label !== "Net Impact" && (
+                      {stat.label !== t("kitchenTest.netImpact") && (
                         <div className="h-px bg-border/30 mt-2.5 sm:mt-3" />
                       )}
                     </motion.div>
@@ -269,10 +273,12 @@ const KitchenTestSection = () => {
                     {intelligenceOn ? "+$55" : "−$106"}
                   </p>
                   <p className="text-[11px] sm:text-xs text-muted-foreground/60 mt-1.5 sm:mt-2">
-                    {intelligenceOn ? "daily margin recovered" : "daily margin lost"}
+                    {intelligenceOn ? t("kitchenTest.dailyMarginRecovered") : t("kitchenTest.dailyMarginLost")}
                   </p>
                   <p className="text-[10px] text-muted-foreground/40 mt-1">
-                    {intelligenceOn ? "That's ~$1,650/month saved" : "That's ~$3,180/month in losses"}
+                    {intelligenceOn
+                      ? t("kitchenTest.monthlySaved", { amount: "$1,650" })
+                      : t("kitchenTest.monthlyLosses", { amount: "$3,180" })}
                   </p>
                 </motion.div>
               </AnimatePresence>
