@@ -1,38 +1,41 @@
 import { motion } from "framer-motion";
 import { QuoteMessage, StarSolid } from "iconoir-react";
-
-const testimonials = [
-  {
-    quote: "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.",
-    name: "Chef Adamu",
-    role: "Head Chef",
-    company: "Lagos Kitchen Co.",
-    metric: "9% waste reduction",
-  },
-  {
-    quote: "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.",
-    name: "Sarah K.",
-    role: "Ops Manager",
-    company: "FreshBite",
-    metric: "$3,200/mo saved",
-  },
-  {
-    quote: "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.",
-    name: "Marcus T.",
-    role: "Owner",
-    company: "3-Branch Network",
-    metric: "92% accuracy",
-  },
-];
-
-const trustSignals = [
-  { value: "40+", label: "Kitchens powered" },
-  { value: "8,000+", label: "Meals processed / week" },
-  { value: "48hrs", label: "Average onboarding" },
-  { value: "92%", label: "Forecast accuracy" },
-];
+import { useTranslation } from "react-i18next";
 
 const TestimonialsSection = () => {
+  const { t, i18n } = useTranslation();
+
+  const testimonials = [
+    {
+      quote: i18n.resolvedLanguage === 'fr' ? "Je devinais la mise en place chaque matin. Maintenant, je la valide. PrepIQ a changé notre vision du gaspillage." : "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.",
+      name: "Chef Adamu",
+      role: i18n.resolvedLanguage === 'fr' ? "Chef de Cuisine" : "Head Chef",
+      company: "Lagos Kitchen Co.",
+      metric: i18n.resolvedLanguage === 'fr' ? "-9 % de gaspillage" : "9% waste reduction",
+    },
+    {
+      quote: i18n.resolvedLanguage === 'fr' ? "Nous avons réduit le gaspillage de 9 % dès le premier mois. La prévision fonctionne tout simplement. Notre marge a bondi." : "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.",
+      name: "Sarah K.",
+      role: i18n.resolvedLanguage === 'fr' ? "Responsable Opérations" : "Ops Manager",
+      company: "FreshBite",
+      metric: i18n.resolvedLanguage === 'fr' ? "3 200 €/mois sauvés" : "$3,200/mo saved",
+    },
+    {
+      quote: i18n.resolvedLanguage === 'fr' ? "Enfin un système qui comprend la réalité d'une cuisine. Pas de superflu, pas de formation. Juste de l'intelligence." : "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.",
+      name: "Marcus T.",
+      role: i18n.resolvedLanguage === 'fr' ? "Propriétaire" : "Owner",
+      company: "3-Branch Network",
+      metric: "92 % de précision",
+    },
+  ];
+
+  const trustSignals = [
+    { value: "40+", label: t("testimonials.stats.powered") },
+    { value: "8,000+", label: t("testimonials.stats.processed") },
+    { value: "48h", label: t("testimonials.stats.onboarding") },
+    { value: "92%", label: t("testimonials.stats.accuracy") },
+  ];
+
   return (
     <section className="py-28 border-t border-border/50 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(var(--primary)/0.02),transparent_60%)] pointer-events-none" />
@@ -45,13 +48,13 @@ const TestimonialsSection = () => {
           className="text-center mb-16"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-4 block">
-            Testimonials
+            {t("testimonials.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 leading-tight lg:leading-[1.15]">
-            From the Kitchen
+            {t("testimonials.title")}
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
-            Real teams. Real results. Here's what operators say after switching to PrepIQ.
+            {t("testimonials.subtitle")}
           </p>
         </motion.div>
 

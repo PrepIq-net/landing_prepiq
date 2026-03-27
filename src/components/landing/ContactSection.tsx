@@ -38,9 +38,9 @@ const ContactSection = () => {
           name: name.trim(),
           email: email.trim(),
           company: company.trim(),
-          locations: selectedLocations || "Not specified",
+          locations: selectedLocations || (i18n.resolvedLanguage === 'fr' ? "Non spécifié" : "Not specified"),
           message: message.trim(),
-          language: i18n.language,
+          language: i18n.resolvedLanguage,
         }),
       });
 

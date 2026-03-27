@@ -1,33 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 type Phase = "forecast" | "adjust" | "live" | "result";
-
-const phases: { key: Phase; label: string; duration: number }[] = [
-  { key: "forecast", label: "Morning Forecast", duration: 6000 },
-  { key: "adjust", label: "Chef Adjusts", duration: 5500 },
-  { key: "live", label: "Live Service", duration: 5500 },
-  { key: "result", label: "End of Day", duration: 6000 },
-];
-
-const forecastItems = [
-  { name: "Grilled Salmon", qty: "25 kg", confidence: 91, trend: "↑ 12% vs last Tue" },
-  { name: "Caesar Salad", qty: "40 portions", confidence: 84, trend: "Steady" },
-  { name: "Tomato Soup", qty: "15 L", confidence: 88, trend: "↓ 5% — rain forecast" },
-];
-
-const liveItems = [
-  { name: "Grilled Salmon", sold: "22 kg", remaining: "8 kg", pct: 73, status: "on-track" as const },
-  { name: "Caesar Salad", sold: "35 portions", remaining: "5 portions", pct: 87, status: "warning" as const },
-  { name: "Tomato Soup", sold: "14 L", remaining: "1 L", pct: 93, status: "critical" as const },
-];
-
-const resultStats = [
-  { label: "Waste Saved", value: "$42", accent: true },
-  { label: "Accuracy", value: "93%", accent: false },
-  { label: "Stockouts", value: "0", accent: true },
-  { label: "Margin Impact", value: "+2.4%", accent: false },
-];
 
 const ConfidenceBar = ({ value, delay = 0 }: { value: number; delay?: number }) => (
   <div className="h-1.5 w-20 rounded-full bg-accent overflow-hidden">
@@ -69,6 +44,34 @@ const ProgressRing = ({ pct, status }: { pct: number; status: "on-track" | "warn
 const transition = { duration: 0.5, ease: [0.4, 0, 0.2, 1] };
 
 const HeroIntelligencePreview = () => {
+  const { t, i18n } = useTranslation();
+
+  const phases: { key: Phase; label: string; duration: number }[] = useMemo(() => [
+    { key: "forecast", label: t("howItWorks.previews.morningForecast"), duration: 6000 },
+    { key: "adjust", label: t("howItWorks.previews.impact.override"), duration: 5500 },
+    { key: "live", label: t("howItWorks.previews.liveService"), duration: 5500 },
+    { key: "result", label: t("howItWorks.previews.stats.endOfDaySummary"), duration: 6000 },
+  ], [t]);
+
+  const forecastItems = useMemo(() => [
+    { name: t("common.items.salmon"), qty: "25 kg", confidence: 91, trend: t("howItWorks.previews.stats.salmonTrend") },
+    { name: t("common.items.salad"), qty: "40 portions", confidence: 84, trend: t("howItWorks.previews.stats.saladTrend") },
+    { name: t("common.items.soup"), qty: "15 L", confidence: 88, trend: t("howItWorks.previews.stats.soupTrend") },
+  ], [t]);
+
+  const liveItems = useMemo(() => [
+    { name: t("common.items.salmon"), sold: "22 kg", remaining: "8 kg", pct: 73, status: "on-track" as const },
+    { name: t("common.items.salad"), sold: "35 portions", remaining: "5 portions", pct: 87, status: "warning" as const },
+    { name: t("common.items.soup"), sold: "14 L", remaining: "1 L", pct: 93, status: "critical" as const },
+  ], [t]);
+
+  const resultStats = useMemo(() => [
+    { label: t("howItWorks.previews.stats.wasteSaved"), value: t("common.currency", { val: "42" }), accent: true },
+    { label: t("interactiveDemo.result.stats.accuracy"), value: "93%", accent: false },
+    { label: t("interactiveDemo.result.stats.stockouts"), value: "0", accent: true },
+    { label: t("interactiveDemo.result.stats.marginImpact"), value: "+2.4%", accent: false },
+  ], [t]);
+
   const [phaseIdx, setPhaseIdx] = useState(0);
   const phase = phases[phaseIdx].key;
 
@@ -123,12 +126,12 @@ const HeroIntelligencePreview = () => {
             <motion.div key="forecast" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={transition} className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground/60 mb-1">Today's Forecast</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Tuesday, March 8 — 3 items predicted</p>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground/60 mb-1">{t("howItWorks.previews.stats.todayForecast")}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{t("howItWorks.previews.stats.itemsPredicted")}</p>
                 </div>
                 <div className="hidden md:flex items-center gap-2 rounded-lg border border-border px-3 py-2">
                   <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse" />
-                  <span className="text-xs text-muted-foreground">Model updated 2h ago</span>
+                  <span className="text-xs text-muted-foreground">{t("howItWorks.previews.stats.modelUpdated")}</span>
                 </div>
               </div>
 
@@ -168,15 +171,15 @@ const HeroIntelligencePreview = () => {
           {/* ─── CHEF ADJUSTS ─── */}
           {phase === "adjust" && (
             <motion.div key="adjust" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={transition} className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-5">
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground/60">Chef Override</p>
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground/60">{t("howItWorks.chefOverride.title")}</p>
 
               <div className="rounded-xl border border-border bg-accent/30 p-4 sm:p-6 space-y-4 sm:space-y-5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3 sm:gap-4">
                      <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center text-xs sm:text-sm font-semibold text-primary">G</div>
                     <div>
-                      <p className="text-xs sm:text-sm font-medium text-foreground">Grilled Salmon</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">AI suggested 25 kg</p>
+                      <p className="text-xs sm:text-sm font-medium text-foreground">{t("common.items.salmon")}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">{t("howItWorks.previews.impact.note", { day: t("howItWorks.previews.stats.marchDate"), pct: 8, prevDay: t("howItWorks.previews.stats.marchDate"), acc: 67 }).split(".")[0]}</p>
                     </div>
                   </div>
                   <motion.div
@@ -200,23 +203,25 @@ const HeroIntelligencePreview = () => {
                 >
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--warning))]" />
-                    <span className="text-[10px] sm:text-xs font-medium text-[hsl(var(--warning))]">Risk Assessment</span>
+                    <span className="text-[10px] sm:text-xs font-medium text-[hsl(var(--warning))]">{t("howItWorks.previews.impact.riskAssessment")}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 sm:gap-4">
                     <div>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">Waste risk</p>
-                      <p className="text-sm sm:text-base font-semibold text-[hsl(var(--warning))]">$6.20</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">{t("howItWorks.previews.impact.wasteRisk")}</p>
+                      <p className="text-sm sm:text-base font-semibold text-[hsl(var(--warning))]">{t("common.currency", { val: "6.20" })}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">Confidence</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">{t("interactiveDemo.result.stats.accuracy")}</p>
                       <p className="text-sm sm:text-base font-semibold text-foreground">82%</p>
                     </div>
                     <div>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">Override</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground/50 uppercase tracking-wider mb-1">{t("howItWorks.previews.impact.override")}</p>
                       <p className="text-sm sm:text-base font-semibold text-foreground">67%</p>
                     </div>
                   </div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground/60 italic">Tuesday demand typically drops 8% vs Monday.</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground/60 italic">
+                    {t("howItWorks.previews.impact.note", { day: t("howItWorks.previews.stats.marchDate"), pct: 8, prevDay: t("howItWorks.previews.stats.marchDate"), acc: 67 }).split(".")[1]}
+                  </p>
                 </motion.div>
               </div>
             </motion.div>
@@ -228,9 +233,9 @@ const HeroIntelligencePreview = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-[hsl(var(--success))] animate-pulse" />
-                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-[hsl(var(--success))] font-medium">Live Tracking</p>
+                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-[hsl(var(--success))] font-medium">{t("howItWorks.previews.stats.liveTracking")}</p>
                   </div>
-                  <span className="text-[10px] sm:text-xs text-muted-foreground/50">Updated 30s ago</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground/50">{t("howItWorks.previews.stats.updatedRecently")}</span>
               </div>
 
               <div className="space-y-2.5 sm:space-y-3">
@@ -254,7 +259,7 @@ const HeroIntelligencePreview = () => {
                       </div>
                       <div>
                         <p className="text-xs sm:text-sm font-medium text-foreground">{item.name}</p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">Sold {item.sold}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">{t("interactiveDemo.result.sold", { amount: item.sold })}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -264,7 +269,7 @@ const HeroIntelligencePreview = () => {
                         item.status === "warning" ? "text-[hsl(var(--warning))]" :
                         "text-destructive"
                       }`}>
-                        {item.status === "on-track" ? "On Track" : item.status === "warning" ? "Low" : "⚠ Risk"}
+                        {item.status === "on-track" ? t("howItWorks.previews.onTrack") : item.status === "warning" ? t("howItWorks.previews.lowStock") : t("howItWorks.previews.alert")}
                       </span>
                     </div>
                   </motion.div>
@@ -278,7 +283,7 @@ const HeroIntelligencePreview = () => {
                 className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3"
               >
                 <div className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse shrink-0" />
-                <p className="text-[10px] sm:text-xs text-destructive">Tomato Soup trending to stockout by 7:30 PM — consider +3 L batch</p>
+                <p className="text-[10px] sm:text-xs text-destructive">{t("howItWorks.previews.stats.soupRisk")}</p>
               </motion.div>
             </motion.div>
           )}
@@ -286,7 +291,7 @@ const HeroIntelligencePreview = () => {
           {/* ─── END OF DAY ─── */}
           {phase === "result" && (
             <motion.div key="result" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={transition} className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-primary/80 font-medium">End of Day Summary</p>
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-primary/80 font-medium">{t("howItWorks.previews.stats.endOfDaySummary")}</p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
                 {resultStats.map((stat, i) => (
@@ -315,8 +320,8 @@ const HeroIntelligencePreview = () => {
                   <span className="text-[hsl(var(--success))] text-sm sm:text-base">✓</span>
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-medium text-foreground">Today's prep was 93% accurate</p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">You saved $42 in waste and prevented 0 stockouts.</p>
+                  <p className="text-xs sm:text-sm font-medium text-foreground">{t("howItWorks.previews.stats.prepAccuracy")}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5">{t("howItWorks.previews.stats.savingsSummary")}</p>
                 </div>
               </motion.div>
             </motion.div>

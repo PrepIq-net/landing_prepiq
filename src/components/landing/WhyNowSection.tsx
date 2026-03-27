@@ -1,14 +1,17 @@
 import { motion } from "framer-motion";
 import { WarningTriangle, CloudSunny, Calendar, GraphUp } from "iconoir-react";
-
-const pressures = [
-  { icon: GraphUp, title: "Rising Food Costs", desc: "Every wasted kilogram hits harder than it did last year.", metric: "+18%", metricLabel: "avg. cost increase" },
-  { icon: CloudSunny, title: "Weather Shifts Traffic", desc: "A rainy Tuesday behaves nothing like a sunny one.", metric: "±30%", metricLabel: "demand swing" },
-  { icon: Calendar, title: "Event-Driven Surges", desc: "Holidays and local events spike demand unpredictably.", metric: "2.4×", metricLabel: "peak multiplier" },
-  { icon: WarningTriangle, title: "Delivery Demand Spikes", desc: "Online orders add volatility your gut can't track.", metric: "+42%", metricLabel: "YoY growth" },
-];
+import { useTranslation, Trans } from "react-i18next";
 
 const WhyNowSection = () => {
+  const { t } = useTranslation();
+
+  const pressures = [
+    { icon: GraphUp, title: t("whyNow.items.foodCosts.title"), desc: t("whyNow.items.foodCosts.desc"), metric: "+18%", metricLabel: t("whyNow.items.foodCosts.label") },
+    { icon: CloudSunny, title: t("whyNow.items.weather.title"), desc: t("whyNow.items.weather.desc"), metric: "±30%", metricLabel: t("whyNow.items.weather.label") },
+    { icon: Calendar, title: t("whyNow.items.events.title"), desc: t("whyNow.items.events.desc"), metric: "2.4×", metricLabel: t("whyNow.items.events.label") },
+    { icon: WarningTriangle, title: t("whyNow.items.delivery.title"), desc: t("whyNow.items.delivery.desc"), metric: "+42%", metricLabel: t("whyNow.items.delivery.label") },
+  ];
+
   return (
     <section className="py-20 md:py-28 border-t border-border/50 relative overflow-hidden">
       {/* Background texture */}
@@ -27,13 +30,13 @@ const WhyNowSection = () => {
           className="text-center mb-12 md:mb-16 max-w-2xl mx-auto px-2"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-destructive font-medium mb-4 block">
-            The Reality
+            {t("whyNow.badge")}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 leading-tight lg:leading-[1.15]">
-            Instinct Can't Keep Up Anymore
+            {t("whyNow.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Kitchens are more volatile than ever. The variables your team juggles every morning are compounding — and spreadsheets aren't learning from yesterday.
+            {t("whyNow.subtitle")}
           </p>
         </motion.div>
 
@@ -77,7 +80,10 @@ const WhyNowSection = () => {
           <div className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-primary/20 bg-primary/5 px-4 sm:px-6 py-2.5 sm:py-3">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
             <span className="text-xs sm:text-sm text-foreground">
-              PrepIQ turns these variables into <span className="text-primary font-medium">daily signals</span>
+              <Trans
+                i18nKey="whyNow.cta"
+                components={{ gold: <span className="text-primary font-medium" /> }}
+              />
             </span>
           </div>
         </motion.div>

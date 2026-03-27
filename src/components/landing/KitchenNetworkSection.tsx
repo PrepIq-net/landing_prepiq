@@ -1,55 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Brain, ArrowRight, Flash, Globe, WarningTriangle, CheckCircle, ShareAndroid, Building, MapPin } from "iconoir-react";
-
-/* ───────── Scenario data: the visual story ───────── */
-const scenarios = [
-  {
-    id: "waste",
-    branchA: { name: "Manhattan", flag: "🇺🇸" },
-    problem: "Over-prepped avocados on Mondays — 8kg wasted weekly",
-    aiLearning: "AI detects pattern: Monday avocado demand is 35% lower than forecast",
-    branchesProtected: [
-      { name: "London", flag: "🇬🇧" },
-      { name: "Dubai", flag: "🇦🇪" },
-      { name: "Sydney", flag: "🇦🇺" },
-    ],
-    prevention: "Monday avocado prep reduced automatically",
-    saved: "$2,100/mo saved across network",
-    tag: "Waste Prevention",
-    tagColor: "bg-destructive/15 text-destructive border-destructive/20",
-  },
-  {
-    id: "stockout",
-    branchA: { name: "London", flag: "🇬🇧" },
-    problem: "Ran out of chicken during Friday dinner rush — lost $1,200 in sales",
-    aiLearning: "AI detects pattern: Friday chicken demand spikes 40% after 6 PM",
-    branchesProtected: [
-      { name: "Manhattan", flag: "🇺🇸" },
-      { name: "Lagos", flag: "🇳🇬" },
-      { name: "Dubai", flag: "🇦🇪" },
-    ],
-    prevention: "Friday chicken prep increased proactively",
-    saved: "$4,800/mo revenue protected",
-    tag: "Stockout Prevention",
-    tagColor: "bg-primary/15 text-primary border-primary/20",
-  },
-  {
-    id: "seasonal",
-    branchA: { name: "Dubai", flag: "🇦🇪" },
-    problem: "Soup sales dropped 60% as temperatures rose — excess inventory spoiled",
-    aiLearning: "AI detects pattern: Soup demand inversely correlates with temperature above 28°C",
-    branchesProtected: [
-      { name: "Sydney", flag: "🇦🇺" },
-      { name: "Lagos", flag: "🇳🇬" },
-      { name: "Manhattan", flag: "🇺🇸" },
-    ],
-    prevention: "Soup prep auto-scales with weather forecast",
-    saved: "$1,600/mo saved across network",
-    tag: "Seasonal Intelligence",
-    tagColor: "bg-[hsl(var(--info)/.15)] text-[hsl(var(--info))] border-[hsl(var(--info)/.2)]",
-  },
-];
+import { useTranslation, Trans } from "react-i18next";
 
 /* ───────── Animated connection line ───────── */
 const PulsingLine = ({ delay = 0 }: { delay?: number }) => (
@@ -76,6 +28,56 @@ const PulsingLine = ({ delay = 0 }: { delay?: number }) => (
 
 /* ───────── Main Section ───────── */
 const KitchenNetworkSection = () => {
+  const { t, i18n } = useTranslation();
+
+  const scenarios = useMemo(() => [
+    {
+      id: "waste",
+      branchA: { name: "Manhattan", flag: "🇺🇸" },
+      problem: t("kitchenNetwork.scenarios.waste.problem"),
+      aiLearning: t("kitchenNetwork.scenarios.waste.aiLearning"),
+      branchesProtected: [
+        { name: "London", flag: "🇬🇧" },
+        { name: "Dubai", flag: "🇦🇪" },
+        { name: "Sydney", flag: "🇦🇺" },
+      ],
+      prevention: t("kitchenNetwork.scenarios.waste.prevention"),
+      saved: t("kitchenNetwork.scenarios.waste.saved"),
+      tag: t("kitchenNetwork.scenarios.waste.tag"),
+      tagColor: "bg-destructive/15 text-destructive border-destructive/20",
+    },
+    {
+      id: "stockout",
+      branchA: { name: "London", flag: "🇬🇧" },
+      problem: t("kitchenNetwork.scenarios.stockout.problem"),
+      aiLearning: t("kitchenNetwork.scenarios.stockout.aiLearning"),
+      branchesProtected: [
+        { name: "Manhattan", flag: "🇺🇸" },
+        { name: "Lagos", flag: "🇳🇬" },
+        { name: "Dubai", flag: "🇦🇪" },
+      ],
+      prevention: t("kitchenNetwork.scenarios.stockout.prevention"),
+      saved: t("kitchenNetwork.scenarios.stockout.saved"),
+      tag: t("kitchenNetwork.scenarios.stockout.tag"),
+      tagColor: "bg-primary/15 text-primary border-primary/20",
+    },
+    {
+      id: "seasonal",
+      branchA: { name: "Dubai", flag: "🇦🇪" },
+      problem: t("kitchenNetwork.scenarios.seasonal.problem"),
+      aiLearning: t("kitchenNetwork.scenarios.seasonal.aiLearning"),
+      branchesProtected: [
+        { name: "Sydney", flag: "🇦🇺" },
+        { name: "Lagos", flag: "🇳🇬" },
+        { name: "Manhattan", flag: "🇺🇸" },
+      ],
+      prevention: t("kitchenNetwork.scenarios.seasonal.prevention"),
+      saved: t("kitchenNetwork.scenarios.seasonal.saved"),
+      tag: t("kitchenNetwork.scenarios.seasonal.tag"),
+      tagColor: "bg-[hsl(var(--info)/.15)] text-[hsl(var(--info))] border-[hsl(var(--info)/.2)]",
+    },
+  ], [t]);
+
   const [activeScenario, setActiveScenario] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -85,7 +87,7 @@ const KitchenNetworkSection = () => {
       setActiveScenario((prev) => (prev + 1) % scenarios.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, scenarios.length]);
 
   const scenario = scenarios[activeScenario];
 
@@ -106,7 +108,7 @@ const KitchenNetworkSection = () => {
           className="text-center mb-12 md:mb-16 px-2"
         >
           <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-            Kitchen Intelligence Network
+            {t("kitchenNetwork.badge")}
           </span>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
@@ -117,17 +119,17 @@ const KitchenNetworkSection = () => {
               transition={{ delay: 0.1 }}
               className="block"
             >
-              Every Kitchen{" "}
-              <span className="relative inline-block">
-                Learns.
-                <motion.span
-                  className="absolute -bottom-1 left-0 h-[2px] bg-primary/40 rounded-full"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
-                />
-              </span>
+              <Trans
+                i18nKey="kitchenNetwork.titleLine1"
+                components={{ gold: <span className="relative inline-block" /> }}
+              />
+              <motion.span
+                className="absolute -bottom-1 left-0 h-[2px] bg-primary/40 rounded-full"
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+              />
             </motion.span>
             <motion.span
               initial={{ opacity: 0, y: 12 }}
@@ -136,17 +138,17 @@ const KitchenNetworkSection = () => {
               transition={{ delay: 0.25 }}
               className="block mt-1"
             >
-              Every Kitchen{" "}
-              <span className="relative inline-block text-primary">
-                Teaches.
-                <motion.span
-                  className="absolute -bottom-1 left-0 h-[2px] bg-primary rounded-full"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
-                />
-              </span>
+              <Trans
+                i18nKey="kitchenNetwork.titleLine2"
+                components={{ gold: <span className="relative inline-block text-primary" /> }}
+              />
+              <motion.span
+                className="absolute -bottom-1 left-0 h-[2px] bg-primary rounded-full"
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
+              />
             </motion.span>
           </h2>
 
@@ -157,9 +159,7 @@ const KitchenNetworkSection = () => {
             transition={{ delay: 0.4 }}
             className="text-sm sm:text-[15px] text-muted-foreground max-w-xl mx-auto leading-relaxed"
           >
-            When one branch makes a mistake, every other branch is protected.
-            PrepIQ's AI learns from each location and automatically prevents
-            the same issue across your entire network.
+            {t("kitchenNetwork.subtitle")}
           </motion.p>
         </motion.div>
 
@@ -218,7 +218,7 @@ const KitchenNetworkSection = () => {
                     <WarningTriangle className="h-4 w-4 text-destructive" />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-destructive/70">Step 1 · Problem Detected</p>
+                    <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-destructive/70">{t("kitchenNetwork.steps.one.title")}</p>
                     <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
                       <span>{scenario.branchA.flag}</span> {scenario.branchA.name}
                     </p>
@@ -235,7 +235,7 @@ const KitchenNetworkSection = () => {
                   <div className="flex items-start gap-2.5">
                     <Brain className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-primary/60 font-semibold mb-1">AI Learning</p>
+                      <p className="text-[10px] uppercase tracking-wider text-primary/60 font-semibold mb-1">{t("kitchenNetwork.aiLearning")}</p>
                       <p className="text-[12px] sm:text-[13px] text-muted-foreground leading-relaxed">
                         {scenario.aiLearning}
                       </p>
@@ -285,7 +285,7 @@ const KitchenNetworkSection = () => {
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   >
-                    AI<br />Transfer
+                    <Trans i18nKey="kitchenNetwork.transfer" components={{ br: <br /> }} />
                   </motion.div>
                   <div className="w-px h-8 bg-gradient-to-b from-border/40 to-transparent" />
                 </div>
@@ -303,8 +303,8 @@ const KitchenNetworkSection = () => {
                     <CheckCircle className="h-4 w-4 text-[hsl(var(--success))]" />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[hsl(var(--success)/.7)]">Step 2 · Auto-Protected</p>
-                    <p className="text-sm font-semibold text-foreground">All Other Branches</p>
+                    <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[hsl(var(--success)/.7)]">{t("kitchenNetwork.steps.two.title")}</p>
+                    <p className="text-sm font-semibold text-foreground">{t("kitchenNetwork.steps.three.desc")}</p>
                   </div>
                 </div>
 
@@ -335,7 +335,7 @@ const KitchenNetworkSection = () => {
                   transition={{ delay: 0.8 }}
                   className="rounded-xl bg-primary/[0.06] border border-primary/15 p-3.5 text-center"
                 >
-                  <p className="text-[10px] uppercase tracking-wider text-primary/60 font-semibold mb-1">Network Impact</p>
+                  <p className="text-[10px] uppercase tracking-wider text-primary/60 font-semibold mb-1">{t("kitchenNetwork.networkImpact")}</p>
                   <p className="text-lg sm:text-xl font-bold text-primary">{scenario.saved}</p>
                 </motion.div>
               </motion.div>
@@ -379,7 +379,7 @@ const KitchenNetworkSection = () => {
           className="max-w-3xl mx-auto mt-16 md:mt-20"
         >
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground/40 font-medium mb-8 text-center">
-            How it gets smarter over time
+            {t("kitchenNetwork.flywheelTitle")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-0 relative">
@@ -390,22 +390,22 @@ const KitchenNetworkSection = () => {
               {
                 step: "01",
                 icon: WarningTriangle,
-                title: "One branch hits an issue",
-                desc: "Waste, stockout, or demand shift detected at any location",
+                title: t("kitchenNetwork.steps.one.desc"),
+                desc: t("kitchenNetwork.steps.one.body"),
                 color: "destructive",
               },
               {
                 step: "02",
                 icon: Brain,
-                title: "AI learns the pattern",
-                desc: "Machine learning identifies the root cause and builds a prevention model",
+                title: t("kitchenNetwork.steps.two.desc"),
+                desc: t("kitchenNetwork.steps.two.body"),
                 color: "primary",
               },
               {
                 step: "03",
                 icon: Globe,
-                title: "All branches protected",
-                desc: "The fix is automatically applied everywhere — before the problem repeats",
+                title: t("kitchenNetwork.steps.three.desc"),
+                desc: t("kitchenNetwork.steps.three.body"),
                 color: "success",
               },
             ].map((item, i) => (
@@ -432,7 +432,7 @@ const KitchenNetworkSection = () => {
                       : "text-[hsl(var(--success))]"
                   }`} />
                 </div>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-semibold mb-1.5">Step {item.step}</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-semibold mb-1.5">{i18n.resolvedLanguage === 'fr' ? 'Étape' : 'Step'} {item.step}</p>
                 <p className="text-sm font-semibold text-foreground mb-1.5">{item.title}</p>
                 <p className="text-[12px] text-muted-foreground/70 leading-relaxed">{item.desc}</p>
 
@@ -450,7 +450,7 @@ const KitchenNetworkSection = () => {
             transition={{ delay: 0.6 }}
             className="text-center text-[12px] sm:text-[13px] text-muted-foreground/50 mt-8 sm:mt-10 px-2 max-w-lg mx-auto"
           >
-            The more branches you add, the faster every kitchen learns. A true network-effect intelligence system.
+            {t("kitchenNetwork.flywheelFooter")}
           </motion.p>
         </motion.div>
       </div>
