@@ -1,48 +1,50 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, GraphUp, Timer, DollarCircle, Percentage } from "iconoir-react";
-
-const metrics = [
-  {
-    value: "5–12%",
-    label: "Waste Reduction",
-    desc: "Less food thrown away. Every day.",
-    icon: ArrowDown,
-    color: "text-[hsl(var(--success))]",
-    iconBg: "bg-[hsl(var(--success)/.1)]",
-    border: "border-[hsl(var(--success)/.15)]",
-  },
-  {
-    value: "3–8%",
-    label: "Revenue Recovery",
-    desc: "From stockouts you didn't know you had.",
-    icon: GraphUp,
-    color: "text-primary",
-    iconBg: "bg-primary/10",
-    border: "border-primary/15",
-  },
-  {
-    value: "2+ hrs",
-    label: "Saved Daily",
-    desc: "No more spreadsheets. No more guessing.",
-    icon: Timer,
-    color: "text-foreground",
-    iconBg: "bg-muted",
-    border: "border-border",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const presets = [2000, 4000, 8000, 15000];
 
-// Monthly breakdown categories for the chart
-const breakdownCategories = [
-  { key: "waste", label: "Waste Saved", pctLow: 0.05, pctHigh: 0.12, color: "bg-[hsl(var(--success))]", textColor: "text-[hsl(var(--success))]" },
-  { key: "stockout", label: "Stockout Recovery", pctLow: 0.03, pctHigh: 0.08, color: "bg-primary", textColor: "text-primary" },
-  { key: "labor", label: "Labor Efficiency", pctLow: 0.01, pctHigh: 0.03, color: "bg-[hsl(var(--info))]", textColor: "text-[hsl(var(--info))]" },
-];
-
 const ValueSection = () => {
+  const { t, i18n } = useTranslation();
   const [spend, setSpend] = useState(4000);
+
+  const metrics = [
+    {
+      value: "5–12%",
+      label: t("value.metrics.waste.label"),
+      desc: t("value.metrics.waste.desc"),
+      icon: ArrowDown,
+      color: "text-[hsl(var(--success))]",
+      iconBg: "bg-[hsl(var(--success)/.1)]",
+      border: "border-[hsl(var(--success)/.15)]",
+    },
+    {
+      value: "3–8%",
+      label: t("value.metrics.revenue.label"),
+      desc: t("value.metrics.revenue.desc"),
+      icon: GraphUp,
+      color: "text-primary",
+      iconBg: "bg-primary/10",
+      border: "border-primary/15",
+    },
+    {
+      value: "2+ hrs",
+      label: t("value.metrics.saved.label"),
+      desc: t("value.metrics.saved.desc"),
+      icon: Timer,
+      color: "text-foreground",
+      iconBg: "bg-muted",
+      border: "border-border",
+    },
+  ];
+
+  // Monthly breakdown categories for the chart
+  const breakdownCategories = [
+    { key: "waste", label: t("value.calculator.categories.waste"), pctLow: 0.05, pctHigh: 0.12, color: "bg-[hsl(var(--success))]", textColor: "text-[hsl(var(--success))]" },
+    { key: "stockout", label: t("value.calculator.categories.stockout"), pctLow: 0.03, pctHigh: 0.08, color: "bg-primary", textColor: "text-primary" },
+    { key: "labor", label: t("value.calculator.categories.labor"), pctLow: 0.01, pctHigh: 0.03, color: "bg-[hsl(var(--info))]", textColor: "text-[hsl(var(--info))]" },
+  ];
 
   const { low, high } = useMemo(
     () => ({
@@ -94,10 +96,10 @@ const ValueSection = () => {
           className="text-center mb-10 md:mb-16 px-2"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
-            What Better Prep Means
+            {t("value.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-            Real savings from day one. Not projections — results kitchens using PrepIQ actually see.
+            {t("value.subtitle")}
           </p>
         </motion.div>
 
@@ -140,8 +142,8 @@ const ValueSection = () => {
               <DollarCircle className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">Savings Calculator</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground">Drag the slider or type a value to see your projected savings</p>
+              <p className="text-sm font-semibold text-foreground">{t("value.calculator.title")}</p>
+              <p className="text-[11px] sm:text-xs text-muted-foreground">{t("value.calculator.subtitle")}</p>
             </div>
           </div>
 
@@ -150,10 +152,10 @@ const ValueSection = () => {
             <div className="p-5 sm:p-8 space-y-5">
               <div className="space-y-2">
                 <label className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Monthly prep waste spend
+                  {t("value.calculator.inputLabel")}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground font-medium">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground font-medium">{i18n.resolvedLanguage === 'fr' ? '€' : '$'}</span>
                   <input
                     type="number"
                     value={spend}
@@ -193,7 +195,7 @@ const ValueSection = () => {
                       spend === p ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                   >
-                    ${p.toLocaleString()}
+                    {i18n.resolvedLanguage === 'fr' ? `${p.toLocaleString()} €` : `$${p.toLocaleString()}`}
                   </button>
                 ))}
               </div>
@@ -201,7 +203,7 @@ const ValueSection = () => {
               {/* Savings summary */}
               <div className="space-y-3 pt-2">
                 <div className="text-center space-y-1 p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">Monthly Recovery</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">{t("value.calculator.monthlyRecovery")}</p>
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={`${low}-${high}`}
@@ -211,13 +213,13 @@ const ValueSection = () => {
                       transition={{ duration: 0.25 }}
                       className="text-2xl sm:text-3xl font-display font-semibold text-primary tracking-tight"
                     >
-                      ${low.toLocaleString()} – ${high.toLocaleString()}
+                      {i18n.resolvedLanguage === 'fr' ? `${low.toLocaleString()} € – ${high.toLocaleString()} €` : `$${low.toLocaleString()} – $${high.toLocaleString()}`}
                     </motion.p>
                   </AnimatePresence>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
-                  <span className="text-xs text-muted-foreground">Annual Impact</span>
+                  <span className="text-xs text-muted-foreground">{t("value.calculator.annualImpact")}</span>
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={`${annualLow}-${annualHigh}`}
@@ -225,7 +227,7 @@ const ValueSection = () => {
                       animate={{ opacity: 1 }}
                       className="text-sm font-semibold text-foreground font-display"
                     >
-                      ${annualLow.toLocaleString()} – ${annualHigh.toLocaleString()}
+                      {i18n.resolvedLanguage === 'fr' ? `${annualLow.toLocaleString()} € – ${annualHigh.toLocaleString()} €` : `$${annualLow.toLocaleString()} – $${annualHigh.toLocaleString()}`}
                     </motion.span>
                   </AnimatePresence>
                 </div>
@@ -237,7 +239,7 @@ const ValueSection = () => {
               {/* 6-month bar chart */}
               <div>
                 <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">
-                  6-Month Savings Projection
+                  {t("value.calculator.projection")}
                 </p>
                 <div className="flex items-end gap-3 sm:gap-4" style={{ height: "200px" }}>
                   {chartData.map((d, i) => {
@@ -255,7 +257,9 @@ const ValueSection = () => {
                           animate={{ opacity: 1 }}
                           className="text-[9px] sm:text-[10px] font-semibold text-muted-foreground font-display"
                         >
-                          ${d.total > 999 ? `${(d.total / 1000).toFixed(1)}k` : d.total}
+                          {i18n.resolvedLanguage === 'fr'
+                            ? `${d.total > 999 ? `${(d.total / 1000).toFixed(1)}k` : d.total} €`
+                            : `$${d.total > 999 ? `${(d.total / 1000).toFixed(1)}k` : d.total}`}
                         </motion.span>
 
                         <motion.div
@@ -280,7 +284,7 @@ const ValueSection = () => {
               {/* Legend / breakdown */}
               <div className="space-y-2.5">
                 <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Monthly Breakdown
+                  {t("value.calculator.breakdown")}
                 </p>
                 {breakdown.map((cat) => (
                   <div key={cat.key} className="flex items-center justify-between">
@@ -295,7 +299,9 @@ const ValueSection = () => {
                         animate={{ opacity: 1 }}
                         className={`text-xs font-semibold ${cat.textColor}`}
                       >
-                        ${cat.low.toLocaleString()} – ${cat.high.toLocaleString()}
+                        {i18n.resolvedLanguage === 'fr'
+                          ? `${cat.low.toLocaleString()} € – ${cat.high.toLocaleString()} €`
+                          : `$${cat.low.toLocaleString()} – $${cat.high.toLocaleString()}`}
                       </motion.span>
                     </AnimatePresence>
                   </div>
@@ -306,7 +312,7 @@ const ValueSection = () => {
               <div className="rounded-lg bg-[hsl(var(--success)/.08)] px-3 sm:px-4 py-2.5 sm:py-3 flex items-start gap-2.5">
                 <Percentage className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[hsl(var(--success))] mt-0.5 shrink-0" />
                 <p className="text-[11px] sm:text-xs text-[hsl(var(--success))] leading-relaxed">
-                  Most kitchens see ROI within the first 2 weeks of using PrepIQ.
+                  {t("value.calculator.roiNote")}
                 </p>
               </div>
             </div>

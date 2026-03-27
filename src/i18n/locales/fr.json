@@ -83,5 +83,540 @@
     "sending": "Envoi en cours...",
     "send": "Envoyer le message",
     "noSpam": "Pas de spam. Pas de pression commerciale. Juste une conversation sur votre cuisine."
+  },
+  "problem": {
+    "badge": "Le Problème",
+    "title": "La plupart des cuisines préparent encore à l'instinct.",
+    "subtitle": "Le résultat ? Des pertes prévisibles qui se multiplient chaque jour.",
+    "cta": "PrepIQ remplace les devinettes par une <gold>intelligence quotidienne</gold>.",
+    "items": {
+      "overprep": {
+        "title": "Sur-préparation",
+        "result": "Gaspillage",
+        "desc": "Jeter de la nourriture et de l'argent chaque jour. Les marges s'effritent silencieusement.",
+        "impact": "2 200 €",
+        "impactLabel": "gaspillage mensuel moyen"
+      },
+      "underprep": {
+        "title": "Sous-préparation",
+        "result": "Ruptures de stock",
+        "desc": "Perdre des revenus quand vos meilleurs produits manquent au pic. Les clients ne reviennent pas.",
+        "impact": "14 %",
+        "impactLabel": "revenus perdus par ruptures"
+      },
+      "spreadsheets": {
+        "title": "Tableurs Manuels",
+        "result": "Pas d'Apprentissage",
+        "desc": "Le même jeu de devinettes, répété chaque matin. Hier n'apprend rien.",
+        "impact": "0 %",
+        "impactLabel": "amélioration au fil du temps"
+      }
+    }
+  },
+  "intelligence": {
+    "badge": "Couche d'Intelligence",
+    "title": "Ce que PrepIQ Écoute",
+    "subtitle": "PrepIQ prend en compte des signaux que votre équipe ne pourrait jamais suivre manuellement — et les transforme en une prévision fiable chaque matin.",
+    "footer": "Le poids des signaux est dynamique — il évolue à mesure que PrepIQ apprend les modèles uniques de votre cuisine.",
+    "signals": {
+      "sales": {
+        "label": "30 derniers jours de ventes",
+        "desc": "Chaque transaction apprend au moteur de prévision ce que votre cuisine vend réellement."
+      },
+      "patterns": {
+        "label": "Modèles de demande par jour",
+        "desc": "Le déjeuner du mardi ≠ le dîner du samedi. PrepIQ connaît la différence."
+      },
+      "weather": {
+        "label": "Variations météo",
+        "desc": "Pluie à 14h ? La demande de soupe augmente historiquement de 18 % par temps humide."
+      },
+      "events": {
+        "label": "Événements locaux et jours fériés",
+        "desc": "Un match de foot à proximité ce soir signifie une hausse de la demande de poulet."
+      },
+      "stockouts": {
+        "label": "Ruptures de stock récentes",
+        "desc": "Rupture de saumon hier ? PrepIQ ajuste auto. pour que ça ne se répète pas."
+      },
+      "chef": {
+        "label": "Ajustements du chef",
+        "desc": "Chaque correction d'un chef entraîne le modèle à être plus performant la fois suivante."
+      }
+    }
+  },
+  "logoTicker": {
+    "title": "Fonctionne avec vos outils actuels"
+  },
+  "kitchenTest": {
+    "badge": "Le test de cuisine en 5 secondes",
+    "title": "Une cuisine. Une journée. <gold>Deux résultats.</gold>",
+    "subtitle": "Basculez pour voir ce qui change quand votre cuisine dispose d'intelligence.",
+    "toggleWithout": "Sans PrepIQ",
+    "toggleWith": "Avec PrepIQ",
+    "traditionalDay": "Journée Traditionnelle",
+    "intelligentDay": "Journée Intelligente",
+    "timeRange": "6h00 → 22h00",
+    "riceExample": "Exemple de préparation : Riz",
+    "prepped": "Préparé",
+    "sold": "Vendu",
+    "waste": "Perte",
+    "endOfDay": "Fin de journée",
+    "netImpact": "Impact Net",
+    "dailyMarginRecovered": "marge quotidienne récupérée",
+    "dailyMarginLost": "marge quotidienne perdue",
+    "monthlySaved": "Soit environ {{amount}} /mois économisés",
+    "monthlyLosses": "Soit environ {{amount}} /mois de pertes",
+    "timeline": {
+      "without": [
+        { "label": "Le chef devine les quantités à l'instinct", "detail": "Pas de données, pas de prévision" },
+        { "label": "Le saumon part vite — personne ne remarque", "detail": "Pas d'alertes ni de suivi" },
+        { "label": "Rupture de soupe — les clients partent", "detail": "Revenu perdu : ~{{amount}}" },
+        { "label": "5 kg de produits jetés à la poubelle", "detail": "Coût de la perte : {{amount}}" }
+      ],
+      "with": [
+        { "label": "Prévision IA générée à partir de 8 signaux", "detail": "Confiance : 96 %" },
+        { "label": "Alerte : le saumon tend au-dessus de la prévision", "detail": "Notification auto. envoyée" },
+        { "label": "Mise en place ajustée tôt — aucune rupture", "detail": "Tous les plats disponibles" },
+        { "label": "Seulement 0,8 kg de perte — prévision exacte à 96 %", "detail": "Modèle mis à jour pour demain" }
+      ]
+    },
+    "stats": {
+      "waste": "Gaspillage",
+      "stockouts": "Ruptures",
+      "lostRevenue": "Revenu perdu",
+      "recovered": "Récupéré"
+    }
+  },
+  "aiThinking": {
+    "badge": "Raisonnement IA Transparent",
+    "title": "Ce que PrepIQ voit <gold>avant l'ouverture de votre cuisine</gold>",
+    "subtitle": "Chaque matin, PrepIQ analyse des signaux que votre équipe ne pourrait jamais suivre manuellement.",
+    "signalsDetected": "Signaux Détectés",
+    "analysis": "Analyse PrepIQ",
+    "suggestedPrep": "Mise en place suggérée",
+    "reanalyzing": "Réanalyse des signaux…",
+    "analyzing": "Analyse de {{count}} signal",
+    "analyzing_plural": "Analyse de {{count}} signaux",
+    "updatingModel": "Mise à jour du modèle de prévision…",
+    "crossReferencing": "Recoupement des modèles…",
+    "recalculating": "Recalcul…",
+    "forecastConfidence": "Confiance de la prévision",
+    "allSignalsActive": "Tous les signaux actifs — confiance maximale",
+    "signalsDisabled": "{{count}} signal désactivé — activez pour plus de confiance",
+    "signalsDisabled_plural": "{{count}} signaux désactivés — activez pour plus de confiance",
+    "vsBaseline": "{{amount}} {{unit}} vs base",
+    "overallConfidence": "Confiance globale de la prévision",
+    "bottomHint": "↑ Essayez de désactiver des signaux pour voir l'impact sur la prévision en temps réel",
+    "items": {
+      "chicken": "Poulet",
+      "soup": "Soupe",
+      "vegetables": "Légumes",
+      "rice": "Riz",
+      "units": {
+        "pieces": "pièces",
+        "litres": "litres",
+        "kg": "kg"
+      }
+    },
+    "signals": {
+      "day": { "label": "Modèle du mardi", "detail": "Historiquement 6 % de passage en moins" },
+      "weather": { "label": "Pluie à 14h", "detail": "+18 % de demande de soupe par temps de pluie" },
+      "trend": { "label": "Tendance poulet", "detail": "+7 % de demande sur les 7 derniers jours" },
+      "event": { "label": "Match local ce soir", "detail": "Pic de fréquentation prévu de +22 %" },
+      "stockout": { "label": "Rupture de légumes hier", "detail": "Sous-préparation signalée, 14 commandes manquées" },
+      "chef": { "label": "Historique des corrections chef", "detail": "Le chef a augmenté les légumes 80 % des mardis" },
+      "network": { "label": "Intelligence du réseau", "detail": "La branche de Londres a perdu 6kg de poulet les mardis pluvieux" }
+    },
+    "reasons": {
+      "lowerTraffic": "Baisse de fréquentation en semaine",
+      "reducedMidday": "Moins de commandes à midi",
+      "rainyComfort": "Pic de 'comfort food' par temps de pluie",
+      "fewerWalkins": "Moins de clients de passage sous la pluie",
+      "sustainedGrowth": "Croissance soutenue de la demande hebdomadaire",
+      "gameDaySurge": "Pic de commandes jour de match",
+      "comboSpike": "Hausse des menus combos",
+      "shortfallComp": "Compensation du manque à gagner d'hier",
+      "chefRecurring": "Ajustement récurrent du chef le mardi",
+      "londonWaste": "Modèle de perte de Londres appliqué",
+      "dubaiSoup": "Dubaï a vu +30 % de soupe par temps similaire",
+      "sydneyRice": "Insight de sur-préparation de riz de Sydney"
+    },
+    "insights": {
+      "weather": "Volatilité de la demande prévue — préférence pour les plats chauds détectée.",
+      "trend": "Demande de poulet en hausse constante.",
+      "stockout": "La rupture de légumes d'hier signale un risque de sous-préparation chronique.",
+      "event": "Événement local détecté — modèle de pic de soirée appliqué.",
+      "day": "Base du mardi historiquement plus basse que le week-end.",
+      "chef": "Les corrections du chef suggèrent un ajustement récurrent le mardi.",
+      "network": "Intelligence réseau : 3 sites ont signalé des modèles similaires — ajustements auto-appliqués.",
+      "insufficient": "Signaux insuffisants pour une prévision de haute confiance."
+    }
+  },
+  "whyNow": {
+    "badge": "La Réalité",
+    "title": "L'instinct ne suffit plus",
+    "subtitle": "Les cuisines sont plus volatiles que jamais. Les variables que votre équipe gère chaque matin s'accumulent — et les tableurs n'apprennent pas d'hier.",
+    "cta": "PrepIQ transforme ces variables en <gold>signaux quotidiens</gold>",
+    "items": {
+      "foodCosts": { "title": "Hausse des coûts alimentaires", "desc": "Chaque kilo gaspillé coûte plus cher que l'année dernière.", "label": "hausse moyenne" },
+      "weather": { "title": "La météo change le trafic", "desc": "Un mardi pluvieux ne ressemble en rien à un mardi ensoleillé.", "label": "variation demande" },
+      "events": { "title": "Pics liés aux événements", "desc": "Les fêtes et événements locaux boostent la demande de façon imprévisible.", "label": "multiplicateur pic" },
+      "delivery": { "title": "Pics de livraison", "desc": "Les commandes en ligne ajoutent une volatilité invisible à l'œil nu.", "label": "croissance annuelle" }
+    }
+  },
+  "whyPrepIQ": {
+    "badge": "Notre Mission",
+    "title": "Pourquoi nous avons créé PrepIQ",
+    "footer": "PrepIQ existe car les cuisines méritent la même intelligence que les meilleures chaînes logistiques mondiales.",
+    "points": [
+      { "highlight": "Les restaurants perdent des milliers d'euros chaque mois", "body": "en raison du gaspillage et des ruptures — des problèmes souvent invisibles." },
+      { "highlight": "La plupart des cuisines se fient encore à l'intuition", "body": "ou à des tableurs qui ne tirent jamais de leçons des erreurs passées." },
+      { "highlight": "PrepIQ apporte une intelligence prévisionnelle", "body": "utilisée par l'aéronautique et le retail — adaptée aux opérations de cuisine." }
+    ]
+  },
+  "howItWorks": {
+    "badge": "La boucle d'intelligence",
+    "title": "Comment PrepIQ fonctionne <gold>chaque jour</gold>",
+    "subtitle": "Trois phases. Une boucle d'apprentissage. Chaque jour, votre cuisine devient plus intelligente, gaspille moins et gagne plus.",
+    "walkthrough": "Présentation en 60 secondes",
+    "phases": {
+      "plan": { "label": "Planifier", "time": "Matin", "desc": "L'IA prévoit votre mise en place", "title": "Prévision de mise en place par l'IA", "body": "Avant l'ouverture, PrepIQ analyse les données de votre POS pour prédire les quantités exactes à préparer. Fini les devinettes : des chiffres concrets avec des scores de confiance." },
+      "live": { "label": "Surveiller", "time": "Service", "desc": "Suivi des ventes en temps réel", "title": "Suivi en temps réel", "body": "Dès le début du service, PrepIQ suit les ventes via votre POS. Visualisez ce qui part vite, ce qui traîne et où les risques s'accumulent — en direct." },
+      "review": { "label": "Apprendre", "time": "Fermeture", "desc": "Analyser et s'améliorer", "title": "Analyser et S'améliorer", "body": "Après le service, PrepIQ génère un rapport complet : pertes, ruptures, précision de la prévision et coût des corrections chef. Chaque donnée affine les prédictions de demain." }
+    },
+    "signalsTitle": "Signaux analysés",
+    "signals": {
+      "sales": "Ventes historiques",
+      "patterns": "Modèles par jour",
+      "hours": "Heures d'ouverture",
+      "events": "Événements et fêtes",
+      "weather": "Signaux météo",
+      "chef": "Ajustements chef",
+      "stockouts": "Historique ruptures",
+      "trends": "Détection tendances"
+    },
+    "chefOverride": {
+      "title": "Correction du Chef",
+      "body": "Votre équipe peut toujours ajuster les quantités. PrepIQ montre alors instantanément le risque : coût potentiel du gaspillage, probabilité de rupture et impact profit. L'IA apprend de chaque correction."
+    },
+    "previews": {
+      "morningForecast": "Prévision du matin",
+      "liveService": "Service en direct",
+      "endOfDayReport": "Rapport de fin de journée",
+      "simulateOverride": "↑ Simuler une correction chef",
+      "resetSimulation": "← Réinitialiser",
+      "onTrack": "Sur la bonne voie",
+      "lowStock": "Stock faible",
+      "alert": "⚠ Alerte",
+      "enoughUntilClose": "Suffisant jusqu'à la fermeture",
+      "mayRunOut": "Risque de rupture vers {{time}}",
+      "stockLeft": "~{{minutes}} min de stock restant",
+      "stockoutRisk": "{{item}} — Risque de rupture",
+      "stockoutRiskBody": "Au rythme actuel, vous serez en rupture dans ~{{minutes}} min. Informez la salle ou ajustez la carte.",
+      "itemPerformance": "Performance par produit",
+      "modelUpdated": "Modèle IA mis à jour",
+      "modelUpdatedBody": "Les données du jour ont été absorbées. La prévision de demain tiendra compte des résultats et corrections d'aujourd'hui.",
+      "impact": {
+        "wasteRisk": "Risque de perte",
+        "stockoutRisk": "Risque de rupture",
+        "riskAssessment": "Évaluation du risque",
+        "override": "Correction",
+        "profit": "Profit si correct",
+        "accuracy": "Précision correction",
+        "note": "La demande du {{day}} baisse typiquement de {{pct}} % vs {{prevDay}}. Les corrections historiques pour ce plat sont exactes à {{acc}} %. <primary> L'IA apprendra de cette décision.</primary>"
+      },
+      "stats": {
+        "wasteSaved": "Pertes évitées",
+        "forecastAccuracy": "Précision prévision",
+        "stockoutEvents": "Ruptures évitées",
+        "revenueProtected": "Revenu protégé",
+        "vsLastWeek": "vs semaine dernière",
+        "fromYesterday": "↑{{pct}} % vs hier",
+        "target": "Cible : <{{count}}",
+        "noMissedSales": "Aucune vente manquée",
+        "todayForecast": "Prévision du jour",
+        "itemsPredicted": "Mardi 8 mars — 3 produits prévus",
+        "modelUpdated": "Modèle mis à jour il y a 2h",
+        "liveTracking": "Suivi en direct",
+        "updatedRecently": "Mis à jour il y a 30s",
+        "endOfDaySummary": "Bilan de fin de journée",
+        "prepAccuracy": "La mise en place était exacte à 93 %",
+        "savingsSummary": "Vous avez économisé 42 € de pertes et évité toute rupture.",
+        "soupRisk": "Risque de rupture Soupe Tomate vers 19h30 — prévoyez +3 L",
+        "marchDate": "Mardi 8 mars",
+        "salmonTrend": "↑ 12 % vs mar. dernier",
+        "saladTrend": "Stable",
+        "soupTrend": "↓ 5 % — pluie prévue"
+      }
+    },
+    "liveFeatures": [
+      { "title": "Suivi des stocks en direct", "desc": "Suivez l'écoulement des stocks en temps réel au fil des commandes." },
+      { "title": "Prédiction de rupture", "desc": "L'IA prédit l'heure de rupture selon le rythme de vente actuel." },
+      { "title": "Alertes intelligentes", "desc": "Soyez prévenu avant la rupture, pas après." },
+      { "title": "Analyse du rythme", "desc": "Comparez le rythme réel à la prévision pour détecter les écarts." }
+    ],
+    "reviewFeatures": [
+      { "title": "Analyse des pertes", "desc": "Identifiez précisément les sur-préparations et leur impact financier." },
+      { "title": "Prévu vs Réel", "desc": "Détail de la précision par produit avec tendance historique." },
+      { "title": "Score des corrections", "desc": "Suivez la performance des ajustements chef par rapport à l'IA." },
+      { "title": "Auto-apprentissage", "desc": "Les données sont réinjectées pour améliorer la prévision dès demain." }
+    ]
+  },
+  "marginGuard": {
+    "badge": "Margin Guard",
+    "title": "L'IA qui protège vos profits",
+    "subtitle": "PrepIQ ne se contente pas de prévoir — il surveille chaque décision et intercepte les fuites de marge avant qu'elles ne coûtent cher.",
+    "steps": ["Prédire", "Détecter", "Corriger"],
+    "atRisk": "{{amount}} à risque",
+    "suggested": "Suggéré : {{action}}",
+    "monthlyProtection": "Protection mensuelle de marge",
+    "totalProtection": "Protection totale mensuelle",
+    "roiNote": "PrepIQ s'amortit en moins de 48 heures.",
+    "alerts": {
+      "waste": { "type": "Risque Perte", "detail": "Demande 12 % sous la prévision. La prochaine fournée risque de produire 4kg d'excédent.", "action": "Retarder la fournée de 45 min." },
+      "stockout": { "type": "Risque Rupture", "detail": "Demande 18 % au-dessus. Rupture prévue à 19h20.", "action": "Préparer +12 pièces maintenant." },
+      "leak": { "type": "Fuite de Marge", "detail": "Pertes constatées 4 jours d'affilée. Modèle détecté.", "action": "Réduire la base de 1,5kg." }
+    },
+    "leakTypes": {
+      "overprep": "Gaspillage sur-prep",
+      "stockout": "Récupération ruptures",
+      "batch": "Timing fournée",
+      "drift": "Dérive demande"
+    }
+  },
+  "value": {
+    "title": "L'impact d'une meilleure mise en place",
+    "subtitle": "Des économies réelles dès le premier jour. Pas des projections, mais des résultats constatés en cuisine.",
+    "metrics": {
+      "waste": { "label": "Réduction pertes", "desc": "Moins de nourriture jetée. Chaque jour." },
+      "revenue": { "label": "Revenu récupéré", "desc": "Issu des ruptures que vous ignoriez." },
+      "saved": { "label": "Gain de temps", "desc": "Fini les tableurs. Fini les devinettes." }
+    },
+    "calculator": {
+      "title": "Calculateur d'économies",
+      "subtitle": "Déplacez le curseur pour voir vos économies projetées",
+      "inputLabel": "Dépense mensuelle en pertes de mise en place",
+      "monthlyRecovery": "Récupération mensuelle",
+      "annualImpact": "Impact annuel",
+      "projection": "Projection d'économies sur 6 mois",
+      "breakdown": "Détail mensuel",
+      "roiNote": "La plupart des cuisines voient un ROI en moins de 2 semaines.",
+      "categories": {
+        "waste": "Pertes évitées",
+        "stockout": "Ruptures récupérées",
+        "labor": "Efficacité main-d'œuvre"
+      }
+    }
+  },
+  "whoItsFor": {
+    "badge": "Conçu pour le métier",
+    "title": "À qui s'adresse PrepIQ ?",
+    "subtitle": "Pour les équipes qui prennent les opérations au sérieux — de la cuisine unique aux réseaux mondiaux.",
+    "personas": {
+      "multiBranch": { "title": "Groupes de Restaurants", "desc": "Centralisez l'intelligence de mise en place. Un tableau de bord, toutes les cuisines alignées.", "stat": "Gère 6+ établissements" },
+      "brands": { "title": "Marques en Croissance", "desc": "Augmentez la production sans augmenter les pertes. Laissez les données piloter votre débit.", "stat": "Croissance 2x plus rapide" },
+      "chefs": { "title": "Chefs Axés Données", "desc": "Prenez des décisions basées sur des données réelles, pas sur la mémoire. Gardez le contrôle.", "stat": "92 % de précision moy." },
+      "ops": { "title": "Responsables Opés", "desc": "Suivez l'impact coût et la précision quotidiennement. Localisez les fuites de marge.", "stat": "Visibilité temps réel" }
+    }
+  },
+  "interactiveDemo": {
+    "badge": "Simulation en direct",
+    "title": "Vivez une journée avec PrepIQ",
+    "subtitle": "De la prévision matinale aux résultats du soir — interagissez avec chaque étape.",
+    "steps": {
+      "forecast": { "label": "Prévision Prête", "desc": "PrepIQ analyse 8 signaux et génère votre liste de mise en place." },
+      "adjust": { "label": "Le Chef valide", "desc": "Votre équipe vérifie, ajuste et valide le plan de préparation." },
+      "live": { "label": "Service en Direct", "desc": "Le suivi temps réel vous alerte avant les ruptures." },
+      "result": { "label": "Fin de Service", "desc": "Découvrez vos économies — le modèle apprend pour demain." }
+    },
+    "forecast": {
+      "prepList": "Liste de prép — {{count}} produits",
+      "confidence": "Confiance du modèle : haute",
+      "prediction": "Prédiction IA"
+    },
+    "adjust": {
+      "instruction": "Ajustez les quantités — voyez l'impact en temps réel",
+      "aiLabel": "IA : {{amount}} {{unit}}",
+      "impact": "Impact de vos ajustements",
+      "wasteRisk": "Évolution risque perte",
+      "projectedAccuracy": "Précision projetée"
+    },
+    "live": {
+      "active": "Service Actif",
+      "timeInto": "{{count}} h de service",
+      "soldOut": "Épuisé",
+      "runningLow": "Stock faible",
+      "onTrack": "En cours"
+    },
+    "result": {
+      "title": "Performance du jour",
+      "stats": {
+        "wasteSaved": "Pertes évitées",
+        "accuracy": "Précision",
+        "stockouts": "Ruptures",
+        "marginImpact": "Impact Marge"
+      },
+      "prepped": "Préparé : {{amount}}",
+      "sold": "Vendu : {{amount}}",
+      "wasteLabel": "{{amount}} {{unit}} de perte",
+      "perfect": "Parfait",
+      "overridesImpact": "Vos ajustements ont changé le résultat",
+      "aiPerfect": "La prévision IA seule était quasi parfaite",
+      "learningNote": "Le modèle de demain tiendra compte des résultats du jour. La précision augmente chaque jour."
+    },
+    "nav": {
+      "previous": "← Précédent",
+      "next": "Suivant",
+      "restart": "Recommencer ↻"
+    },
+    "cta": "C'est une seule journée. Imaginez cela sur tout votre réseau, chaque jour."
+  },
+  "multiBranch": {
+    "badge": "Déploiement Mondial",
+    "title": "Intelligence Multi-Sites",
+    "subtitle": "Un seul tableau de bord. Toutes vos cuisines. Visibilité temps réel sur la précision, les pertes et l'impact marge du réseau.",
+    "liveBadge": "{{count}} sites en ligne",
+    "sidebarTitle": "Établissements du Réseau",
+    "savedMo": "{{amount}} /mois",
+    "margin": "{{amount}} de marge",
+    "popup": {
+      "accuracy": "Précision prévision",
+      "monthlySaved": "Économies mensuelles",
+      "marginImpact": "Impact marge",
+      "itemsTracked": "Produits suivis"
+    },
+    "stats": {
+      "margin": "Hausse marge moy.",
+      "waste": "Pertes réseau évitées",
+      "accuracy": "Précision prévision",
+      "allBranches": "sur tout le réseau",
+      "networkWide": "global réseau",
+      "weightedAvg": "moyenne pondérée"
+    }
+  },
+  "kitchenNetwork": {
+    "badge": "Réseau d'Intelligence",
+    "titleLine1": "Chaque cuisine <gold>apprend.</gold>",
+    "titleLine2": "Chaque cuisine <gold>enseigne.</gold>",
+    "subtitle": "Quand une branche fait une erreur, toutes les autres sont protégées. L'IA apprend de chaque site et évite auto. la répétition des problèmes sur tout le réseau.",
+    "steps": {
+      "one": { "title": "Étape 1 · Problème détecté", "desc": "Un site rencontre un souci", "body": "Perte, rupture ou dérive de demande détectée sur un site" },
+      "two": { "title": "Étape 2 · Auto-protection", "desc": "L'IA apprend le modèle", "body": "L'apprentissage automatique identifie la cause et crée un modèle préventif" },
+      "three": { "desc": "Sites protégés", "body": "La correction est appliquée partout — avant que le problème ne se reproduise" }
+    },
+    "aiLearning": "Apprentissage IA",
+    "networkImpact": "Impact Réseau",
+    "transfer": "Transfert IA",
+    "flywheelTitle": "Une intelligence qui s'auto-alimente",
+    "flywheelFooter": "Plus vous ajoutez de sites, plus l'apprentissage est rapide. Un véritable système à effet de réseau.",
+    "scenarios": {
+      "waste": { "tag": "Prévention des pertes", "problem": "Trop d'avocats préparés le lundi — 8kg de perte hebdo", "aiLearning": "L'IA détecte : la demande d'avocats le lundi est 35 % sous prévision", "prevention": "Mise en place avocats réduite auto. le lundi", "saved": "2 100 €/mois sauvés sur le réseau" },
+      "stockout": { "tag": "Prévention des ruptures", "problem": "Rupture de poulet le vendredi soir — 1 200 € de CA perdu", "aiLearning": "L'IA détecte : la demande de poulet bondit de 40 % le vendredi après 18h", "prevention": "Mise en place poulet augmentée proactivement", "saved": "4 800 €/mois de CA protégé" },
+      "seasonal": { "tag": "Seasonal Intelligence", "problem": "Soup sales dropped 60% as temperatures rose — excess inventory spoiled", "aiLearning": "AI detects pattern: Soup demand inversely correlates with temperature above 28°C", "prevention": "Soup prep auto-scales with weather forecast", "saved": "$1,600/mo saved across network" }
+    }
+  },
+  "globalReady": {
+    "badge": "Prêt pour l'international",
+    "title": "Conçu pour les cuisines mondiales",
+    "subtitle": "PrepIQ s'adapte à votre région, votre devise et au rythme de votre cuisine.",
+    "features": {
+      "currency": { "label": "Multi-devises", "desc": "Supporte USD, EUR, GBP, AED, NGN et plus. Vos coûts restent locaux." },
+      "timezone": { "label": "Gestion des fuseaux", "desc": "Les prévisions s'alignent sur vos heures d'ouverture, où que vous soyez." },
+      "localized": { "label": "Prévisions localisées", "desc": "Jours fériés, événements locaux et habitudes culturelles intégrés." },
+      "support": { "label": "Support multi-sites", "desc": "Consolidez ou détaillez. Comparez les performances de tout votre réseau." }
+    },
+    "regions": {
+      "na": "Amérique du Nord",
+      "eu": "Europe",
+      "me": "Moyen-Orient",
+      "af": "Afrique",
+      "ap": "Asie-Pacifique",
+      "la": "Amérique Latine"
+    }
+  },
+  "testimonials": {
+    "badge": "Témoignages",
+    "title": "Vu des Cuisines",
+    "subtitle": "Des équipes réelles. Des résultats concrets. Voici ce qu'en disent les restaurateurs.",
+    "stats": {
+      "powered": "Cuisines équipées",
+      "processed": "Repas analysés / semaine",
+      "onboarding": "Déploiement moyen",
+      "accuracy": "Précision prévision"
+    }
+  },
+  "pricing": {
+    "badge": "Tarification",
+    "title": "Une cuisine ou <gold>cinquante</gold>",
+    "subtitle": "Un tarif par site qui suit votre croissance. Commencez par un essai, évoluez avec votre réseau.",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "save": "Économisez ~15 %",
+    "perMonth": "/mois",
+    "perYear": "/an",
+    "billedAnnually": "facturé annuellement",
+    "billedMonthly": "facturé mensuellement",
+    "branches": "Sites",
+    "staff": "Équipe",
+    "mostPopular": "Le plus populaire",
+    "addOns": {
+      "title": "Modules optionnels",
+      "subtitle": "Étendez PrepIQ avec des modules spécialisés. Chaque ajout est facturé par site et peut être modifié à tout moment."
+    },
+    "footer": "Tous les forfaits incluent le chiffrement, les pratiques SOC 2 et un accompagnement dédié. Pour 10+ sites, contactez-nous pour un <primary>tarif sur mesure</primary>.",
+    "plans": {
+      "core": { "name": "Core", "tagline": "Visibilité Opérationnelle Quotidienne", "cta": "Essai gratuit de 30 jours" },
+      "intelligence": { "name": "Intelligence", "tagline": "Protection des Marges par l'IA", "cta": "Commencer" },
+      "command": { "name": "Command", "tagline": "Centre de Pilotage Multi-Sites", "cta": "Parler à un expert" }
+    }
+  },
+  "faq": {
+    "badge": "Questions & Réponses",
+    "title": "Tout ce que vous devez savoir",
+    "subtitle": "De la configuration au quotidien — les réponses aux questions les plus fréquentes.",
+    "footer": "Encore des questions ? <contact>Parler à l'équipe →</contact>"
+  },
+  "finalCTA": {
+    "badge": "Approuvé par des cuisines réduisant leurs pertes quotidiennement",
+    "title": "Activez l'<gold>intelligence</gold> de votre cuisine dès aujourd'hui.",
+    "subtitle": "Arrêtez de deviner. Commencez chaque matin avec un plan de préparation clair, basé sur les données.",
+    "ctaStart": "Essayer gratuitement",
+    "ctaDemo": "Réserver une démo de 10 min"
+  },
+  "calendlyModal": {
+    "title": "Réserver une démo",
+    "description": "Choisissez un créneau — nous vous montrerons comment PrepIQ transforme vos opérations."
+  },
+  "common": {
+    "backToHome": "Retour à l'accueil",
+    "lastUpdated": "Dernière mise à jour : {{date}}",
+    "pieces": "pièces",
+    "litres": "litres",
+    "kg": "kg",
+    "currency": "{{val}} €",
+    "items": {
+      "salmon": "Saumon grillé",
+      "salad": "Salade César",
+      "soup": "Soupe Tomate",
+      "pasta": "Pâtes Carbonara"
+    },
+    "countries": {
+      "usa": "États-Unis",
+      "uk": "Royaume-Uni",
+      "uae": "Émirats Arabes Unis",
+      "australia": "Australie",
+      "nigeria": "Nigeria"
+    }
+  },
+  "privacy": {
+    "title": "Politique de confidentialité"
+  },
+  "terms": {
+    "title": "Conditions d'utilisation"
+  },
+  "security": {
+    "title": "La Sécurité chez PrepIQ",
+    "subtitle": "Les données de votre cuisine sont le cœur de vos opérations. Nous les traitons avec le même soin que vous mettez dans vos plats — protection multicouche, audits réguliers et aucune revente."
   }
 }

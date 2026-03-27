@@ -3,25 +3,34 @@ import { useTranslation } from "react-i18next";
 const Footer = () => {
   const { t } = useTranslation();
 
-  const footerLinks = {
-    [t("footer.headings.product")]: [
-      { label: t("navbar.howItWorks"), href: "#how-it-works" },
-      { label: t("navbar.intelligence"), href: "#intelligence" },
-      { label: t("navbar.pricing"), href: "#value" },
-      { label: t("navbar.integrations"), href: "#integrations" },
-    ],
-    [t("footer.headings.company")]: [
-      { label: t("footer.links.about"), href: "#" },
-      { label: t("footer.links.blog"), href: "#" },
-      { label: t("footer.links.careers"), href: "#" },
-      { label: t("footer.links.contact"), href: "#" },
-    ],
-    [t("footer.headings.legal")]: [
-      { label: t("footer.links.privacy"), href: "/privacy-policy" },
-      { label: t("footer.links.terms"), href: "/terms-of-service" },
-      { label: t("footer.links.security"), href: "/security" },
-    ],
-  };
+  const footerLinks = [
+    {
+      heading: t("footer.headings.product"),
+      links: [
+        { label: t("navbar.howItWorks"), href: "#how-it-works" },
+        { label: t("navbar.intelligence"), href: "#intelligence" },
+        { label: t("navbar.pricing"), href: "#value" },
+        { label: t("navbar.integrations"), href: "#integrations" },
+      ]
+    },
+    {
+      heading: t("footer.headings.company"),
+      links: [
+        { label: t("footer.links.about"), href: "#" },
+        { label: t("footer.links.blog"), href: "#" },
+        { label: t("footer.links.careers"), href: "#" },
+        { label: t("footer.links.contact"), href: "#contact" },
+      ]
+    },
+    {
+      heading: t("footer.headings.legal"),
+      links: [
+        { label: t("footer.links.privacy"), href: "/privacy-policy" },
+        { label: t("footer.links.terms"), href: "/terms-of-service" },
+        { label: t("footer.links.security"), href: "/security" },
+      ]
+    }
+  ];
 
   return (
     <footer className="border-t border-border/50 relative overflow-hidden">
@@ -52,13 +61,13 @@ const Footer = () => {
           </div>
 
           {/* Link columns */}
-          {Object.entries(footerLinks).map(([heading, links]) => (
-            <div key={heading}>
+          {footerLinks.map((column) => (
+            <div key={column.heading}>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-                {heading}
+                {column.heading}
               </h4>
               <ul className="space-y-3">
-                {links.map((link) => (
+                {column.links.map((link) => (
                   <li key={link.label}>
                     <a
                       href={link.href}

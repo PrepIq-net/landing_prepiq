@@ -5,6 +5,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 interface CalendlyModalProps {
   open: boolean;
@@ -14,15 +15,17 @@ interface CalendlyModalProps {
 const CALENDLY_URL = "https://calendly.com/your-link-here"; // Replace with your real Calendly URL
 
 const CalendlyModal = ({ open, onOpenChange }: CalendlyModalProps) => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] h-[85vh] max-h-[750px] p-0 overflow-hidden rounded-2xl border-border/60 bg-card">
         <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle className="text-xl font-semibold text-foreground">
-            Book a Demo
+            {t("calendlyModal.title")}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            Pick a time that works for you — we'll show you how PrepIQ can transform your kitchen ops.
+            {t("calendlyModal.description")}
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 px-6 pb-6 h-full">
