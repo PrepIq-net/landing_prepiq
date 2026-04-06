@@ -1,14 +1,57 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { AnimatedGroup } from "@/components/ui/animated-group";
+import { ArrowRight, Sparkles } from "lucide-react";
 import HeroIntelligencePreview from "./HeroIntelligencePreview";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import CalendlyModal from "./CalendlyModal";
 import { useTranslation } from "react-i18next";
+
+const transitionVariants = {
+  item: {
+    hidden: { opacity: 0, filter: "blur(16px)", y: 20, scale: 0.97 },
+    visible: {
+      opacity: 1,
+      filter: "blur(0px)",
+      y: 0,
+      scale: 1,
+      transition: { type: "spring" as const, bounce: 0.25, duration: 1.6 },
+    },
+  },
+};
+
+// Sparkle positions scattered around the hero
+const SPARKLES = [
+  { top: "12%", left: "8%", delay: "0s", size: 14 },
+  { top: "22%", left: "92%", delay: "0.8s", size: 10 },
+  { top: "38%", left: "4%", delay: "1.4s", size: 8 },
+  { top: "8%", left: "72%", delay: "0.3s", size: 12 },
+  { top: "55%", left: "96%", delay: "1.9s", size: 9 },
+  { top: "18%", left: "18%", delay: "2.2s", size: 7 },
+  { top: "30%", left: "85%", delay: "0.6s", size: 11 },
+];
 
 const HeroSection = () => {
   const { t } = useTranslation();
   const [demoOpen, setDemoOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Subtle tilt on card hover
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), { stiffness: 200, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-4, 4]), { stiffness: 200, damping: 30 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   const stats = [
     { value: "92%", label: t("hero.stats.accuracy") },
@@ -20,218 +63,275 @@ const HeroSection = () => {
     <>
       <section className="relative flex min-h-screen flex-col items-center overflow-hidden pt-24 sm:pt-28 pb-0">
 
-        {/* ── Background layers ── */}
-        {/* Fine grid */}
-        <div className="absolute inset-0 pattern-grid opacity-[0.35] pointer-events-none" />
-        {/* Radial vignette — darkens edges */}
+        {/* ── Animated aurora orbs ── */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Large gold orb — top left */}
+          <div
+            className="animate-orb-drift-1 absolute rounded-full opacity-[0.18]"
+            style={{
+              width: 700,
+              height: 700,
+              top: "-200px",
+              left: "-180px",
+              background: "radial-gradient(circle, hsl(40 70% 50%) 0%, transparent 70%)",
+              filter: "blur(80px)",
+            }}
+          />
+          {/* Smaller amber orb — top right */}
+          <div
+            className="animate-orb-drift-2 absolute rounded-full opacity-[0.12]"
+            style={{
+              width: 500,
+              height: 500,
+              top: "-100px",
+              right: "-120px",
+              background: "radial-gradient(circle, hsl(35 80% 55%) 0%, transparent 70%)",
+              filter: "blur(70px)",
+              animationDelay: "4s",
+            }}
+          />
+          {/* Accent orb — mid left */}
+          <div
+            className="animate-orb-drift-3 absolute rounded-full opacity-[0.07]"
+            style={{
+              width: 400,
+              height: 400,
+              top: "40%",
+              left: "-100px",
+              background: "radial-gradient(circle, hsl(45 90% 60%) 0%, transparent 70%)",
+              filter: "blur(60px)",
+              animationDelay: "8s",
+            }}
+          />
+        </div>
+
+        {/* ── Grid pattern ── */}
+        <div className="absolute inset-0 pattern-grid opacity-[0.25] pointer-events-none" />
+
+        {/* ── Vignette ── */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, hsl(240 7% 8% / 0.85) 100%)",
+              "radial-gradient(ellipse 90% 70% at 50% 0%, transparent 30%, hsl(240 7% 8% / 0.9) 100%)",
           }}
         />
-        {/* Gold bloom — top center */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: "-120px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "700px",
-            height: "420px",
-            borderRadius: "50%",
-            background: "radial-gradient(ellipse, hsl(40 70% 39% / 0.13) 0%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
+
+        {/* ── Sparkle dots ── */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none hidden lg:block">
+          {SPARKLES.map((s, i) => (
+            <div
+              key={i}
+              className="animate-sparkle-pop absolute"
+              style={{ top: s.top, left: s.left, animationDelay: s.delay, animationDuration: `${2.5 + i * 0.4}s` }}
+            >
+              <svg width={s.size} height={s.size} viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"
+                  fill="hsl(40 70% 55% / 0.7)"
+                />
+              </svg>
+            </div>
+          ))}
+        </div>
 
         {/* ── Content ── */}
         <div className="section-container relative z-10 flex w-full flex-col items-center px-4 text-center sm:px-6">
 
-          {/* Eyebrow badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-6 sm:mb-8"
+          <AnimatedGroup
+            variants={{
+              container: {
+                visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+              },
+              ...transitionVariants,
+            }}
+            className="flex flex-col items-center"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-primary sm:text-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              {t("hero.badge")}
-            </span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.07, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display max-w-[800px] text-[2.25rem] font-semibold leading-[1.07] tracking-[-0.03em] sm:text-[3rem] md:text-[3.75rem] lg:text-[4.25rem]"
-          >
-            <span
-              style={{
-                background:
-                  "linear-gradient(160deg, #F5F5F7 0%, #F5F5F7 55%, rgba(245,245,247,0.45) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              {t("hero.titleLine1")}
-              <br />
-            </span>
-            <span
-              style={{
-                background:
-                  "linear-gradient(90deg, #A8821F 0%, #D4A843 45%, #A8821F 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              {t("hero.titleLine2")}
-            </span>
-          </motion.h1>
-
-          {/* Sub-headline */}
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-5 max-w-[480px] text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]"
-          >
-            {t("hero.subtitle")}
-          </motion.p>
-
-          {/* Proof chips */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.45, delay: 0.24 }}
-            className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-xs text-muted-foreground sm:text-sm"
-          >
-            {[
-              t("hero.proof.lessWaste"),
-              t("hero.proof.noStockouts"),
-              t("hero.proof.betterMargins"),
-            ].map((item) => (
-              <span key={item} className="flex items-center gap-1.5">
-                <span className="text-primary">✓</span>
-                {item}
+            {/* Eyebrow badge */}
+            <div className="mb-6 sm:mb-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/[0.08] px-4 py-1.5 text-[11px] font-medium tracking-wide text-primary sm:text-xs shadow-[0_0_20px_hsl(40_70%_39%/0.15)]">
+                <Sparkles className="h-3 w-3 text-primary" />
+                {t("hero.badge")}
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               </span>
-            ))}
-          </motion.div>
+            </div>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.3 }}
-            className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:w-auto sm:justify-center"
-          >
-            <Button variant="hero" size="xl" className="group w-full sm:w-auto rounded-xl">
-              <span className="flex items-center gap-2">
-                {t("hero.ctaStart")}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            {/* Headline */}
+            <h1 className="font-display max-w-[820px] text-[2.4rem] font-semibold leading-[1.06] tracking-[-0.035em] sm:text-[3.1rem] md:text-[3.9rem] lg:text-[4.5rem]">
+              <span
+                style={{
+                  background: "linear-gradient(160deg, #FFFFFF 0%, #F5F5F7 50%, rgba(245,245,247,0.5) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {t("hero.titleLine1")}
+                <br />
               </span>
-            </Button>
-            <Button
-              variant="hero-outline"
-              size="xl"
-              onClick={() => setDemoOpen(true)}
-              className="w-full sm:w-auto rounded-xl"
-            >
-              {t("hero.ctaDemo")}
-            </Button>
-          </motion.div>
+              {/* Shimmer gold text */}
+              <span
+                className="animate-shimmer-gold"
+                style={{
+                  background: "linear-gradient(90deg, #A8821F 0%, #D4A843 25%, #F0C060 50%, #D4A843 75%, #A8821F 100%)",
+                  backgroundSize: "200% auto",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {t("hero.titleLine2")}
+              </span>
+            </h1>
 
-          {/* Social proof — stat strip */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.45, delay: 0.38 }}
-            className="mt-10 flex items-center gap-8 sm:gap-12"
-          >
-            {stats.map((stat, i) => (
-              <div key={stat.label} className="text-center">
-                <p
-                  className="font-display text-2xl font-semibold sm:text-3xl"
-                  style={{
-                    background:
-                      i === 0
-                        ? "linear-gradient(135deg, #A8821F, #D4A843)"
-                        : "linear-gradient(to bottom, #F5F5F7, rgba(245,245,247,0.6))",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  {stat.value}
-                </p>
-                <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 sm:text-[11px]">
-                  {stat.label}
-                </p>
+            {/* Sub-headline */}
+            <p className="mt-6 max-w-[500px] text-sm leading-relaxed text-muted-foreground/80 sm:text-base md:text-[1.05rem]">
+              {t("hero.subtitle")}
+            </p>
+
+            {/* Proof chips */}
+            <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground sm:text-sm">
+              {[
+                t("hero.proof.lessWaste"),
+                t("hero.proof.noStockouts"),
+                t("hero.proof.betterMargins"),
+              ].map((item) => (
+                <span key={item} className="flex items-center gap-1.5">
+                  <span className="text-primary drop-shadow-[0_0_6px_hsl(40_70%_50%/0.8)]">✓</span>
+                  {item}
+                </span>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:w-auto sm:justify-center">
+              <div className="relative">
+                {/* Glow ring behind primary CTA */}
+                <div className="absolute inset-0 rounded-[14px] bg-primary/20 blur-xl animate-border-glow" />
+                <div className="relative bg-primary/10 rounded-[14px] border border-primary/25 p-0.5">
+                  <Button variant="hero" size="lg" className="group rounded-xl px-7 shadow-[0_0_30px_hsl(40_70%_39%/0.25)]">
+                    <span className="flex items-center gap-2">
+                      {t("hero.ctaStart")}
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Button>
+                </div>
               </div>
-            ))}
-          </motion.div>
+              <Button
+                variant="hero-outline"
+                size="lg"
+                onClick={() => setDemoOpen(true)}
+                className="w-full sm:w-auto rounded-xl"
+              >
+                {t("hero.ctaDemo")}
+              </Button>
+            </div>
+
+            {/* Stat strip */}
+            <div className="mt-10 flex items-center gap-8 sm:gap-14">
+              {stats.map((stat, i) => (
+                <div key={stat.label} className="text-center">
+                  <p
+                    className="font-display text-2xl font-semibold sm:text-3xl"
+                    style={{
+                      background:
+                        i === 0
+                          ? "linear-gradient(135deg, #A8821F, #F0C060, #A8821F)"
+                          : "linear-gradient(to bottom, #F5F5F7, rgba(245,245,247,0.55))",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      filter: i === 0 ? "drop-shadow(0 0 12px hsl(40 70% 50% / 0.4))" : undefined,
+                    }}
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground/45 sm:text-[11px]">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </AnimatedGroup>
 
           {/* ── Product preview ── */}
           <motion.div
-            initial={{ opacity: 0, y: 56 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.0, delay: 0.44, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mt-14 sm:mt-16 w-full max-w-[960px]"
+            initial={{ opacity: 0, y: 72, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            className="relative mt-14 sm:mt-16 w-full max-w-[980px]"
+            style={{ perspective: 1200 }}
           >
-            {/* Glow bloom behind card */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                inset: "-40px -60px",
-                background:
-                  "radial-gradient(ellipse 70% 50% at 50% 0%, hsl(40 70% 39% / 0.14) 0%, transparent 70%)",
-                borderRadius: "50%",
-                filter: "blur(20px)",
-              }}
-            />
-            {/* Top edge shimmer line */}
-            <div
-              className="absolute -top-px left-[15%] right-[15%] h-px pointer-events-none"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, hsl(40 70% 39% / 0.5) 50%, transparent)",
-              }}
-            />
-            {/* Card frame — browser chrome feel */}
-            <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[0_32px_80px_rgba(0,0,0,0.55),0_0_0_1px_hsl(40_70%_39%/0.06)]">
-              {/* Browser chrome bar */}
-              <div className="flex items-center gap-3 border-b border-border/60 bg-accent/40 px-4 py-3 backdrop-blur-sm">
-                <div className="flex gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
-                </div>
-                <div className="flex-1 flex justify-center">
-                  <div className="flex items-center gap-2 rounded-md border border-border/50 bg-background/50 px-3 py-1">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    <span className="text-[11px] text-muted-foreground/60 font-mono">app.prepiq.io/today</span>
+            {/* Floating wrapper */}
+            <motion.div
+              ref={cardRef}
+              className="animate-float-card"
+              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              {/* Wide glow bloom */}
+              <div
+                className="absolute pointer-events-none animate-border-glow"
+                style={{
+                  inset: "-60px -80px",
+                  background:
+                    "radial-gradient(ellipse 65% 45% at 50% 0%, hsl(40 70% 39% / 0.22) 0%, transparent 70%)",
+                  borderRadius: "50%",
+                  filter: "blur(24px)",
+                }}
+              />
+              {/* Top shimmer line */}
+              <div
+                className="absolute -top-px left-[10%] right-[10%] h-px pointer-events-none animate-border-glow"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent, hsl(40 70% 55% / 0.7) 50%, transparent)",
+                }}
+              />
+              {/* Side glow lines */}
+              <div
+                className="absolute top-[10%] bottom-[10%] -left-px w-px pointer-events-none"
+                style={{
+                  background: "linear-gradient(to bottom, transparent, hsl(40 70% 39% / 0.3) 50%, transparent)",
+                }}
+              />
+              <div
+                className="absolute top-[10%] bottom-[10%] -right-px w-px pointer-events-none"
+                style={{
+                  background: "linear-gradient(to bottom, transparent, hsl(40 70% 39% / 0.3) 50%, transparent)",
+                }}
+              />
+
+              {/* Card frame */}
+              <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card shadow-[0_40px_100px_rgba(0,0,0,0.65),0_0_0_1px_hsl(40_70%_39%/0.08),inset_0_1px_0_hsl(40_70%_55%/0.06)]">
+                {/* Browser chrome */}
+                <div className="flex items-center gap-3 border-b border-border/50 bg-accent/30 px-4 py-3 backdrop-blur-sm">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
+                  </div>
+                  <div className="flex-1 flex justify-center">
+                    <div className="flex items-center gap-2 rounded-md border border-border/50 bg-background/50 px-3 py-1">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                      <span className="text-[11px] text-muted-foreground/60 font-mono">app.prepiq.io/today</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                    <span className="text-[10px] text-muted-foreground/50">Live</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-                  <span className="text-[10px] text-muted-foreground/50">Live</span>
-                </div>
+                <HeroIntelligencePreview />
               </div>
-              {/* The actual preview */}
-              <HeroIntelligencePreview />
-            </div>
+            </motion.div>
 
-            {/* Bottom fade — blends into next section */}
+            {/* Bottom fade */}
             <div
-              className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+              className="absolute bottom-0 left-0 right-0 h-36 pointer-events-none"
               style={{
-                background:
-                  "linear-gradient(to bottom, transparent, hsl(240 7% 8%))",
+                background: "linear-gradient(to bottom, transparent, hsl(240 7% 8%))",
               }}
             />
           </motion.div>

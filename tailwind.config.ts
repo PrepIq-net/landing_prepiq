@@ -102,6 +102,37 @@ export default {
           "0%": { width: "0" },
           "100%": { width: "100%" },
         },
+        "orb-drift-1": {
+          "0%, 100%": { transform: "translate(0px, 0px) scale(1)" },
+          "33%": { transform: "translate(60px, -40px) scale(1.08)" },
+          "66%": { transform: "translate(-30px, 50px) scale(0.95)" },
+        },
+        "orb-drift-2": {
+          "0%, 100%": { transform: "translate(0px, 0px) scale(1)" },
+          "33%": { transform: "translate(-50px, 30px) scale(1.05)" },
+          "66%": { transform: "translate(40px, -60px) scale(0.92)" },
+        },
+        "orb-drift-3": {
+          "0%, 100%": { transform: "translate(0px, 0px) scale(1)" },
+          "50%": { transform: "translate(30px, 40px) scale(1.1)" },
+        },
+        "shimmer-gold": {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "float-card": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        "sparkle-pop": {
+          "0%": { opacity: "0", transform: "scale(0) rotate(0deg)" },
+          "50%": { opacity: "1", transform: "scale(1) rotate(180deg)" },
+          "100%": { opacity: "0", transform: "scale(0) rotate(360deg)" },
+        },
+        "border-glow": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -109,6 +140,13 @@ export default {
         "fade-in": "fade-in 0.3s ease-out forwards",
         "fade-in-up": "fade-in-up 0.5s ease-out forwards",
         "pulse-gold": "pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "orb-drift-1": "orb-drift-1 18s ease-in-out infinite",
+        "orb-drift-2": "orb-drift-2 22s ease-in-out infinite",
+        "orb-drift-3": "orb-drift-3 15s ease-in-out infinite",
+        "shimmer-gold": "shimmer-gold 3s linear infinite",
+        "float-card": "float-card 6s ease-in-out infinite",
+        "sparkle-pop": "sparkle-pop 2.5s ease-in-out infinite",
+        "border-glow": "border-glow 3s ease-in-out infinite",
       },
     },
   },
