@@ -259,7 +259,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 72, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mt-14 sm:mt-16 w-full max-w-[980px]"
+            className="relative mt-14 sm:mt-16 w-full max-w-[1100px]"
             style={{ perspective: 1200 }}
           >
             {/* Floating wrapper */}
