@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useTranslation, Trans } from "react-i18next";
 
 const COOKIE_KEY = "prepiq_cookie_consent";
@@ -45,7 +47,7 @@ const CookieConsent = () => {
                 <Trans
                   i18nKey="common.cookieNotice"
                   defaults={i18n.resolvedLanguage === 'fr' ? 'Nous utilisons des cookies pour améliorer votre expérience. Consultez notre <link>Politique de confidentialité</link>.' : 'We use cookies to improve your experience. Read our <link>Privacy Policy</link> for details.'}
-                  components={{ link: <Link to="/privacy-policy" className="text-primary hover:underline" /> }}
+                  components={{ link: <Link href="/privacy-policy" className="text-primary hover:underline" /> }}
                 />
               </div>
             </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { WarningTriangle, CloudSunny, Calendar, GraphUp } from "iconoir-react";
 import { useTranslation, Trans } from "react-i18next";

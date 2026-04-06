@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ShieldCheck, TrendingDown, AlertTriangle, Clock, Package, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";

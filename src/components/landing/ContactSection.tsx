@@ -1,3 +1,5 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, ArrowRight, CheckCircle2, Building2, Users, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

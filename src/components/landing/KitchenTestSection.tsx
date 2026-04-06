@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HelpCircle, FireFlame, Xmark, Trash, Cpu, Bell, Check, Percentage } from "iconoir-react";

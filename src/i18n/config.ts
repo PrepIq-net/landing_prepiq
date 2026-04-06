@@ -5,6 +5,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import fr from './locales/fr.json';
 
+const isBrowser = typeof window !== 'undefined';
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -19,7 +21,7 @@ i18n
     },
     detection: {
       order: ['querystring', 'cookie', 'localStorage', 'navigator', 'path', 'subdomain'],
-      caches: ['localStorage', 'cookie'],
+      caches: isBrowser ? ['localStorage', 'cookie'] : [],
     },
   });
 

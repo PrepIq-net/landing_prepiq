@@ -1,21 +1,23 @@
+"use client";
+
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
-const PrivacyPolicy = () => {
+export default function PrivacyPolicy() {
   const { t, i18n } = useTranslation();
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/50">
         <div className="section-container flex items-center justify-between py-5">
-          <Link to="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="font-display text-sm font-bold text-primary-foreground">P</span>
             </div>
             <span className="font-display text-lg font-semibold text-foreground">PrepIQ</span>
           </Link>
-          <Link to="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
             {t("common.backToHome")}
           </Link>
@@ -208,6 +210,4 @@ const PrivacyPolicy = () => {
       </main>
     </div>
   );
-};
-
-export default PrivacyPolicy;
+}

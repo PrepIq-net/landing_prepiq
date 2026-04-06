@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -152,7 +154,7 @@ const AIThinkingSection = () => {
       const activeReasons: string[] = [];
 
       enabledSignals.forEach((signal) => {
-        const effect = signal.effects[item.id];
+        const effect = (signal.effects as any)[item.id];
         if (effect) {
           total += effect.delta;
           activeReasons.push(effect.reason);
@@ -162,7 +164,7 @@ const AIThinkingSection = () => {
       const delta = total - item.base;
       return { ...item, recommended: total, delta, reasons: activeReasons };
     });
-  }, [enabledSignals]);
+  }, [enabledSignals, PREP_ITEMS]);
 
   // Confidence based on how many signals are active
   const confidence = useMemo(() => {

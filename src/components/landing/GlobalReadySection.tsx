@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { Globe, Clock, Language, Building } from "iconoir-react";
 import { useTranslation } from "react-i18next";

@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -34,6 +36,11 @@ const createPinIcon = (isActive: boolean) =>
 
 const MultiBranchSection = () => {
   const { t, i18n } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const branches = useMemo(() => [
     { name: "Manhattan", country: i18n.resolvedLanguage === 'fr' ? "États-Unis" : "USA", flag: "🇺🇸", lat: 40.76, lng: -73.97, accuracy: 96, saved: i18n.resolvedLanguage === 'fr' ? "5 100 €" : "$5,100", margin: "+3.4%", items: 165 },
@@ -86,75 +93,77 @@ const MultiBranchSection = () => {
           <div className="grid lg:grid-cols-[1fr_300px]">
             {/* Map */}
             <div className="h-[300px] sm:h-[400px] lg:h-[480px] w-full relative">
-              <MapContainer
-                center={[20, 20]}
-                zoom={2}
-                minZoom={2}
-                maxZoom={6}
-                scrollWheelZoom={false}
-                zoomControl={false}
-                attributionControl={false}
-                className="h-full w-full"
-                style={{ background: "hsl(240 7% 8%)" }}
-              >
-                <TileLayer
-                  url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-                />
-                {branches.map((branch) => (
-                  <Marker
-                    key={branch.name}
-                    position={[branch.lat, branch.lng]}
-                    icon={createPinIcon(activeBranch === branch.name)}
-                    eventHandlers={{
-                      click: () => setActiveBranch(branch.name),
-                    }}
-                  >
-                    <Popup className="prepiq-popup">
-                      <div className="min-w-[200px]">
-                        <div className="flex items-center gap-2.5 mb-3">
-                          <span className="text-lg">{branch.flag}</span>
-                          <div>
-                            <p className="text-[13px] font-semibold leading-tight" style={{ color: "hsl(240 5% 96%)" }}>{branch.name}</p>
-                            <p className="text-[10px]" style={{ color: "hsl(240 4% 56%)" }}>{branch.country}</p>
+              {mounted && (
+                <MapContainer
+                  center={[20, 20]}
+                  zoom={2}
+                  minZoom={2}
+                  maxZoom={6}
+                  scrollWheelZoom={false}
+                  zoomControl={false}
+                  attributionControl={false}
+                  className="h-full w-full"
+                  style={{ background: "hsl(240 7% 8%)" }}
+                >
+                  <TileLayer
+                    url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
+                  />
+                  {branches.map((branch) => (
+                    <Marker
+                      key={branch.name}
+                      position={[branch.lat, branch.lng]}
+                      icon={createPinIcon(activeBranch === branch.name)}
+                      eventHandlers={{
+                        click: () => setActiveBranch(branch.name),
+                      }}
+                    >
+                      <Popup className="prepiq-popup">
+                        <div className="min-w-[200px]">
+                          <div className="flex items-center gap-2.5 mb-3">
+                            <span className="text-lg">{branch.flag}</span>
+                            <div>
+                              <p className="text-[13px] font-semibold leading-tight" style={{ color: "hsl(240 5% 96%)" }}>{branch.name}</p>
+                              <p className="text-[10px]" style={{ color: "hsl(240 4% 56%)" }}>{branch.country}</p>
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Accuracy bar */}
-                        <div className="mb-3">
-                          <div className="flex justify-between text-[10px] mb-1">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.accuracy")}</span>
-                            <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.accuracy}%</span>
+                          {/* Accuracy bar */}
+                          <div className="mb-3">
+                            <div className="flex justify-between text-[10px] mb-1">
+                              <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.accuracy")}</span>
+                              <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.accuracy}%</span>
+                            </div>
+                            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(240 4% 17%)" }}>
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${branch.accuracy}%`,
+                                  background: `linear-gradient(90deg, hsl(40 70% 35%), hsl(40 70% 50%))`,
+                                }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(240 4% 17%)" }}>
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${branch.accuracy}%`,
-                                background: `linear-gradient(90deg, hsl(40 70% 35%), hsl(40 70% 50%))`,
-                              }}
-                            />
-                          </div>
-                        </div>
 
-                        <div className="space-y-1.5 border-t pt-2.5" style={{ borderColor: "hsl(240 4% 17%)" }}>
-                          <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.monthlySaved")}</span>
-                            <span className="font-semibold" style={{ color: "hsl(153 39% 50%)" }}>{branch.saved}</span>
-                          </div>
-                          <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.marginImpact")}</span>
-                            <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.margin}</span>
-                          </div>
-                          <div className="flex justify-between text-[11px]">
-                            <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.itemsTracked")}</span>
-                            <span className="font-medium" style={{ color: "hsl(240 5% 96%)" }}>{branch.items}</span>
+                          <div className="space-y-1.5 border-t pt-2.5" style={{ borderColor: "hsl(240 4% 17%)" }}>
+                            <div className="flex justify-between text-[11px]">
+                              <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.monthlySaved")}</span>
+                              <span className="font-semibold" style={{ color: "hsl(153 39% 50%)" }}>{branch.saved}</span>
+                            </div>
+                            <div className="flex justify-between text-[11px]">
+                              <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.marginImpact")}</span>
+                              <span className="font-semibold" style={{ color: "hsl(40 70% 50%)" }}>{branch.margin}</span>
+                            </div>
+                            <div className="flex justify-between text-[11px]">
+                              <span style={{ color: "hsl(240 4% 56%)" }}>{t("multiBranch.popup.itemsTracked")}</span>
+                              <span className="font-medium" style={{ color: "hsl(240 5% 96%)" }}>{branch.items}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
+              )}
 
               {/* Map overlay gradient edges */}
               <div className="absolute inset-0 pointer-events-none">

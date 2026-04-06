@@ -1,8 +1,10 @@
+"use client";
+
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
-const TermsOfService = () => {
+export default function TermsOfService() {
   const { t, i18n } = useTranslation();
 
   return (
@@ -10,14 +12,14 @@ const TermsOfService = () => {
       {/* Header */}
       <header className="border-b border-border/50">
         <div className="section-container flex items-center justify-between py-5">
-          <Link to="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="font-display text-sm font-bold text-primary-foreground">P</span>
             </div>
             <span className="font-display text-lg font-semibold text-foreground">PrepIQ</span>
           </Link>
           <Link
-            to="/"
+            href="/"
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -250,6 +252,4 @@ const TermsOfService = () => {
       </main>
     </div>
   );
-};
-
-export default TermsOfService;
+}

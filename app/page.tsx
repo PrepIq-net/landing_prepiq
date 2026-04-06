@@ -1,7 +1,14 @@
+"use client";
+
 import { lazy, Suspense } from "react";
 import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import LogoTickerSection from "@/components/landing/LogoTickerSection";
+import dynamic from 'next/dynamic';
+
+const MultiBranchSection = dynamic(() => import('@/components/landing/MultiBranchSection'), {
+  ssr: false,
+});
 
 // Lazy load below-the-fold sections
 const KitchenTestSection = lazy(() => import("@/components/landing/KitchenTestSection"));
@@ -16,7 +23,6 @@ const ValueSection = lazy(() => import("@/components/landing/ValueSection"));
 const WhoItsForSection = lazy(() => import("@/components/landing/WhoItsForSection"));
 const IntegrationsSection = lazy(() => import("@/components/landing/IntegrationsSection"));
 const InteractiveDemoSection = lazy(() => import("@/components/landing/InteractiveDemoSection"));
-const MultiBranchSection = lazy(() => import("@/components/landing/MultiBranchSection"));
 const KitchenNetworkSection = lazy(() => import("@/components/landing/KitchenNetworkSection"));
 const GlobalReadySection = lazy(() => import("@/components/landing/GlobalReadySection"));
 const TestimonialsSection = lazy(() => import("@/components/landing/TestimonialsSection"));
@@ -32,7 +38,7 @@ const SectionFallback = () => (
   </div>
 );
 
-const Index = () => {
+export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -63,6 +69,4 @@ const Index = () => {
       </Suspense>
     </div>
   );
-};
-
-export default Index;
+}

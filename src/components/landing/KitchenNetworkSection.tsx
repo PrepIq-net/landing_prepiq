@@ -1,3 +1,5 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { Brain, ArrowRight, Flash, Globe, WarningTriangle, CheckCircle, ShareAndroid, Building, MapPin } from "iconoir-react";
