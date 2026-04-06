@@ -37,8 +37,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      <LogoTickerSection />
+      {/* <LogoTickerSection /> */}
       <Suspense fallback={<SectionFallback />}>
+        <IntegrationsSection />
         <KitchenTestSection />
         <AIThinkingSection />
         <WhyPrepIQSection />
@@ -49,7 +50,6 @@ const Index = () => {
         <MarginGuardSection />
         <ValueSection />
         <WhoItsForSection />
-        <IntegrationsSection />
         <InteractiveDemoSection />
         <MultiBranchSection />
         <KitchenNetworkSection />
