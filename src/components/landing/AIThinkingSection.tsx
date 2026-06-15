@@ -35,16 +35,51 @@ interface PrepItem {
 const AIThinkingSection = () => {
   const { t } = useTranslation();
 
-  const PREP_ITEMS: PrepItem[] = useMemo(() => [
-    { id: "chicken", name: t("aiThinking.items.chicken"), unit: t("aiThinking.items.units.pieces"), base: 40, emoji: "🍗" },
-    { id: "soup", name: t("aiThinking.items.soup"), unit: t("aiThinking.items.units.litres"), base: 12, emoji: "🍲" },
-    { id: "vegetables", name: t("aiThinking.items.vegetables"), unit: t("aiThinking.items.units.kg"), base: 8, emoji: "🥬" },
-    { id: "rice", name: t("aiThinking.items.rice"), unit: t("aiThinking.items.units.kg"), base: 15, emoji: "🍚" },
-  ], [t]);
+  const PREP_ITEMS: PrepItem[] = useMemo(
+    () => [
+      {
+        id: "chicken",
+        name: t("aiThinking.items.chicken"),
+        unit: t("aiThinking.items.units.pieces"),
+        base: 40,
+        emoji: "🍗",
+      },
+      {
+        id: "soup",
+        name: t("aiThinking.items.soup"),
+        unit: t("aiThinking.items.units.litres"),
+        base: 12,
+        emoji: "🍲",
+      },
+      {
+        id: "vegetables",
+        name: t("aiThinking.items.vegetables"),
+        unit: t("aiThinking.items.units.kg"),
+        base: 8,
+        emoji: "🥬",
+      },
+      {
+        id: "rice",
+        name: t("aiThinking.items.rice"),
+        unit: t("aiThinking.items.units.kg"),
+        base: 15,
+        emoji: "🍚",
+      },
+    ],
+    [t],
+  );
 
-  const [enabledSignalIds, setEnabledSignalIds] = useState<Set<string>>(new Set([
-    "day", "weather", "trend", "event", "stockout", "chef", "network"
-  ]));
+  const [enabledSignalIds, setEnabledSignalIds] = useState<Set<string>>(
+    new Set([
+      "day",
+      "weather",
+      "trend",
+      "event",
+      "stockout",
+      "chef",
+      "network",
+    ]),
+  );
 
   const signals = useMemo(() => {
     const allSignals = [
@@ -74,7 +109,10 @@ const AIThinkingSection = () => {
         label: t("aiThinking.signals.trend.label"),
         detail: t("aiThinking.signals.trend.detail"),
         effects: {
-          chicken: { delta: 4, reason: t("aiThinking.reasons.sustainedGrowth") },
+          chicken: {
+            delta: 4,
+            reason: t("aiThinking.reasons.sustainedGrowth"),
+          },
         },
       },
       {
@@ -93,7 +131,10 @@ const AIThinkingSection = () => {
         label: t("aiThinking.signals.stockout.label"),
         detail: t("aiThinking.signals.stockout.detail"),
         effects: {
-          vegetables: { delta: 3, reason: t("aiThinking.reasons.shortfallComp") },
+          vegetables: {
+            delta: 3,
+            reason: t("aiThinking.reasons.shortfallComp"),
+          },
         },
       },
       {
@@ -102,7 +143,10 @@ const AIThinkingSection = () => {
         label: t("aiThinking.signals.chef.label"),
         detail: t("aiThinking.signals.chef.detail"),
         effects: {
-          vegetables: { delta: 1, reason: t("aiThinking.reasons.chefRecurring") },
+          vegetables: {
+            delta: 1,
+            reason: t("aiThinking.reasons.chefRecurring"),
+          },
         },
       },
       {
@@ -118,9 +162,9 @@ const AIThinkingSection = () => {
       },
     ];
 
-    return allSignals.map(s => ({
+    return allSignals.map((s) => ({
       ...s,
-      enabled: enabledSignalIds.has(s.id)
+      enabled: enabledSignalIds.has(s.id),
     }));
   }, [t, enabledSignalIds]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -134,13 +178,16 @@ const AIThinkingSection = () => {
       else next.add(id);
       return next;
     });
-    
+
     // Show processing state with simulated latency
     setIsProcessing(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setIsProcessing(false);
-    }, 800 + Math.random() * 700); // 800-1500ms random delay
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsProcessing(false);
+      },
+      800 + Math.random() * 700,
+    ); // 800-1500ms random delay
   }, []);
 
   const enabledSignals = signals.filter((s) => s.enabled);
@@ -152,7 +199,12 @@ const AIThinkingSection = () => {
       const activeReasons: string[] = [];
 
       enabledSignals.forEach((signal) => {
-        const effect = signal.effects[item.id];
+        const effect = (
+          signal.effects as Record<
+            string,
+            { delta: number; reason: string } | undefined
+          >
+        )[item.id];
         if (effect) {
           total += effect.delta;
           activeReasons.push(effect.reason);
@@ -175,20 +227,14 @@ const AIThinkingSection = () => {
     const insights: string[] = [];
     const enabled = new Set(enabledSignals.map((s) => s.id));
 
-    if (enabled.has("weather"))
-      insights.push(t("aiThinking.insights.weather"));
-    if (enabled.has("trend"))
-      insights.push(t("aiThinking.insights.trend"));
+    if (enabled.has("weather")) insights.push(t("aiThinking.insights.weather"));
+    if (enabled.has("trend")) insights.push(t("aiThinking.insights.trend"));
     if (enabled.has("stockout"))
       insights.push(t("aiThinking.insights.stockout"));
-    if (enabled.has("event"))
-      insights.push(t("aiThinking.insights.event"));
-    if (enabled.has("day"))
-      insights.push(t("aiThinking.insights.day"));
-    if (enabled.has("chef"))
-      insights.push(t("aiThinking.insights.chef"));
-    if (enabled.has("network"))
-      insights.push(t("aiThinking.insights.network"));
+    if (enabled.has("event")) insights.push(t("aiThinking.insights.event"));
+    if (enabled.has("day")) insights.push(t("aiThinking.insights.day"));
+    if (enabled.has("chef")) insights.push(t("aiThinking.insights.chef"));
+    if (enabled.has("network")) insights.push(t("aiThinking.insights.network"));
 
     if (insights.length === 0)
       insights.push(t("aiThinking.insights.insufficient"));
@@ -356,12 +402,16 @@ const AIThinkingSection = () => {
                       </motion.span>
                     ) : (
                       <>
-                        {t("aiThinking.analyzing", { count: enabledSignals.length })}
+                        {t("aiThinking.analyzing", {
+                          count: enabledSignals.length,
+                        })}
                       </>
                     )}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isProcessing ? t("aiThinking.updatingModel") : t("aiThinking.crossReferencing")}
+                    {isProcessing
+                      ? t("aiThinking.updatingModel")
+                      : t("aiThinking.crossReferencing")}
                   </p>
                 </div>
               </div>
@@ -381,37 +431,46 @@ const AIThinkingSection = () => {
                           key={i}
                           className="h-1.5 w-1.5 rounded-full bg-primary"
                           animate={{ y: [0, -6, 0] }}
-                          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                          transition={{
+                            duration: 0.6,
+                            repeat: Infinity,
+                            delay: i * 0.15,
+                          }}
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] text-muted-foreground">{t("aiThinking.recalculating")}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {t("aiThinking.recalculating")}
+                    </span>
                   </div>
                 </motion.div>
               )}
 
               {/* Insights */}
               <motion.div
-                animate={{ opacity: isProcessing ? 0.2 : 1, filter: isProcessing ? "blur(3px)" : "blur(0px)" }}
+                animate={{
+                  opacity: isProcessing ? 0.2 : 1,
+                  filter: isProcessing ? "blur(3px)" : "blur(0px)",
+                }}
                 transition={{ duration: 0.25 }}
               >
-              <AnimatePresence mode="popLayout">
-                {analysisInsights.map((insight, i) => (
-                  <motion.div
-                    key={insight}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 8 }}
-                    transition={{ delay: i * 0.06, duration: 0.3 }}
-                    className="flex items-start gap-2.5 mb-3 last:mb-0"
-                  >
-                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 flex-shrink-0" />
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {insight}
-                    </p>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                <AnimatePresence mode="popLayout">
+                  {analysisInsights.map((insight, i) => (
+                    <motion.div
+                      key={insight}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 8 }}
+                      transition={{ delay: i * 0.06, duration: 0.3 }}
+                      className="flex items-start gap-2.5 mb-3 last:mb-0"
+                    >
+                      <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 flex-shrink-0" />
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {insight}
+                      </p>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </motion.div>
 
               {/* Confidence meter */}
@@ -439,7 +498,9 @@ const AIThinkingSection = () => {
                 <p className="text-[10px] text-muted-foreground/60 mt-1.5">
                   {enabledSignals.length === signals.length
                     ? t("aiThinking.allSignalsActive")
-                    : t("aiThinking.signalsDisabled", { count: signals.length - enabledSignals.length })}
+                    : t("aiThinking.signalsDisabled", {
+                        count: signals.length - enabledSignals.length,
+                      })}
                 </p>
               </div>
             </div>
@@ -470,7 +531,10 @@ const AIThinkingSection = () => {
 
             <motion.div
               className="space-y-3"
-              animate={{ opacity: isProcessing ? 0.4 : 1, filter: isProcessing ? "blur(1px)" : "blur(0px)" }}
+              animate={{
+                opacity: isProcessing ? 0.4 : 1,
+                filter: isProcessing ? "blur(1px)" : "blur(0px)",
+              }}
               transition={{ duration: 0.3 }}
             >
               <AnimatePresence mode="popLayout">
@@ -485,7 +549,9 @@ const AIThinkingSection = () => {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-base sm:text-lg">{item.emoji}</span>
+                        <span className="text-base sm:text-lg">
+                          {item.emoji}
+                        </span>
                         <span className="text-xs sm:text-sm font-medium text-foreground">
                           {item.name}
                         </span>
@@ -519,7 +585,10 @@ const AIThinkingSection = () => {
                               : "text-destructive"
                           }`}
                         >
-                          {t("aiThinking.vsBaseline", { amount: (item.delta > 0 ? "+" : "") + item.delta, unit: item.unit })}
+                          {t("aiThinking.vsBaseline", {
+                            amount: (item.delta > 0 ? "+" : "") + item.delta,
+                            unit: item.unit,
+                          })}
                         </span>
                       </motion.div>
                     )}
@@ -556,7 +625,10 @@ const AIThinkingSection = () => {
             {/* Overall confidence footer */}
             <motion.div
               layout
-              animate={{ opacity: isProcessing ? 0.3 : 1, filter: isProcessing ? "blur(2px)" : "blur(0px)" }}
+              animate={{
+                opacity: isProcessing ? 0.3 : 1,
+                filter: isProcessing ? "blur(2px)" : "blur(0px)",
+              }}
               transition={{ duration: 0.25 }}
               className="mt-3 sm:mt-4 rounded-xl border border-primary/20 bg-primary/[0.04] p-3 sm:p-4 text-center"
             >

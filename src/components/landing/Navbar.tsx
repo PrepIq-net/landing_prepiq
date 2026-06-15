@@ -1,7 +1,13 @@
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, Xmark } from "iconoir-react";
-import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
@@ -36,7 +42,8 @@ const Navbar = () => {
           scrolled ? "opacity-100" : "opacity-0"
         }`}
         style={{
-          background: "linear-gradient(90deg, transparent 0%, hsl(40 70% 39% / 0.3) 50%, transparent 100%)",
+          background:
+            "linear-gradient(90deg, transparent 0%, hsl(40 70% 39% / 0.3) 50%, transparent 100%)",
         }}
       />
 
@@ -44,21 +51,23 @@ const Navbar = () => {
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 group">
           <motion.div
-            className={`flex items-center justify-center rounded-lg bg-primary transition-all duration-300 ${
-              scrolled ? "h-7 w-7" : "h-8 w-8"
+            className={`transition-all duration-300 ${
+              scrolled ? "h-7 w-7" : "h-10 w-10"
             }`}
             whileHover={{ rotate: -6, scale: 1.08 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
           >
-            <span
-              className={`font-display font-bold text-primary-foreground transition-all duration-300 ${
-                scrolled ? "text-xs" : "text-sm"
-              }`}
-            >
-              P
-            </span>
+            <Image
+              src="/logo/golden-main-transparent.png"
+              alt="PrepIQ Logo"
+              width={40}
+              height={40}
+              className="h-full w-full object-contain"
+            />
           </motion.div>
-          <span className="font-display text-base sm:text-lg font-semibold text-foreground">PrepIQ</span>
+          <span className="font-display text-base sm:text-lg font-semibold text-foreground">
+            PrepIQ
+          </span>
         </a>
 
         {/* Desktop nav links */}
@@ -93,7 +102,11 @@ const Navbar = () => {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <Xmark className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <Xmark className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>
@@ -138,10 +151,18 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-2.5 pt-6 mt-6 border-t border-border/50">
-                <Button variant="ghost" size="sm" className="w-full justify-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-center"
+                >
                   {t("navbar.logIn")}
                 </Button>
-                <Button variant="hero" size="sm" className="w-full justify-center">
+                <Button
+                  variant="hero"
+                  size="sm"
+                  className="w-full justify-center"
+                >
                   {t("navbar.startFree")}
                 </Button>
               </div>
