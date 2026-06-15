@@ -24,7 +24,24 @@ async function main() {
     },
   });
 
-  // 2. Define Sections for Home Page
+  // 2. Create Legal Pages
+  await prisma.page.upsert({
+    where: { slug: "privacy-policy" },
+    update: {},
+    create: { slug: "privacy-policy", titleEn: "Privacy Policy", titleFr: "Politique de Confidentialité", isActive: true, sortOrder: 1 },
+  });
+  await prisma.page.upsert({
+    where: { slug: "terms-of-service" },
+    update: {},
+    create: { slug: "terms-of-service", titleEn: "Terms of Service", titleFr: "Conditions d'Utilisation", isActive: true, sortOrder: 2 },
+  });
+  await prisma.page.upsert({
+    where: { slug: "security" },
+    update: {},
+    create: { slug: "security", titleEn: "Security", titleFr: "Sécurité", isActive: true, sortOrder: 3 },
+  });
+
+  // 3. Define Sections for Home Page
   const sections = [
     { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: JSON.stringify({ en: en.hero, fr: fr.hero }) },
     { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: JSON.stringify({ en: en.integrations, fr: fr.integrations }) },
@@ -62,7 +79,7 @@ async function main() {
     });
   }
 
-  // 3. Navigation Links
+  // 4. Navigation Links
   const navLinks = [
     { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "#how-it-works", sortOrder: 0 },
     { labelEn: en.navbar.intelligence, labelFr: fr.navbar.intelligence, url: "#intelligence", sortOrder: 1 },
@@ -81,7 +98,7 @@ async function main() {
     });
   }
 
-  // 4. Footer Links
+  // 5. Footer Links
   const footerLinks = [
     { labelEn: en.footer.links.about, labelFr: fr.footer.links.about, url: "#", category: "product", sortOrder: 0 },
     { labelEn: en.footer.links.blog, labelFr: fr.footer.links.blog, url: "#", category: "product", sortOrder: 1 },
