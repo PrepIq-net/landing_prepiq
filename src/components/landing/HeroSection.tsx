@@ -2,12 +2,12 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedGroup } from "@/components/ui/animated-group";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import HeroIntelligencePreview from "./HeroIntelligencePreview";
 import { useState, useRef } from "react";
 import CalendlyModal from "./CalendlyModal";
 import { useTranslation } from "react-i18next";
-import Link from "next/link";
+import { HeroContent, SectionContent } from "@/types/cms";
 
 const transitionVariants = {
   item: {
@@ -22,7 +22,6 @@ const transitionVariants = {
   },
 };
 
-// Sparkle positions scattered around the hero
 const SPARKLES = [
   { top: "12%", left: "8%", delay: "0s", size: 14 },
   { top: "22%", left: "92%", delay: "0.8s", size: 10 },
@@ -33,12 +32,31 @@ const SPARKLES = [
   { top: "30%", left: "85%", delay: "0.6s", size: 11 },
 ];
 
-const HeroSection = () => {
-  const { t } = useTranslation();
+const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
+
+  const content: HeroContent = dbContent?.[currentLang] || {
+    titleLine1: t("hero.titleLine1", "Prep with confidence."),
+    titleLine2: t("hero.titleLine2", "Know exactly what — and how much — to cook."),
+    subtitle: t("hero.subtitle", "Every morning, PrepIQ gives your team a precise prep plan — built from your sales history, demand signals, and real kitchen patterns. No guesswork. No waste."),
+    proof: {
+      lessWaste: t("hero.proof.lessWaste", "Less waste"),
+      noStockouts: t("hero.proof.noStockouts", "No stockouts"),
+      betterMargins: t("hero.proof.betterMargins", "Better margins"),
+    },
+    ctaStart: t("hero.ctaStart", "Start Free"),
+    ctaDemo: t("hero.ctaDemo", "Book a 10-min Demo"),
+    stats: {
+      accuracy: t("hero.stats.accuracy", "Forecast accuracy"),
+      waste: t("hero.stats.waste", "Food waste"),
+      stockouts: t("hero.stats.stockouts", "Stockouts avg/week"),
+    }
+  };
+
   const [demoOpen, setDemoOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Subtle tilt on card hover
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), {
@@ -62,20 +80,18 @@ const HeroSection = () => {
   };
 
   const stats = [
-    { value: "92%", label: t("hero.stats.accuracy") },
-    { value: "−34%", label: t("hero.stats.waste") },
-    { value: "0", label: t("hero.stats.stockouts") },
+    { value: "92%", label: content.stats.accuracy },
+    { value: "−34%", label: content.stats.waste },
+    { value: "0", label: content.stats.stockouts },
   ];
 
   return (
     <>
       <section className="relative overflow-hidden pt-24 sm:pt-32 pb-20 md:pb-32">
-        {/* ── Animated aurora orbs ── */}
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none overflow-hidden"
         >
-          {/* Large gold orb — top left */}
           <div
             className="animate-orb-drift-1 absolute rounded-full opacity-[0.18]"
             style={{
@@ -88,7 +104,6 @@ const HeroSection = () => {
               filter: "blur(80px)",
             }}
           />
-          {/* Smaller amber orb — top right */}
           <div
             className="animate-orb-drift-2 absolute rounded-full opacity-[0.12]"
             style={{
@@ -102,7 +117,6 @@ const HeroSection = () => {
               animationDelay: "4s",
             }}
           />
-          {/* Accent orb — mid left */}
           <div
             className="animate-orb-drift-3 absolute rounded-full opacity-[0.07]"
             style={{
@@ -118,10 +132,8 @@ const HeroSection = () => {
           />
         </div>
 
-        {/* ── Grid pattern ── */}
         <div className="absolute inset-0 pattern-grid opacity-[0.25] pointer-events-none" />
 
-        {/* ── Vignette ── */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -130,7 +142,6 @@ const HeroSection = () => {
           }}
         />
 
-        {/* ── Sparkle dots ── */}
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none hidden lg:block"
@@ -163,7 +174,6 @@ const HeroSection = () => {
 
         <div className="section-container relative z-10 mt-16">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            {/* ── Left Content ── */}
             <div className="space-y-8">
               <AnimatedGroup
                 variants={{
@@ -175,7 +185,6 @@ const HeroSection = () => {
                   ...transitionVariants,
                 }}
               >
-                {/* Headline */}
                 <h1 className="font-display text-[2.4rem] font-semibold leading-[1.06] tracking-[-0.035em] sm:text-[3.1rem] md:text-[3.9rem]">
                   <span
                     style={{
@@ -186,10 +195,9 @@ const HeroSection = () => {
                       backgroundClip: "text",
                     }}
                   >
-                    {t("hero.titleLine1")}
+                    {content.titleLine1}
                     <br />
                   </span>
-                  {/* Shimmer gold text */}
                   <span
                     className="animate-shimmer-gold"
                     style={{
@@ -201,21 +209,19 @@ const HeroSection = () => {
                       backgroundClip: "text",
                     }}
                   >
-                    {t("hero.titleLine2")}
+                    {content.titleLine2}
                   </span>
                 </h1>
 
-                {/* Sub-headline */}
                 <p className="max-w-[500px] text-sm leading-relaxed text-muted-foreground/80 sm:text-base md:text-[1.05rem] my-4">
-                  {t("hero.subtitle")}
+                  {content.subtitle}
                 </p>
 
-                {/* Proof chips */}
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground sm:text-sm my-2">
                   {[
-                    t("hero.proof.lessWaste"),
-                    t("hero.proof.noStockouts"),
-                    t("hero.proof.betterMargins"),
+                    content.proof.lessWaste,
+                    content.proof.noStockouts,
+                    content.proof.betterMargins,
                   ].map((item) => (
                     <span key={item} className="flex items-center gap-2">
                       <span className="text-primary drop-shadow-[0_0_6px_hsl(40_70%_50%/0.8)]">
@@ -226,10 +232,8 @@ const HeroSection = () => {
                   ))}
                 </div>
 
-                {/* CTAs */}
                 <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                   <div className="relative">
-                    {/* Glow ring behind primary CTA */}
                     <div className="absolute inset-0 rounded-[14px] bg-primary/20 blur-xl animate-border-glow" />
                     <div className="relative bg-primary/10 rounded-[14px] border border-primary/25 p-0.5">
                       <Button
@@ -238,7 +242,7 @@ const HeroSection = () => {
                         className="group rounded-xl px-8 py-6 shadow-[0_0_30px_hsl(40_70%_39%/0.25)]"
                       >
                         <span className="flex items-center gap-2 text-base">
-                          {t("hero.ctaStart")}
+                          {content.ctaStart}
                           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                         </span>
                       </Button>
@@ -250,11 +254,10 @@ const HeroSection = () => {
                     onClick={() => setDemoOpen(true)}
                     className="w-full sm:w-auto rounded-xl px-8 py-6 text-base"
                   >
-                    {t("hero.ctaDemo")}
+                    {content.ctaDemo}
                   </Button>
                 </div>
 
-                {/* Stat strip */}
                 <div className="flex items-start gap-10 sm:gap-16 pt-4">
                   {stats.map((stat, i) => (
                     <div key={stat.label} className="space-y-1">
@@ -285,9 +288,7 @@ const HeroSection = () => {
               </AnimatedGroup>
             </div>
 
-            {/* ── Right Content (Preview) ── */}
             <div className="relative">
-              {/* ── Product preview ── */}
               <motion.div
                 initial={{ opacity: 0, y: 72, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -299,7 +300,6 @@ const HeroSection = () => {
                 className="relative"
                 style={{ perspective: 1200 }}
               >
-                {/* Floating wrapper */}
                 <motion.div
                   ref={cardRef}
                   className="animate-float-card"
@@ -307,7 +307,6 @@ const HeroSection = () => {
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {/* Wide glow bloom */}
                   <div
                     className="absolute pointer-events-none animate-border-glow"
                     style={{
@@ -318,7 +317,6 @@ const HeroSection = () => {
                       filter: "blur(24px)",
                     }}
                   />
-                  {/* Top shimmer line */}
                   <div
                     className="absolute -top-px left-[10%] right-[10%] h-px pointer-events-none animate-border-glow"
                     style={{
@@ -326,7 +324,6 @@ const HeroSection = () => {
                         "linear-gradient(90deg, transparent, hsl(40 70% 55% / 0.7) 50%, transparent)",
                     }}
                   />
-                  {/* Side glow lines */}
                   <div
                     className="absolute top-[10%] bottom-[10%] -left-px w-px pointer-events-none"
                     style={{
@@ -342,9 +339,7 @@ const HeroSection = () => {
                     }}
                   />
 
-                  {/* Card frame */}
                   <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card shadow-[0_40px_100px_rgba(0,0,0,0.65),0_0_0_1px_hsl(40_70%_39%/0.08),inset_0_1px_0_hsl(40_70%_55%/0.06)]">
-                    {/* Browser chrome */}
                     <div className="flex items-center gap-3 border-b border-border/50 bg-accent/30 px-4 py-3 backdrop-blur-sm">
                       <div className="flex gap-1.5">
                         <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/15" />
