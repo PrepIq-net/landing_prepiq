@@ -1,66 +1,10 @@
-"use client";
-import dynamic from "next/dynamic";
-import { lazy, Suspense } from "react";
+import { Suspense, lazy } from "react";
 import Navbar from "@/components/landing/Navbar";
-import HeroSection from "@/components/landing/HeroSection";
-import LogoTickerSection from "@/components/landing/LogoTickerSection";
+import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/lib/data";
+import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
+import ScrollToTop from "@/components/ScrollToTop";
+import CookieConsent from "@/components/CookieConsent";
 
-// Lazy load below-the-fold sections
-const KitchenTestSection = lazy(
-  () => import("@/components/landing/KitchenTestSection"),
-);
-const AIThinkingSection = lazy(
-  () => import("@/components/landing/AIThinkingSection"),
-);
-const WhyPrepIQSection = lazy(
-  () => import("@/components/landing/WhyPrepIQSection"),
-);
-const ProblemSection = lazy(
-  () => import("@/components/landing/ProblemSection"),
-);
-const WhyNowSection = lazy(() => import("@/components/landing/WhyNowSection"));
-const HowItWorksSection = lazy(
-  () => import("@/components/landing/HowItWorksSection"),
-);
-const IntelligenceSection = lazy(
-  () => import("@/components/landing/IntelligenceSection"),
-);
-const MarginGuardSection = lazy(
-  () => import("@/components/landing/MarginGuardSection"),
-);
-const ValueSection = lazy(() => import("@/components/landing/ValueSection"));
-const WhoItsForSection = lazy(
-  () => import("@/components/landing/WhoItsForSection"),
-);
-const IntegrationsSection = lazy(
-  () => import("@/components/landing/IntegrationsSection"),
-);
-const InteractiveDemoSection = lazy(
-  () => import("@/components/landing/InteractiveDemoSection"),
-);
-const MultiBranchSection = dynamic(
-  () => import("@/components/landing/MultiBranchSection"),
-  { ssr: false },
-);
-const KitchenNetworkSection = lazy(
-  () => import("@/components/landing/KitchenNetworkSection"),
-);
-const GlobalReadySection = lazy(
-  () => import("@/components/landing/GlobalReadySection"),
-);
-const TestimonialsSection = lazy(
-  () => import("@/components/landing/TestimonialsSection"),
-);
-const PricingSection = lazy(
-  () => import("@/components/landing/PricingSection"),
-);
-const FAQSection = lazy(() => import("@/components/landing/FAQSection"));
-const ContactSection = lazy(
-  () => import("@/components/landing/ContactSection"),
-);
-const FinalCTASection = lazy(
-  () => import("@/components/landing/FinalCTASection"),
-);
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 const SectionFallback = () => (
@@ -69,39 +13,25 @@ const SectionFallback = () => (
   </div>
 );
 
-import ScrollToTop from "@/components/ScrollToTop";
-import CookieConsent from "@/components/CookieConsent";
+export default async function Page() {
+  const [page, navLinks, footerLinks] = await Promise.all([
+    getPageWithSections("home"),
+    getActiveNavLinks(),
+    getActiveFooterLinks(),
+  ]);
 
-export default function Page() {
+  if (!page) return <div>Page not found</div>;
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      <HeroSection />
-      {/* <LogoTickerSection /> */}
+      <Navbar links={navLinks} />
       <ScrollToTop />
       <CookieConsent />
+
+      <DynamicSectionRenderer sections={page.sections} />
+
       <Suspense fallback={<SectionFallback />}>
-        <IntegrationsSection />
-        <KitchenTestSection />
-        <AIThinkingSection />
-        <WhyPrepIQSection />
-        <ProblemSection />
-        <WhyNowSection />
-        <HowItWorksSection />
-        <IntelligenceSection />
-        <MarginGuardSection />
-        <ValueSection />
-        <WhoItsForSection />
-        <InteractiveDemoSection />
-        <MultiBranchSection />
-        <KitchenNetworkSection />
-        <GlobalReadySection />
-        <TestimonialsSection />
-        <PricingSection />
-        <FAQSection />
-        <ContactSection />
-        <FinalCTASection />
-        <Footer />
+        <Footer links={footerLinks} />
       </Suspense>
     </div>
   );

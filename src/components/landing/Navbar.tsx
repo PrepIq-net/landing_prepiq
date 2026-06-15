@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,15 +13,17 @@ import {
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-const Navbar = () => {
-  const { t } = useTranslation();
+interface NavLink {
+  id: string;
+  labelEn: string;
+  labelFr: string;
+  url: string;
+}
 
-  const navLinks = [
-    { label: t("navbar.howItWorks"), href: "#how-it-works" },
-    { label: t("navbar.intelligence"), href: "#intelligence" },
-    { label: t("navbar.pricing"), href: "#value" },
-    { label: t("navbar.integrations"), href: "#integrations" },
-  ];
+const Navbar = ({ links }: { links: NavLink[] }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.resolvedLanguage as "en" | "fr";
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
@@ -36,7 +40,6 @@ const Navbar = () => {
           : "h-16 border-b border-transparent bg-transparent backdrop-blur-none"
       }`}
     >
-      {/* Subtle gold gradient line at bottom when scrolled */}
       <div
         className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500 ${
           scrolled ? "opacity-100" : "opacity-0"
@@ -48,8 +51,7 @@ const Navbar = () => {
       />
 
       <div className="section-container px-4 sm:px-6 flex h-full items-center justify-between">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5 group">
+        <a href="/" className="flex items-center gap-2.5 group">
           <motion.div
             className={`transition-all duration-300 ${
               scrolled ? "h-7 w-7" : "h-10 w-10"
@@ -70,20 +72,18 @@ const Navbar = () => {
           </span>
         </a>
 
-        {/* Desktop nav links */}
         <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <a
-              key={link.href}
-              href={link.href}
+              key={link.id}
+              href={link.url}
               className="relative text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
             >
-              {link.label}
+              {currentLang === "fr" ? link.labelFr : link.labelEn}
             </a>
           ))}
         </div>
 
-        {/* Desktop CTAs */}
         <div className="hidden items-center gap-3 md:flex">
           <LanguageSwitcher />
           <Button variant="ghost" size="sm">
@@ -94,7 +94,6 @@ const Navbar = () => {
           </Button>
         </div>
 
-        {/* Mobile toggle */}
         <div className="flex items-center gap-2 md:hidden">
           <LanguageSwitcher />
           <button
@@ -111,7 +110,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -124,7 +122,6 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile slide-in drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -136,17 +133,17 @@ const Navbar = () => {
           >
             <div className="flex flex-col h-full p-6">
               <div className="space-y-1">
-                {navLinks.map((link, i) => (
+                {links.map((link, i) => (
                   <motion.a
-                    key={link.href}
-                    href={link.href}
+                    key={link.id}
+                    href={link.url}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
                     className="block text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg px-3 py-3 hover:bg-accent/50"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {link.label}
+                    {currentLang === "fr" ? link.labelFr : link.labelEn}
                   </motion.a>
                 ))}
               </div>
