@@ -1,19 +1,20 @@
 import { PrismaClient } from "@prisma/client";
 
 function createPrismaClient() {
-  const tursoUrl = process.env.TURSO_DATABASE_URL;
+  const dbUrl = process.env.DATABASE_URL ?? "";
 
-  if (tursoUrl) {
+  if (dbUrl.startsWith("libsql:") || dbUrl.startsWith("libsql+")) {
+    // Turso / remote libSQL
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { PrismaLibSql } = require("@prisma/adapter-libsql");
     const adapter = new PrismaLibSql({
-      url: tursoUrl,
+      url: dbUrl,
       authToken: process.env.TURSO_AUTH_TOKEN,
     });
     return new PrismaClient({ adapter });
   }
 
-  // Local dev fallback: file-based SQLite
+  // Local: file-based SQLite (file:./dev.db)
   return new PrismaClient({ log: ["query"] });
 }
 
