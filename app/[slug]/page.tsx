@@ -4,6 +4,7 @@ import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ScrollToTop from "@/components/ScrollToTop";
 import CookieConsent from "@/components/CookieConsent";
+import { notFound } from "next/navigation";
 
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
@@ -13,14 +14,17 @@ const SectionFallback = () => (
   </div>
 );
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [page, navLinks, footerLinks] = await Promise.all([
-    getPageWithSections("home"),
+    getPageWithSections(slug),
     getActiveNavLinks(),
     getActiveFooterLinks(),
   ]);
 
-  if (!page) return <div>Page not found</div>;
+  if (!page) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen bg-background">

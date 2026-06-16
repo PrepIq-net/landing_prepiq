@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum ActionType {
+  CREATE
+  UPDATE
+  DELETE
+  ACTIVATE
+  DEACTIVATE
+  LOGIN
+  LOGOUT
+}
+
+enum EntityType {
+  PAGE
+  SECTION
+  LINK
+  USER
+  MESSAGE
+  MEETING
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  passwordHash  String
+  role          Role          @default(EDITOR)
+  isActive      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  activities    ActivityLog[]
+}
+
+model ActivityLog {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    ActionType
+  entity    EntityType
+  entityId  String?
+  details   String?
+  createdAt DateTime   @default(now())
+}
+
+
+model Page {
+  id                 String    @id @default(cuid())
+  slug               String    @unique
+  titleEn            String
+  titleFr            String
+  isActive           Boolean   @default(true)
+  sortOrder          Int       @default(0)
+  metaDescriptionEn  String?
+  metaDescriptionFr  String?
+  sections           Section[]
+}
+
+model Section {
+  id            String  @id @default(cuid())
+  pageId        String
+  page          Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  componentType String
+  titleEn       String?
+  titleFr       String?
+  contentJson   String  // Store as JSON string in SQLite
+  isActive      Boolean @default(true)
+  sortOrder     Int     @default(0)
+}
+
+model Link {
+  id        String  @id @default(cuid())
+  labelEn   String
+  labelFr   String
+  url       String
+  type      String  // 'nav' or 'footer'
+  category  String? // for grouping footer links
+  isActive  Boolean @default(true)
+  sortOrder Int     @default(0)
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  status    String   @default("unread") // "unread", "read", "archived"
+}
+
+enum MeetingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model Meeting {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  company     String?
+  phone       String?
+  date        DateTime
+  notes       String?
+  meetingLink String?
+  status      MeetingStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
