@@ -10,34 +10,46 @@ export default async function AdminDashboard() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pages</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-2">Welcome back! Here's what's happening with your content.</p>
+      </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-lg">
+            <CardTitle className="text-sm font-medium text-blue-900">Pages</CardTitle>
+            <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
+              <FileText className="h-5 w-5 text-blue-700" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{pagesCount}</div>
+          <CardContent className="pt-6">
+            <div className="text-4xl font-bold text-gray-900">{pagesCount}</div>
+            <p className="text-sm text-gray-500 mt-1">Total pages created</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nav & Footer Links</CardTitle>
-            <Link className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-purple-50 to-purple-100 rounded-t-lg">
+            <CardTitle className="text-sm font-medium text-purple-900">Links</CardTitle>
+            <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center">
+              <Link className="h-5 w-5 text-purple-700" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{linksCount}</div>
+          <CardContent className="pt-6">
+            <div className="text-4xl font-bold text-gray-900">{linksCount}</div>
+            <p className="text-sm text-gray-500 mt-1">Navigation & footer links</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unread Messages</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-amber-50 to-amber-100 rounded-t-lg">
+            <CardTitle className="text-sm font-medium text-amber-900">Unread Messages</CardTitle>
+            <div className="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center">
+              <MessageSquare className="h-5 w-5 text-amber-700" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{messagesCount}</div>
+          <CardContent className="pt-6">
+            <div className="text-4xl font-bold text-gray-900">{messagesCount}</div>
+            <p className="text-sm text-gray-500 mt-1">Requires your attention</p>
           </CardContent>
         </Card>
       </div>
