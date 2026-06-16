@@ -1,17 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 function createPrismaClient() {
-  // Local dev: use the file-based SQLite DB
-  if (process.env.NODE_ENV !== "production" && !process.env.TURSO_DATABASE_URL) {
-    return new PrismaClient({ log: ["query"] });
+  const tursoUrl = process.env.TURSO_DATABASE_URL;
+
+  if (tursoUrl) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { PrismaLibSql } = require("@prisma/adapter-libsql");
+    const adapter = new PrismaLibSql({
+      url: tursoUrl,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+    return new PrismaClient({ adapter });
   }
 
-  const adapter = new PrismaLibSql({
-    url: process.env.TURSO_DATABASE_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN,
-  });
-  return new PrismaClient({ adapter });
+  // Local dev fallback: file-based SQLite
+  return new PrismaClient({ log: ["query"] });
 }
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
