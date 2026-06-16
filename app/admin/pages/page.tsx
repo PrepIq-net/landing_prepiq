@@ -1,8 +1,22 @@
 import { prisma } from "@/lib/prisma";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Edit, Layers, Trash2, EyeOff, Eye, Plus } from "lucide-react";
+import {
+  EditPencil,
+  NavArrowRight,
+  Trash,
+  Eye,
+  EyeClosed,
+  Plus,
+} from "iconoir-react";
 import { deletePage, togglePageActive } from "@/lib/actions/page-actions";
 
 export default async function PagesManager() {
@@ -11,70 +25,118 @@ export default async function PagesManager() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Pages</h1>
-          <p className="text-gray-500 mt-1">Manage all your site pages</p>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-display font-semibold tracking-tight text-foreground">
+            Pages
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Configure site hierarchy and content nodes.
+          </p>
         </div>
-        <Button asChild className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          asChild
+          className="bg-primary hover:bg-[#B8962E] text-primary-foreground font-semibold px-6 rounded-xl"
+        >
           <Link href="/admin/pages/new">
-            <Plus className="h-4 w-4 mr-2" />
-            Add New Page
+            <Plus className="h-4 w-4 mr-2 stroke-[2.5px]" />
+            New Page
           </Link>
         </Button>
       </div>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+      <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden shadow-l2">
         <Table>
-          <TableHeader className="bg-gray-50">
-            <TableRow>
-              <TableHead className="font-semibold text-gray-900">Slug</TableHead>
-              <TableHead className="font-semibold text-gray-900">Title (EN)</TableHead>
-              <TableHead className="font-semibold text-gray-900">Title (FR)</TableHead>
-              <TableHead className="font-semibold text-gray-900">Status</TableHead>
-              <TableHead className="text-right font-semibold text-gray-900">Actions</TableHead>
+          <TableHeader className="bg-[#232327]">
+            <TableRow className="hover:bg-transparent border-b border-[#2A2A2E]">
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Slug
+              </TableHead>
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Title (EN)
+              </TableHead>
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Title (FR)
+              </TableHead>
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Status
+              </TableHead>
+              <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Control
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {pages.map((page) => (
-              <TableRow key={page.id} className="hover:bg-gray-50 transition-colors duration-150">
-                <TableCell className="font-medium text-gray-900">{page.slug}</TableCell>
-                <TableCell className="text-gray-700">{page.titleEn}</TableCell>
-                <TableCell className="text-gray-700">{page.titleFr}</TableCell>
-                <TableCell>
+              <TableRow
+                key={page.id}
+                className="hover:bg-[#2A2A2E]/50 border-b border-[#2A2A2E] transition-colors"
+              >
+                <TableCell className="px-6 py-4">
+                  <span className="font-mono text-xs text-primary bg-primary/5 px-2 py-1 rounded border border-primary/10">
+                    /{page.slug}
+                  </span>
+                </TableCell>
+                <TableCell className="px-6 py-4 font-medium text-foreground">
+                  {page.titleEn}
+                </TableCell>
+                <TableCell className="px-6 py-4 text-muted-foreground">
+                  {page.titleFr}
+                </TableCell>
+                <TableCell className="px-6 py-4">
                   <form action={togglePageActive.bind(null, page.id)}>
-                    <Button variant="ghost" size="sm" type="submit">
+                    <button
+                      type="submit"
+                      className="group flex items-center gap-2"
+                    >
                       {page.isActive ? (
-                        <span className="flex items-center gap-1.5 text-green-600">
-                          <Eye className="h-4 w-4" />
-                          <span className="text-xs font-medium">Active</span>
-                        </span>
+                        <div className="badge-success">
+                          <Eye className="h-3 w-3" />
+                          <span>ACTIVE</span>
+                        </div>
                       ) : (
-                        <span className="flex items-center gap-1.5 text-gray-500">
-                          <EyeOff className="h-4 w-4" />
-                          <span className="text-xs font-medium">Inactive</span>
-                        </span>
+                        <div className="badge-status bg-muted/20 text-muted-foreground border border-muted/30">
+                          <EyeClosed className="h-3 w-3" />
+                          <span>INACTIVE</span>
+                        </div>
                       )}
-                    </Button>
+                    </button>
                   </form>
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" asChild className="border-gray-300 hover:bg-gray-100">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="hover:bg-accent text-foreground h-8 w-8 p-0"
+                      title="Edit Structure"
+                    >
                       <Link href={`/admin/pages/${page.id}/sections`}>
-                        <Layers className="h-4 w-4 mr-1" />
-                        Sections
+                        <NavArrowRight className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="outline" size="sm" asChild className="border-gray-300 hover:bg-gray-100">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="hover:bg-accent text-foreground h-8 w-8 p-0"
+                      title="Edit Content"
+                    >
                       <Link href={`/admin/pages/${page.id}`}>
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
+                        <EditPencil className="h-4 w-4" />
                       </Link>
                     </Button>
                     <form action={deletePage.bind(null, page.id)}>
-                      <Button variant="outline" size="sm" type="submit" className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700">
-                        <Trash2 className="h-4 w-4" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        type="submit"
+                        className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0"
+                        title="Purge"
+                      >
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </form>
                   </div>

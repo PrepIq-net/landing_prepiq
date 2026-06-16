@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Trash2, CheckCircle, Mail, MailOpen } from "lucide-react";
+import { Trash, Check, Mail } from "iconoir-react";
 import { deleteMessage, markAsRead } from "@/lib/actions/message-actions";
 import { Badge } from "@/components/ui/badge";
 
@@ -18,29 +18,34 @@ export default async function MessagesManager() {
   });
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Contact Messages</h1>
-        <p className="text-gray-500 mt-1">Manage incoming contact requests</p>
+    <div className="space-y-8">
+      <div className="space-y-1">
+        <h1 className="text-3xl font-display font-semibold tracking-tight text-foreground">
+          Communications
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Operator transmission logs and contact requests.
+        </p>
       </div>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+      <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden shadow-l2">
         <Table>
-          <TableHeader className="bg-gray-50">
-            <TableRow>
-              <TableHead className="font-semibold text-gray-900">
-                Date
+          <TableHeader className="bg-[#232327]">
+            <TableRow className="hover:bg-transparent border-b border-[#2A2A2E]">
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Timestamp
               </TableHead>
-              <TableHead className="font-semibold text-gray-900">
-                Sender
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Origin
               </TableHead>
-              <TableHead className="font-semibold text-gray-900">
-                Message
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Payload
               </TableHead>
-              <TableHead className="font-semibold text-gray-900">
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
                 Status
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-900">
-                Actions
+              <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Control
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -48,75 +53,71 @@ export default async function MessagesManager() {
             {messages.map((msg) => (
               <TableRow
                 key={msg.id}
-                className={`transition-colors duration-150 ${
+                className={`transition-colors duration-150 border-b border-[#2A2A2E] ${
                   msg.status === "unread"
-                    ? "bg-blue-50 hover:bg-blue-100"
-                    : "hover:bg-gray-50"
+                    ? "bg-primary/[0.03] hover:bg-primary/[0.06]"
+                    : "hover:bg-[#2A2A2E]/50"
                 }`}
               >
-                <TableCell className="whitespace-nowrap text-xs text-gray-500">
+                <TableCell className="px-6 py-4 whitespace-nowrap text-[11px] font-mono text-muted-foreground">
                   {msg.createdAt.toLocaleString()}
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
+                <TableCell className="px-6 py-4">
+                  <div className="flex flex-col gap-0.5">
                     <span
-                      className={
-                        msg.status === "unread"
-                          ? "font-bold text-gray-900"
-                          : "font-medium text-gray-700"
-                      }
+                      className={`text-sm ${msg.status === "unread" ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}
                     >
                       {msg.name}
                     </span>
-                    <span className="text-xs text-gray-500">{msg.email}</span>
+                    <span className="text-[11px] font-mono text-muted-foreground/60">
+                      {msg.email}
+                    </span>
                   </div>
                 </TableCell>
-                <TableCell className="max-w-md">
+                <TableCell className="px-6 py-4 max-w-md">
                   <p
-                    className={`text-sm ${msg.status === "unread" ? "font-semibold text-gray-900" : "text-gray-600"}`}
+                    className={`text-sm leading-relaxed ${msg.status === "unread" ? "font-medium text-foreground" : "text-muted-foreground"}`}
                   >
                     {msg.message}
                   </p>
                 </TableCell>
-                <TableCell>
+                <TableCell className="px-6 py-4">
                   {msg.status === "unread" ? (
-                    <Badge className="bg-blue-500 hover:bg-blue-600">
-                      <Mail className="h-3 w-3 mr-1" />
-                      New
-                    </Badge>
+                    <div className="badge-warning">
+                      <Mail className="h-3 w-3" />
+                      <span>PENDING</span>
+                    </div>
                   ) : (
-                    <Badge variant="outline" className="text-gray-600">
-                      <MailOpen className="h-3 w-3 mr-1" />
-                      Read
-                    </Badge>
+                    <div className="badge-status bg-muted/10 text-muted-foreground border border-muted/20">
+                      <Check className="h-3 w-3" />
+                      <span>PROCESSED</span>
+                    </div>
                   )}
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-2">
                     {msg.status === "unread" && (
                       <form action={markAsRead.bind(null, msg.id)}>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           type="submit"
-                          title="Mark as read"
-                          className="border-green-200 text-green-600 hover:bg-green-50 hover:text-green-700"
+                          className="hover:bg-success/10 text-success h-8 w-8 p-0"
+                          title="Acknowledge"
                         >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Mark as Read
+                          <Check className="h-4 w-4" />
                         </Button>
                       </form>
                     )}
                     <form action={deleteMessage.bind(null, msg.id)}>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         type="submit"
-                        className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
-                        title="Delete"
+                        className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0"
+                        title="Purge"
                       >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </form>
                   </div>
