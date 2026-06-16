@@ -5,7 +5,12 @@ const prisma = new PrismaClient();
 
 async function main() {
   const email = process.env.ADMIN_EMAIL || "admin@prepiq.io";
-  const password = process.env.ADMIN_PASSWORD || "admin123";
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!password) {
+    console.error("Error: ADMIN_PASSWORD environment variable is not set.");
+    process.exit(1);
+  }
 
   const passwordHash = await bcrypt.hash(password, 10);
 
