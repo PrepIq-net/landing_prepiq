@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Link, MessageSquare } from "lucide-react";
+import { Page, Link as LinkIcon, Mail } from "iconoir-react";
 
 export default async function AdminDashboard() {
   const [pagesCount, linksCount, messagesCount] = await Promise.all([
@@ -10,48 +9,103 @@ export default async function AdminDashboard() {
   ]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-2">Welcome back! Here's what's happening with your content.</p>
+    <div className="space-y-12">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-display font-semibold tracking-tight text-foreground">
+          System Overview
+        </h1>
+        <p className="text-muted-foreground text-lg max-w-2xl">
+          Infrastructure control panel. Operational metrics and content
+          management nodes are active.
+        </p>
       </div>
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-blue-900">Pages</CardTitle>
-            <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
-              <FileText className="h-5 w-5 text-blue-700" />
+
+      <div className="grid gap-8 md:grid-cols-3">
+        {/* Pages Node */}
+        <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl p-8 shadow-l2 hover:border-primary/30 transition-all duration-300 group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
+              <Page className="h-6 w-6 text-primary" />
             </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-4xl font-bold text-gray-900">{pagesCount}</div>
-            <p className="text-sm text-gray-500 mt-1">Total pages created</p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-purple-50 to-purple-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-purple-900">Links</CardTitle>
-            <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center">
-              <Link className="h-5 w-5 text-purple-700" />
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              Content Node
             </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-4xl font-bold text-gray-900">{linksCount}</div>
-            <p className="text-sm text-gray-500 mt-1">Navigation & footer links</p>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-amber-50 to-amber-100 rounded-t-lg">
-            <CardTitle className="text-sm font-medium text-amber-900">Unread Messages</CardTitle>
-            <div className="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center">
-              <MessageSquare className="h-5 w-5 text-amber-700" />
+          </div>
+          <div className="space-y-1">
+            <div className="text-5xl font-display font-semibold tracking-tighter text-foreground">
+              {pagesCount}
             </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-4xl font-bold text-gray-900">{messagesCount}</div>
-            <p className="text-sm text-gray-500 mt-1">Requires your attention</p>
-          </CardContent>
-        </Card>
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Active Pages
+            </p>
+          </div>
+          <div className="mt-6 pt-6 border-t border-[#2A2A2E]">
+            <p className="text-xs text-muted-foreground">
+              Operational status:{" "}
+              <span className="text-success font-semibold">OPTIMAL</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Links Node */}
+        <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl p-8 shadow-l2 hover:border-primary/30 transition-all duration-300 group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
+              <LinkIcon className="h-6 w-6 text-primary" />
+            </div>
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              Routing Node
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-5xl font-display font-semibold tracking-tighter text-foreground">
+              {linksCount}
+            </div>
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Nav Terminals
+            </p>
+          </div>
+          <div className="mt-6 pt-6 border-t border-[#2A2A2E]">
+            <p className="text-xs text-muted-foreground">
+              Map integrity:{" "}
+              <span className="text-success font-semibold">100%</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Messages Node */}
+        <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl p-8 shadow-l2 hover:border-primary/30 transition-all duration-300 group">
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
+              <Mail className="h-6 w-6 text-primary" />
+            </div>
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              Comm Node
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-5xl font-display font-semibold tracking-tighter text-foreground">
+              {messagesCount}
+            </div>
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Pending Syncs
+            </p>
+          </div>
+          <div className="mt-6 pt-6 border-t border-[#2A2A2E]">
+            <p className="text-xs text-muted-foreground">
+              Queue status:{" "}
+              <span
+                className={
+                  messagesCount > 0
+                    ? "text-warning font-semibold"
+                    : "text-success font-semibold"
+                }
+              >
+                {messagesCount > 0 ? "ATTENTION REQ" : "SYNCHRONIZED"}
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

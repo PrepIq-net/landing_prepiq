@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Home, FileText, Link as LinkIcon, Mail, LogOut, LayoutDashboard, Plus } from "lucide-react";
+import {
+  ViewGrid,
+  Page,
+  Link as LinkIcon,
+  Mail,
+  LogOut,
+  Home,
+  Plus,
+} from "iconoir-react";
 
 export default async function AdminLayout({
   children,
@@ -11,57 +18,66 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
 
+  // If no session, just render children (which will be the login page)
+  if (!session) {
+    return <div className="min-h-screen bg-background">{children}</div>;
+  }
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-background text-foreground font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-gradient-to-b from-blue-900 to-blue-950 text-white flex flex-col shadow-lg">
-        <div className="p-6 border-b border-blue-800">
-          <Link href="/admin" className="flex items-center gap-3 font-bold text-2xl">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <LayoutDashboard className="w-6 h-6" />
+      <aside className="w-64 bg-card border-r border-border flex flex-col shadow-l2">
+        <div className="p-6 border-b border-border">
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 font-display font-bold text-xl tracking-tight text-primary"
+          >
+            <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center border border-primary/20">
+              <ViewGrid className="w-5 h-5 text-primary" />
             </div>
             PrepIQ Admin
           </Link>
         </div>
-        <nav className="flex-1 p-4 space-y-2">
-          <div className="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-4 px-2">
-            Content Management
+        <nav className="flex-1 p-4 space-y-1.5">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] mb-3 px-3">
+            Operational Control
           </div>
           <Link
             href="/admin"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-800/50 transition-all duration-200 font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
-            <LayoutDashboard className="w-5 h-5" />
+            <ViewGrid className="w-4.5 h-4.5 opacity-70" />
             Dashboard
           </Link>
           <Link
             href="/admin/pages"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-800/50 transition-all duration-200 font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
-            <FileText className="w-5 h-5" />
+            <Page className="w-4.5 h-4.5 opacity-70" />
             Pages
           </Link>
           <Link
             href="/admin/links"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-800/50 transition-all duration-200 font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
-            <LinkIcon className="w-5 h-5" />
+            <LinkIcon className="w-4.5 h-4.5 opacity-70" />
             Links
           </Link>
           <Link
             href="/admin/messages"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-800/50 transition-all duration-200 font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
-            <Mail className="w-5 h-5" />
+            <Mail className="w-4.5 h-4.5 opacity-70" />
             Messages
           </Link>
         </nav>
-        <div className="p-4 border-t border-blue-800 space-y-2">
+
+        <div className="p-4 border-t border-border space-y-1.5">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-blue-200 hover:text-white hover:bg-blue-800/50 transition-all duration-200 text-sm"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 text-sm"
           >
-            <Home className="w-4 h-4" />
+            <Home className="w-4.5 h-4.5 opacity-70" />
             View Site
           </Link>
           <form
@@ -70,26 +86,34 @@ export default async function AdminLayout({
               await signOut();
             }}
           >
-            <Button
-              variant="outline"
-              className="w-full justify-start border-blue-700 text-blue-200 hover:bg-blue-800/50 hover:text-white hover:border-blue-600"
+            <button
+              type="submit"
+              className="flex w-full items-center gap-3 px-3 py-2.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all duration-200 text-sm font-medium"
             >
-              <LogOut className="w-4 h-4 mr-2" />
+              <LogOut className="w-4.5 h-4.5 opacity-70" />
               Logout
-            </Button>
+            </button>
           </form>
         </div>
-        {session?.user?.email && (
-          <div className="p-4 border-t border-blue-800 text-xs text-blue-300">
-            <div className="font-medium">Logged in as</div>
-            <div className="text-blue-200 truncate">{session.user.email}</div>
+
+        <div className="p-4 border-t border-border flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary border border-primary/20">
+            {session.user?.email?.[0].toUpperCase()}
           </div>
-        )}
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-semibold truncate text-foreground">
+              {session.user?.email?.split("@")[0]}
+            </div>
+            <div className="text-[10px] text-muted-foreground truncate uppercase tracking-wider">
+              Administrator
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 min-h-screen">
-        <div className="p-8">{children}</div>
+      <main className="flex-1 min-h-screen overflow-y-auto">
+        <div className="max-w-[1440px] mx-auto p-8">{children}</div>
       </main>
     </div>
   );
