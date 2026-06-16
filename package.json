@@ -9,8 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed:admin": "export DATABASE_URL=\"file:$(pwd)/prisma/dev.db\" && tsx scripts/seedAdmin.ts",
-    "db:seed:pages": "export DATABASE_URL=\"file:$(pwd)/prisma/dev.db\" && tsx scripts/seedPages.ts"
+    "db:seed:admin": "export DATABASE_URL=\"file:$(pwd)/dev.db\" && tsx scripts/seedAdmin.ts",
+    "db:seed:pages": "export DATABASE_URL=\"file:$(pwd)/dev.db\" && tsx scripts/seedPages.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
