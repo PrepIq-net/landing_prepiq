@@ -22,8 +22,11 @@ export default async function Page() {
 
   if (!page) return <div>Page not found</div>;
 
+  const config = JSON.parse(page.configJson || "{}");
+  const maxWidth = config.maxWidth || "1440px";
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
       <Navbar links={navLinks} />
       <ScrollToTop />
       <CookieConsent />

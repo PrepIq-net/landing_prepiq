@@ -4,9 +4,19 @@ import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const page = await prisma.page.findUnique({ where: { id } });
+
+  const page = await prisma.page.findUnique({
+    where: { id },
+    include: {
+      sections: {
+        orderBy: { sortOrder: "asc" },
+      }
+    }
+  });
+
   if (!page) {
     notFound();
   }
-  return <EditPageForm page={page!} />;
+
+  return <EditPageForm page={page} />;
 }

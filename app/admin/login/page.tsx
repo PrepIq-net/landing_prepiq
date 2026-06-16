@@ -44,7 +44,7 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="admin@prepiq.io"
+                  placeholder="name@example.com"
                   required
                   className="pl-10 bg-[#141416] border-[#2A2A2E] focus:border-primary/50 focus:ring-primary/20 transition-all h-11"
                 />

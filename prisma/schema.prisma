@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -65,7 +64,11 @@ model Page {
   sortOrder          Int       @default(0)
   metaDescriptionEn  String?
   metaDescriptionFr  String?
+  configJson         String?   @default("{}") // Global page configuration
   sections           Section[]
+
+  @@index([isActive])
+  @@index([slug, isActive])
 }
 
 model Section {
@@ -76,8 +79,11 @@ model Section {
   titleEn       String?
   titleFr       String?
   contentJson   String  // Store as JSON string in SQLite
+  styleJson     String? @default("{}") // Component-specific styling
   isActive      Boolean @default(true)
   sortOrder     Int     @default(0)
+
+  @@index([pageId, isActive, sortOrder])
 }
 
 model Link {

@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { revalidateTag } from "@/lib/revalidate";
 import { z } from "zod";
 
 const PageSchema = z.object({
@@ -11,6 +12,7 @@ const PageSchema = z.object({
   metaDescriptionEn: z.string().optional(),
   metaDescriptionFr: z.string().optional(),
   sortOrder: z.coerce.number().int().default(0),
+  configJson: z.string().optional(),
 });
 
 export async function createPage(formData: FormData) {
@@ -31,14 +33,33 @@ export async function createPage(formData: FormData) {
 }
 
 export async function updatePage(id: string, formData: FormData) {
-  const data = Object.fromEntries(formData.entries());
+  const rawData = Object.fromEntries(formData.entries());
+
+  // Extract config fields if they exist
+  const configFields = ['maxWidth', 'spacingScale', 'borderRadius'];
+  const config: Record<string, any> = {};
+  const data: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(rawData)) {
+    if (configFields.includes(key)) {
+      config[key] = value;
+    } else {
+      data[key] = value;
+    }
+  }
+
+  if (Object.keys(config).length > 0) {
+    data.configJson = JSON.stringify(config);
+  }
+
   const validated = PageSchema.safeParse(data);
   if (!validated.success) {
     return { success: false, errors: validated.error.flatten().fieldErrors };
   }
 
   try {
-    await prisma.page.update({ where: { id }, data: validated.data });
+    await prisma.page.update({ where: { id }, data: validated.data as any });
+    revalidateTag("pages");
     revalidatePath("/admin/pages");
     revalidatePath(`/${validated.data.slug}`);
     return { success: true };
