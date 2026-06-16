@@ -101,7 +101,9 @@ export default async function UsersPage() {
                       </Link>
                     </Button>
                     {user.id !== currentUser.id && (
-                      <form action={deleteUser.bind(null, user.id)}>
+                      <form action={async () => {
+                        await deleteUser(user.id);
+                      }}>
                         <Button variant="ghost" size="sm" type="submit" className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0">
                           <span className="sr-only">Delete</span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
