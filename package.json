@@ -6,11 +6,16 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed:admin": "export DATABASE_URL=\"file:$(pwd)/dev.db\" && tsx scripts/seedAdmin.ts",
-    "db:seed:pages": "export DATABASE_URL=\"file:$(pwd)/dev.db\" && tsx scripts/seedPages.ts"
+    "db:seed:admin": "tsx scripts/seedAdmin.ts",
+    "db:seed:pages": "tsx scripts/seedPages.ts",
+    "db:seed": "npm run db:seed:admin && npm run db:seed:pages",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx scripts/seedAdmin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

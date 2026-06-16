@@ -29,7 +29,7 @@ enum EntityType {
   LINK
   USER
   MESSAGE
-  DEMO
+  MEETING
 }
 
 model User {
@@ -42,6 +42,18 @@ model User {
   updatedAt     DateTime      @updatedAt
   activities    ActivityLog[]
 }
+
+model ActivityLog {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    ActionType
+  entity    EntityType
+  entityId  String?
+  details   String?
+  createdAt DateTime   @default(now())
+}
+
 
 model Page {
   id                 String    @id @default(cuid())
@@ -87,22 +99,24 @@ model ContactMessage {
   status    String   @default("unread") // "unread", "read", "archived"
 }
 
-enum DemoStatus {
+enum MeetingStatus {
   PENDING
   CONFIRMED
   COMPLETED
   CANCELLED
 }
 
-model DemoBooking {
-  id          String       @id @default(cuid())
+model Meeting {
+  id          String        @id @default(cuid())
   name        String
   email       String
   company     String?
   phone       String?
   date        DateTime
   notes       String?
-  status      DemoStatus   @default(PENDING)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  meetingLink String?
+  status      MeetingStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
+

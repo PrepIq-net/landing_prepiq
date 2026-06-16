@@ -12,14 +12,67 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash } from "iconoir-react";
 import {
-  deleteDemoBooking,
-  updateDemoBookingStatus,
-} from "@/lib/actions/demo-booking-actions";
-import { DemoStatus } from "@prisma/client";
+  deleteMeeting,
+  updateMeetingStatus,
+  updateMeetingLink,
+} from "@/lib/actions/meeting-actions";
+import { MeetingStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
-export default async function DemosPage() {
+function MeetingLinkEditor({
+  meetingId,
+  currentLink,
+}: {
+  meetingId: string;
+  currentLink?: string | null;
+}) {
+  return (
+    <form action={updateMeetingLink} className="flex gap-1">
+      <input type="hidden" name="meetingId" value={meetingId} />
+      <input
+        type="text"
+        name="meetingLink"
+        defaultValue={currentLink || ""}
+        placeholder="Add meeting link"
+        className="h-8 bg-[#141416] border border-[#2A2A2E] rounded px-2 text-sm text-foreground"
+      />
+      <Button variant="ghost" size="sm" type="submit" className="h-8 text-xs">
+        Save
+      </Button>
+    </form>
+  );
+}
+
+function UpdateStatusButton({
+  meetingId,
+  status,
+  label,
+}: {
+  meetingId: string;
+  status: MeetingStatus;
+  label: string;
+}) {
+  return (
+    <form
+      action={async (formData) => {
+        await updateMeetingStatus(meetingId, status);
+      }}
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        type="submit"
+        className="hover:bg-accent text-muted-foreground h-8 text-xs px-2"
+      >
+        {label}
+      </Button>
+    </form>
+  );
+}
+
+export default async function MeetingsPage() {
   const session = await auth();
   const currentUser = await prisma.user.findUnique({
     where: { email: session?.user?.email! },
@@ -29,31 +82,31 @@ export default async function DemosPage() {
     return notFound();
   }
 
-  const demos = await prisma.demoBooking.findMany({
+  const meetings = await prisma.meeting.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  const getStatusBadge = (status: DemoStatus) => {
+  const getStatusBadge = (status: MeetingStatus) => {
     switch (status) {
-      case DemoStatus.PENDING:
+      case MeetingStatus.PENDING:
         return (
           <div className="badge-warning">
             <span>PENDING</span>
           </div>
         );
-      case DemoStatus.CONFIRMED:
+      case MeetingStatus.CONFIRMED:
         return (
           <div className="badge-info">
             <span>CONFIRMED</span>
           </div>
         );
-      case DemoStatus.COMPLETED:
+      case MeetingStatus.COMPLETED:
         return (
           <div className="badge-success">
             <span>COMPLETED</span>
           </div>
         );
-      case DemoStatus.CANCELLED:
+      case MeetingStatus.CANCELLED:
         return (
           <div className="badge-critical">
             <span>CANCELLED</span>
@@ -66,10 +119,10 @@ export default async function DemosPage() {
     <div className="space-y-8">
       <div className="space-y-1">
         <h1 className="text-3xl font-display font-semibold tracking-tight text-foreground">
-          Demos
+          Meetings
         </h1>
         <p className="text-muted-foreground text-sm">
-          Manage demo booking requests
+          Manage scheduled meetings and links
         </p>
       </div>
 
@@ -78,7 +131,7 @@ export default async function DemosPage() {
           <TableHeader className="bg-[#232327]">
             <TableRow className="hover:bg-transparent border-b border-[#2A2A2E]">
               <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
-                Date
+                Date & Time
               </TableHead>
               <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
                 Name
@@ -90,6 +143,9 @@ export default async function DemosPage() {
                 Company
               </TableHead>
               <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
+                Meeting Link
+              </TableHead>
+              <TableHead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
                 Status
               </TableHead>
               <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-4">
@@ -98,85 +154,78 @@ export default async function DemosPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {demos.map((demo) => (
+            {meetings.map((meeting) => (
               <TableRow
-                key={demo.id}
+                key={meeting.id}
                 className="hover:bg-[#2A2A2E]/50 border-b border-[#2A2A2E] transition-colors"
               >
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
-                  {format(demo.date, "MMM d, yyyy h:mm a")}
+                  {format(meeting.date, "MMM d, yyyy h:mm a")}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-sm text-foreground">
-                  {demo.name}
+                  {meeting.name}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-sm text-muted-foreground font-mono">
-                  {demo.email}
+                  {meeting.email}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-sm text-muted-foreground">
-                  {demo.company || "—"}
+                  {meeting.company || "—"}
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {getStatusBadge(demo.status)}
+                  {meeting.meetingLink ? (
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={meeting.meetingLink}
+                        target="_blank"
+                        className="text-primary text-sm hover:underline flex items-center gap-1"
+                      >
+                        Open Link
+                      </Link>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">
+                      No link
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {getStatusBadge(meeting.status)}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 flex-col items-end">
                     <div className="flex gap-1">
-                      <form
-                        action={updateDemoBookingStatus.bind(
-                          null,
-                          demo.id,
-                          DemoStatus.CONFIRMED,
-                        )}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          type="submit"
-                          className="hover:bg-accent text-muted-foreground h-8 text-xs px-2"
-                        >
-                          Confirm
-                        </Button>
-                      </form>
-                      <form
-                        action={updateDemoBookingStatus.bind(
-                          null,
-                          demo.id,
-                          DemoStatus.COMPLETED,
-                        )}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          type="submit"
-                          className="hover:bg-accent text-muted-foreground h-8 text-xs px-2"
-                        >
-                          Complete
-                        </Button>
-                      </form>
-                      <form
-                        action={updateDemoBookingStatus.bind(
-                          null,
-                          demo.id,
-                          DemoStatus.CANCELLED,
-                        )}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          type="submit"
-                          className="hover:bg-accent text-muted-foreground h-8 text-xs px-2"
-                        >
-                          Cancel
-                        </Button>
-                      </form>
+                      <UpdateStatusButton
+                        meetingId={meeting.id}
+                        status={MeetingStatus.CONFIRMED}
+                        label="Confirm"
+                      />
+                      <UpdateStatusButton
+                        meetingId={meeting.id}
+                        status={MeetingStatus.COMPLETED}
+                        label="Complete"
+                      />
+                      <UpdateStatusButton
+                        meetingId={meeting.id}
+                        status={MeetingStatus.CANCELLED}
+                        label="Cancel"
+                      />
                     </div>
+                    <MeetingLinkEditor
+                      meetingId={meeting.id}
+                      currentLink={meeting.meetingLink}
+                    />
                     {currentUser.role === "ADMIN" && (
-                      <form action={deleteDemoBooking.bind(null, demo.id)}>
+                      <form action={deleteMeeting}>
+                        <input
+                          type="hidden"
+                          name="meetingId"
+                          value={meeting.id}
+                        />
                         <Button
                           variant="ghost"
                           size="sm"
                           type="submit"
-                          className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0"
+                          className="hover:bg-destructive/10 text-destructive h-8 w-8 p-0 mt-1"
                           title="Delete"
                         >
                           <Trash className="w-4 h-4" />
