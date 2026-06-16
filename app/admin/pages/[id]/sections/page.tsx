@@ -6,9 +6,10 @@ import { Edit, ArrowUp, ArrowDown, Eye, EyeOff } from "lucide-react";
 import { toggleSection, moveSection } from "@/lib/actions/section-actions";
 import { Badge } from "@/components/ui/badge";
 
-export default async function PageSectionsManager({ params }: { params: { id: string } }) {
+export default async function PageSectionsManager({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const page = await prisma.page.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       sections: {
         orderBy: { sortOrder: "asc" },
