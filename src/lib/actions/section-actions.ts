@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { revalidateTag } from "@/lib/revalidate";
 import { z } from "zod";
 
 const SectionSchema = z.object({
@@ -39,6 +40,7 @@ export async function updateSection(id: string, formData: FormData) {
 
   try {
     await prisma.section.update({ where: { id }, data: validated.data });
+    revalidateTag("sections");
     revalidatePath("/admin/pages/[id]/sections", "page");
     revalidatePath("/admin/pages/[id]/sections/[sectionId]", "page");
     revalidatePath("/");
@@ -99,5 +101,6 @@ export async function updateSectionContent(id: string, contentJson: string) {
     where: { id },
     data: { contentJson },
   });
+  revalidateTag("sections");
   revalidatePath("/");
 }
