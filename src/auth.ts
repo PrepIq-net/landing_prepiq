@@ -3,8 +3,10 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { authConfig } from "@/auth.config";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -17,7 +19,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const user = await prisma.user.findUnique({ where: { email } });
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
-
           if (passwordsMatch) return { id: user.id, email: user.email, name: user.role };
         }
 
@@ -25,22 +26,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  pages: {
-    signIn: "/admin/login",
-  },
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
-      const isLoginPage = nextUrl.pathname === "/admin/login";
-
-      if (isOnAdmin && !isLoginPage) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn && isLoginPage) {
-        return Response.redirect(new URL("/admin", nextUrl));
-      }
-      return true;
-    },
-  },
 });
