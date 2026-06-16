@@ -7,12 +7,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum ActionType {
+  CREATE
+  UPDATE
+  DELETE
+  ACTIVATE
+  DEACTIVATE
+  LOGIN
+  LOGOUT
+}
+
+enum EntityType {
+  PAGE
+  SECTION
+  LINK
+  USER
+  MESSAGE
+  DEMO
+}
+
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
+  id            String        @id @default(cuid())
+  email         String        @unique
   passwordHash  String
-  role          String   @default("admin")
-  createdAt     DateTime @default(now())
+  role          Role          @default(EDITOR)
+  isActive      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  activities    ActivityLog[]
 }
 
 model Page {
@@ -56,5 +84,25 @@ model ContactMessage {
   email     String
   message   String
   createdAt DateTime @default(now())
-  status    String   @default("unread") // 'unread', 'read', 'archived'
+  status    String   @default("unread") // "unread", "read", "archived"
+}
+
+enum DemoStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model DemoBooking {
+  id          String       @id @default(cuid())
+  name        String
+  email       String
+  company     String?
+  phone       String?
+  date        DateTime
+  notes       String?
+  status      DemoStatus   @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }

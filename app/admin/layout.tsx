@@ -9,7 +9,11 @@ import {
   LogOut,
   Home,
   Plus,
+  User,
+  Clock,
+  Calendar,
 } from "iconoir-react";
+import { prisma } from "@/lib/prisma";
 
 export default async function AdminLayout({
   children,
@@ -22,6 +26,11 @@ export default async function AdminLayout({
   if (!session) {
     return <div className="min-h-screen bg-background">{children}</div>;
   }
+
+  // Get current user's role
+  const currentUser = await prisma.user.findUnique({
+    where: { email: session.user?.email! },
+  });
 
   return (
     <div className="flex min-h-screen bg-background text-foreground font-sans">
@@ -39,7 +48,7 @@ export default async function AdminLayout({
           </Link>
         </div>
         <nav className="flex-1 p-4 space-y-1.5">
-          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] mb-3 px-3">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 px-3">
             Operational Control
           </div>
           <Link
@@ -68,8 +77,37 @@ export default async function AdminLayout({
             className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
             <Mail className="w-4.5 h-4.5 opacity-70" />
-            Messages
+            Communications
           </Link>
+          <Link
+            href="/admin/demos"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
+          >
+            <Calendar className="w-4.5 h-4.5 opacity-70" />
+            Demos
+          </Link>
+
+          {currentUser?.role === "ADMIN" && (
+            <>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mt-6 px-3">
+                System Administration
+              </div>
+              <Link
+                href="/admin/users"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
+              >
+                <User className="w-4.5 h-4.5 opacity-70" />
+                Staff
+              </Link>
+              <Link
+                href="/admin/activity"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
+              >
+                <Clock className="w-4.5 h-4.5 opacity-70" />
+                Activity Log
+              </Link>
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t border-border space-y-1.5">
