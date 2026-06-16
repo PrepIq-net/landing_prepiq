@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslation, Trans } from "react-i18next";
-
-const WEB3FORMS_KEY = "ccacc9ed-7685-4d71-bef2-55f5c3013efc";
+import { submitContactForm } from "@/lib/actions/contact-actions";
 
 const ContactSection = () => {
   const { t, i18n } = useTranslation();
@@ -28,25 +27,17 @@ const ContactSection = () => {
     e.preventDefault();
     setLoading(true);
 
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("company", company);
+    formData.append("locations", selectedLocations || "");
+    formData.append("message", message);
+
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `New PrepIQ Lead — ${company || name || email}`,
-          name: name.trim(),
-          email: email.trim(),
-          company: company.trim(),
-          locations: selectedLocations || (i18n.resolvedLanguage === 'fr' ? "Non spécifié" : "Not specified"),
-          message: message.trim(),
-          language: i18n.resolvedLanguage,
-        }),
-      });
+      const result = await submitContactForm(formData);
 
-      const data = await res.json();
-
-      if (data.success) {
+      if (result.success) {
         setSubmitted(true);
         setName("");
         setEmail("");
@@ -118,8 +109,6 @@ const ContactSection = () => {
               ))}
             </div>
 
-            {/* Trust points */}
-
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -159,6 +148,7 @@ const ContactSection = () => {
                       {t("contact.name")}
                     </label>
                     <input
+                      name="name"
                       type="text"
                       placeholder={t("contact.placeholderName")}
                       maxLength={100}
@@ -173,6 +163,7 @@ const ContactSection = () => {
                       {t("contact.email")} <span className="text-destructive">*</span>
                     </label>
                     <input
+                      name="email"
                       type="email"
                       placeholder={t("contact.placeholderEmail")}
                       required
@@ -191,6 +182,7 @@ const ContactSection = () => {
                     {t("contact.company")}
                   </label>
                   <input
+                    name="company"
                     type="text"
                     placeholder={t("contact.placeholderCompany")}
                     maxLength={200}
@@ -229,6 +221,7 @@ const ContactSection = () => {
                     {t("contact.message")}
                   </label>
                   <textarea
+                    name="message"
                     rows={4}
                     placeholder={t("contact.placeholderMessage")}
                     maxLength={1000}
