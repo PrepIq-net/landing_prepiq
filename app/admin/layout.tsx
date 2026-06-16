@@ -80,11 +80,11 @@ export default async function AdminLayout({
             Communications
           </Link>
           <Link
-            href="/admin/demos"
+            href="/admin/meetings"
             className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
           >
             <Calendar className="w-4.5 h-4.5 opacity-70" />
-            Demos
+            Meetings
           </Link>
 
           {currentUser?.role === "ADMIN" && (
