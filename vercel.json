@@ -3,8 +3,5 @@
   "devCommand": "next dev",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "env": {
-    "DATABASE_URL": "file:./dev.db"
-  }
+  "installCommand": "npm install --legacy-peer-deps"
 }
