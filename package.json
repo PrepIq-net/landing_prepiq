@@ -14,9 +14,6 @@
     "db:seed": "npm run db:seed:admin && npm run db:seed:pages",
     "postinstall": "prisma generate"
   },
-  "prisma": {
-    "seed": "tsx scripts/seedAdmin.ts"
-  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@libsql/client": "^0.17.4",
