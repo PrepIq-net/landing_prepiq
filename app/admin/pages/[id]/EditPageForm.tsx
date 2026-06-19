@@ -169,7 +169,7 @@ export default function EditPageForm({ page }: EditPageFormProps) {
 
                     <div className="space-y-2">
                       <Label htmlFor="layoutWidth">Container Max Width</Label>
-                      <Select defaultValue={JSON.parse(page.configJson || "{}").maxWidth || "1440px"} name="maxWidth">
+                      <Select defaultValue={(typeof page.configJson === 'string' ? JSON.parse(page.configJson || "{}") : (page.configJson || {})).maxWidth || "1440px"} name="maxWidth">
                         <SelectTrigger id="layoutWidth">
                           <SelectValue placeholder="Select width" />
                         </SelectTrigger>
@@ -183,7 +183,7 @@ export default function EditPageForm({ page }: EditPageFormProps) {
 
                     <div className="space-y-2">
                       <Label htmlFor="spacingScale">Global Spacing Scale</Label>
-                      <Select defaultValue={JSON.parse(page.configJson || "{}").spacingScale || "8px"} name="spacingScale">
+                      <Select defaultValue={(typeof page.configJson === 'string' ? JSON.parse(page.configJson || "{}") : (page.configJson || {})).spacingScale || "8px"} name="spacingScale">
                         <SelectTrigger id="spacingScale">
                           <SelectValue placeholder="Select spacing" />
                         </SelectTrigger>
@@ -197,7 +197,7 @@ export default function EditPageForm({ page }: EditPageFormProps) {
 
                     <div className="space-y-2">
                       <Label htmlFor="borderRadius">Component Radius</Label>
-                      <Select defaultValue={JSON.parse(page.configJson || "{}").borderRadius || "12px"} name="borderRadius">
+                      <Select defaultValue={(typeof page.configJson === 'string' ? JSON.parse(page.configJson || "{}") : (page.configJson || {})).borderRadius || "12px"} name="borderRadius">
                         <SelectTrigger id="borderRadius">
                           <SelectValue placeholder="Select radius" />
                         </SelectTrigger>

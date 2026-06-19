@@ -38,7 +38,7 @@ interface DynamicSectionRendererProps {
   sections: {
     id: string;
     componentType: string;
-    contentJson: string;
+    contentJson: any;
   }[];
 }
 
@@ -49,12 +49,9 @@ export default function DynamicSectionRenderer({ sections }: DynamicSectionRende
         const Component = COMPONENTS[section.componentType];
         if (!Component) return null;
 
-        let content = {};
-        try {
-          content = JSON.parse(section.contentJson);
-        } catch (e) {
-          console.error(`Failed to parse JSON for section ${section.id}`, e);
-        }
+        const content = typeof section.contentJson === 'string'
+          ? JSON.parse(section.contentJson)
+          : section.contentJson;
 
         return (
           <Suspense key={section.id} fallback={<SectionFallback />}>

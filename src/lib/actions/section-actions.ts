@@ -9,7 +9,7 @@ const SectionSchema = z.object({
   componentType: z.string().min(1, "Component type is required"),
   titleEn: z.string().optional(),
   titleFr: z.string().optional(),
-  contentJson: z.string().default("{}"),
+  contentJson: z.any().default("{}"),
   sortOrder: z.coerce.number().int().default(0),
 });
 
@@ -21,7 +21,12 @@ export async function createSection(pageId: string, formData: FormData) {
   }
 
   try {
-    await prisma.section.create({ data: { ...validated.data, pageId } });
+    const sectionData = {
+      ...validated.data,
+      contentJson: validated.data.contentJson || "{}",
+      pageId
+    };
+    await prisma.section.create({ data: sectionData as any });
     revalidatePath("/admin/pages/[id]/sections", "page");
     revalidatePath("/");
     return { success: true };
@@ -96,10 +101,11 @@ export async function moveSection(id: string, direction: "up" | "down") {
   revalidatePath("/");
 }
 
-export async function updateSectionContent(id: string, contentJson: string) {
+export async function updateSectionContent(id: string, contentJson: any) {
+  const data = typeof contentJson === 'string' ? JSON.parse(contentJson) : contentJson;
   await prisma.section.update({
     where: { id },
-    data: { contentJson },
+    data: { contentJson: data },
   });
   revalidateTag("sections");
   revalidatePath("/");

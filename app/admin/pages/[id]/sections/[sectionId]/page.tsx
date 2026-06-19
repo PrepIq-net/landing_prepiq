@@ -16,7 +16,7 @@ export default async function SectionEditor({
 
   if (!section) notFound();
 
-  const content = JSON.parse(section.contentJson);
+  const content = typeof section.contentJson === 'string' ? JSON.parse(section.contentJson) : section.contentJson;
 
   return (
     <div className="space-y-6">
