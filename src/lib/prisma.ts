@@ -12,7 +12,7 @@ function createPrismaClient(): PrismaClient {
     });
   }
 
-  // In development, also use PostgreSQL (no SQLite fallback)
+  // In development, also use PostgreSQL (no SQLite)
   return new PrismaClient({
     log: ["query"],
   });
