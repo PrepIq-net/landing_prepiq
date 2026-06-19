@@ -1,11 +1,11 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 
@@ -66,7 +66,7 @@ model Page {
   sortOrder          Int       @default(0)
   metaDescriptionEn  String?
   metaDescriptionFr  String?
-  configJson         String?   @default("{}") // Global page configuration
+  configJson         Json?     @default("{}") // Global page configuration
   sections           Section[]
 
   @@index([isActive])
@@ -80,8 +80,8 @@ model Section {
   componentType String
   titleEn       String?
   titleFr       String?
-  contentJson   String  // Store as JSON string in SQLite
-  styleJson     String? @default("{}") // Component-specific styling
+  contentJson   Json
+  styleJson     Json?   @default("{}") // Component-specific styling
   isActive      Boolean @default(true)
   sortOrder     Int     @default(0)
 

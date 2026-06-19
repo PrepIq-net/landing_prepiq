@@ -12,7 +12,7 @@ const PageSchema = z.object({
   metaDescriptionEn: z.string().optional(),
   metaDescriptionFr: z.string().optional(),
   sortOrder: z.coerce.number().int().default(0),
-  configJson: z.string().optional(),
+  configJson: z.any().optional(),
 });
 
 export async function createPage(formData: FormData) {
@@ -49,7 +49,7 @@ export async function updatePage(id: string, formData: FormData) {
   }
 
   if (Object.keys(config).length > 0) {
-    data.configJson = JSON.stringify(config);
+    data.configJson = config;
   }
 
   const validated = PageSchema.safeParse(data);

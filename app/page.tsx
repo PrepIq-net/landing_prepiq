@@ -22,7 +22,7 @@ export default async function Page() {
 
   if (!page) return <div>Page not found</div>;
 
-  const config = JSON.parse(page.configJson || "{}");
+  const config = typeof page.configJson === 'string' ? JSON.parse(page.configJson || "{}") : (page.configJson || {});
   const maxWidth = config.maxWidth || "1440px";
 
   return (

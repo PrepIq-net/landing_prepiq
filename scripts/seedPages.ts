@@ -11,71 +11,101 @@ async function main() {
   const en = JSON.parse(fs.readFileSync(enPath, "utf8"));
   const fr = JSON.parse(fs.readFileSync(frPath, "utf8"));
 
-  // 1. Create Home Page
-  const homePage = await prisma.page.upsert({
-    where: { slug: "home" },
-    update: {},
-    create: {
-      slug: "home",
-      titleEn: "Home",
-      titleFr: "Accueil",
-      isActive: true,
-      sortOrder: 0,
-    },
-  });
+  // Helper to upsert a page and return it
+  async function upsertPage(slug: string, titleEn: string, titleFr: string, sortOrder: number) {
+    const existing = await prisma.page.findUnique({ where: { slug } });
+    if (existing) {
+      if (existing.titleEn !== titleEn || existing.titleFr !== titleFr || existing.sortOrder !== sortOrder) {
+        return await prisma.page.update({
+          where: { slug },
+          data: { titleEn, titleFr, sortOrder },
+        });
+      }
+      return existing;
+    } else {
+      return await prisma.page.create({
+        data: { slug, titleEn, titleFr, sortOrder, isActive: true },
+      });
+    }
+  }
 
-  // 2. Create Legal Pages
-  await prisma.page.upsert({
-    where: { slug: "privacy-policy" },
-    update: {},
-    create: { slug: "privacy-policy", titleEn: "Privacy Policy", titleFr: "Politique de Confidentialité", isActive: true, sortOrder: 1 },
-  });
-  await prisma.page.upsert({
-    where: { slug: "terms-of-service" },
-    update: {},
-    create: { slug: "terms-of-service", titleEn: "Terms of Service", titleFr: "Conditions d'Utilisation", isActive: true, sortOrder: 2 },
-  });
-  await prisma.page.upsert({
-    where: { slug: "security" },
-    update: {},
-    create: { slug: "security", titleEn: "Security", titleFr: "Sécurité", isActive: true, sortOrder: 3 },
-  });
+  // 1. Create/Update Pages
+  const homePage = await upsertPage("home", "Home", "Accueil", 0);
+  await upsertPage("privacy-policy", "Privacy Policy", "Politique de Confidentialité", 1);
+  await upsertPage("terms-of-service", "Terms of Service", "Conditions d'Utilisation", 2);
+  await upsertPage("security", "Security", "Sécurité", 3);
 
   // 3. Define Sections for Home Page
   const sections = [
-    { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: JSON.stringify({ en: en.hero, fr: fr.hero }) },
-    { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: JSON.stringify({ en: en.integrations, fr: fr.integrations }) },
-    { componentType: "KitchenTestSection", titleEn: "Kitchen Test", titleFr: "Test de cuisine", contentJson: JSON.stringify({ en: en.kitchenTest, fr: fr.kitchenTest }) },
-    { componentType: "AIThinkingSection", titleEn: "AI Thinking", titleFr: "Réflexion IA", contentJson: JSON.stringify({ en: en.aiThinking, fr: fr.aiThinking }) },
-    { componentType: "WhyPrepIQSection", titleEn: "Why PrepIQ", titleFr: "Pourquoi PrepIQ", contentJson: JSON.stringify({ en: en.whyPrepIQ, fr: fr.whyPrepIQ }) },
-    { componentType: "ProblemSection", titleEn: "Problem", titleFr: "Problème", contentJson: JSON.stringify({ en: en.problem, fr: fr.problem }) },
-    { componentType: "WhyNowSection", titleEn: "Why Now", titleFr: "Pourquoi maintenant", contentJson: JSON.stringify({ en: en.whyNow, fr: fr.whyNow }) },
-    { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: JSON.stringify({ en: en.howItWorks, fr: fr.howItWorks }) },
-    { componentType: "IntelligenceSection", titleEn: "Intelligence", titleFr: "Intelligence", contentJson: JSON.stringify({ en: en.intelligence, fr: fr.intelligence }) },
-    { componentType: "MarginGuardSection", titleEn: "Margin Guard", titleFr: "Margin Guard", contentJson: JSON.stringify({ en: en.marginGuard, fr: fr.marginGuard }) },
-    { componentType: "ValueSection", titleEn: "Value", titleFr: "Valeur", contentJson: JSON.stringify({ en: en.value, fr: fr.value }) },
-    { componentType: "WhoItsForSection", titleEn: "Who It's For", titleFr: "Pour qui", contentJson: JSON.stringify({ en: en.whoItsFor, fr: fr.whoItsFor }) },
-    { componentType: "InteractiveDemoSection", titleEn: "Interactive Demo", titleFr: "Démo interactive", contentJson: JSON.stringify({ en: en.interactiveDemo, fr: fr.interactiveDemo }) },
-    { componentType: "MultiBranchSection", titleEn: "Multi Branch", titleFr: "Multi-sites", contentJson: JSON.stringify({ en: en.multiBranch, fr: fr.multiBranch }) },
-    { componentType: "KitchenNetworkSection", titleEn: "Kitchen Network", titleFr: "Réseau de cuisines", contentJson: JSON.stringify({ en: en.kitchenNetwork, fr: fr.kitchenNetwork }) },
-    { componentType: "GlobalReadySection", titleEn: "Global Ready", titleFr: "Prêt pour l'international", contentJson: JSON.stringify({ en: en.globalReady, fr: fr.globalReady }) },
-    { componentType: "TestimonialsSection", titleEn: "Testimonials", titleFr: "Témoignages", contentJson: JSON.stringify({ en: en.testimonials, fr: fr.testimonials }) },
-    { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: JSON.stringify({ en: en.pricing, fr: fr.pricing }) },
-    { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: JSON.stringify({ en: en.faq, fr: fr.faq }) },
-    { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: JSON.stringify({ en: en.contact, fr: fr.contact }) },
-    { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: JSON.stringify({ en: en.finalCTA, fr: fr.finalCTA }) },
+    { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: { en: en.hero, fr: fr.hero } },
+    { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: { en: en.integrations, fr: fr.integrations } },
+    { componentType: "KitchenTestSection", titleEn: "Kitchen Test", titleFr: "Test de cuisine", contentJson: { en: en.kitchenTest, fr: fr.kitchenTest } },
+    { componentType: "AIThinkingSection", titleEn: "AI Thinking", titleFr: "Réflexion IA", contentJson: { en: en.aiThinking, fr: fr.aiThinking } },
+    { componentType: "WhyPrepIQSection", titleEn: "Why PrepIQ", titleFr: "Pourquoi PrepIQ", contentJson: { en: en.whyPrepIQ, fr: fr.whyPrepIQ } },
+    { componentType: "ProblemSection", titleEn: "Problem", titleFr: "Problème", contentJson: { en: en.problem, fr: fr.problem } },
+    { componentType: "WhyNowSection", titleEn: "Why Now", titleFr: "Pourquoi maintenant", contentJson: { en: en.whyNow, fr: fr.whyNow } },
+    { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: { en: en.howItWorks, fr: fr.howItWorks } },
+    { componentType: "IntelligenceSection", titleEn: "Intelligence", titleFr: "Intelligence", contentJson: { en: en.intelligence, fr: fr.intelligence } },
+    { componentType: "MarginGuardSection", titleEn: "Margin Guard", titleFr: "Margin Guard", contentJson: { en: en.marginGuard, fr: fr.marginGuard } },
+    { componentType: "ValueSection", titleEn: "Value", titleFr: "Valeur", contentJson: { en: en.value, fr: fr.value } },
+    { componentType: "WhoItsForSection", titleEn: "Who It's For", titleFr: "Pour qui", contentJson: { en: en.whoItsFor, fr: fr.whoItsFor } },
+    { componentType: "InteractiveDemoSection", titleEn: "Interactive Demo", titleFr: "Démo interactive", contentJson: { en: en.interactiveDemo, fr: fr.interactiveDemo } },
+    { componentType: "MultiBranchSection", titleEn: "Multi Branch", titleFr: "Multi-sites", contentJson: { en: en.multiBranch, fr: fr.multiBranch } },
+    { componentType: "KitchenNetworkSection", titleEn: "Kitchen Network", titleFr: "Réseau de cuisines", contentJson: { en: en.kitchenNetwork, fr: fr.kitchenNetwork } },
+    { componentType: "GlobalReadySection", titleEn: "Global Ready", titleFr: "Prêt pour l'international", contentJson: { en: en.globalReady, fr: fr.globalReady } },
+    { componentType: "TestimonialsSection", titleEn: "Testimonials", titleFr: "Témoignages", contentJson: { en: en.testimonials, fr: fr.testimonials } },
+    { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: en.pricing, fr: fr.pricing } },
+    { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: { en: en.faq, fr: fr.faq } },
+    { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: en.contact, fr: fr.contact } },
+    { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: en.finalCTA, fr: fr.finalCTA } },
   ];
 
-  await prisma.section.deleteMany({ where: { pageId: homePage.id } });
+  // Get current sections to avoid unnecessary updates
+  const currentSections = await prisma.section.findMany({
+    where: { pageId: homePage.id },
+    orderBy: { sortOrder: "asc" },
+  });
 
+  // Idempotent section updates
   for (let i = 0; i < sections.length; i++) {
-    await prisma.section.create({
-      data: {
-        ...sections[i],
-        pageId: homePage.id,
-        sortOrder: i,
-        isActive: true,
-      },
+    const sectionData = {
+      ...sections[i],
+      pageId: homePage.id,
+      sortOrder: i,
+      isActive: true,
+    };
+
+    const existing = currentSections.find(s => s.componentType === sectionData.componentType);
+
+    if (existing) {
+      // For JSON comparison, we can use stringify or deep equal. Since it's a seed, stringify is usually enough for data from files.
+      const existingContentStr = JSON.stringify(existing.contentJson);
+      const newContentStr = JSON.stringify(sectionData.contentJson);
+
+      if (
+        existing.titleEn !== sectionData.titleEn ||
+        existing.titleFr !== sectionData.titleFr ||
+        existingContentStr !== newContentStr ||
+        existing.sortOrder !== sectionData.sortOrder
+      ) {
+        await prisma.section.update({
+          where: { id: existing.id },
+          data: sectionData as any,
+        });
+      }
+    } else {
+      await prisma.section.create({
+        data: sectionData as any,
+      });
+    }
+  }
+
+  // Remove sections that are no longer in the seed
+  const seedComponentTypes = sections.map(s => s.componentType);
+  const sectionsToRemove = currentSections.filter(s => !seedComponentTypes.includes(s.componentType));
+  if (sectionsToRemove.length > 0) {
+    await prisma.section.deleteMany({
+      where: { id: { in: sectionsToRemove.map(s => s.id) } },
     });
   }
 
@@ -87,16 +117,23 @@ async function main() {
     { labelEn: en.navbar.integrations, labelFr: fr.navbar.integrations, url: "#integrations", sortOrder: 3 },
   ];
 
-  await prisma.link.deleteMany({ where: { type: "nav" } });
+  const currentNavLinks = await prisma.link.findMany({ where: { type: "nav" } });
   for (const link of navLinks) {
-    await prisma.link.create({
-      data: {
-        ...link,
-        type: "nav",
-        isActive: true,
-      },
-    });
+    const existing = currentNavLinks.find(l => l.url === link.url);
+    const data = { ...link, type: "nav", isActive: true };
+    if (existing) {
+      if (existing.labelEn !== link.labelEn || existing.labelFr !== link.labelFr || existing.sortOrder !== link.sortOrder) {
+        await prisma.link.update({ where: { id: existing.id }, data });
+      }
+    } else {
+      await prisma.link.create({ data });
+    }
   }
+  // Cleanup old nav links
+  const seedNavUrls = navLinks.map(l => l.url);
+  await prisma.link.deleteMany({
+    where: { type: "nav", url: { notIn: seedNavUrls } }
+  });
 
   // 5. Footer Links
   const footerLinks = [
@@ -109,18 +146,25 @@ async function main() {
     { labelEn: en.footer.links.security, labelFr: fr.footer.links.security, url: "/security", category: "legal", sortOrder: 2 },
   ];
 
-  await prisma.link.deleteMany({ where: { type: "footer" } });
+  const currentFooterLinks = await prisma.link.findMany({ where: { type: "footer" } });
   for (const link of footerLinks) {
-    await prisma.link.create({
-      data: {
-        ...link,
-        type: "footer",
-        isActive: true,
-      },
-    });
+    const existing = currentFooterLinks.find(l => l.url === link.url && l.category === link.category);
+    const data = { ...link, type: "footer", isActive: true };
+    if (existing) {
+      if (existing.labelEn !== link.labelEn || existing.labelFr !== link.labelFr || existing.sortOrder !== link.sortOrder) {
+        await prisma.link.update({ where: { id: existing.id }, data });
+      }
+    } else {
+      await prisma.link.create({ data });
+    }
   }
+  // Cleanup old footer links
+  const seedFooterUrls = footerLinks.map(l => l.url);
+  await prisma.link.deleteMany({
+    where: { type: "footer", url: { notIn: seedFooterUrls } }
+  });
 
-  console.log("Database seeded with pages, sections and links.");
+  console.log("Database seeded with pages, sections and links (idempotent).");
 }
 
 main()
