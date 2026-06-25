@@ -35,6 +35,7 @@ export async function retryReconciliation(connectorId: string) {
     email,
     { method: 'POST' },
   );
+  revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
 export async function publishRelease(releaseId: string) {
@@ -42,7 +43,7 @@ export async function publishRelease(releaseId: string) {
   await djangoAdminFetch(`/api/mgmt/releases/${releaseId}/publish/`, email, {
     method: 'POST',
   });
-  revalidatePath('/admin/connectors');
+  revalidatePath('/admin/releases');
 }
 
 export async function toggleReleaseMandatory(releaseId: string) {
@@ -50,5 +51,32 @@ export async function toggleReleaseMandatory(releaseId: string) {
   await djangoAdminFetch(`/api/mgmt/releases/${releaseId}/mark-mandatory/`, email, {
     method: 'POST',
   });
-  revalidatePath('/admin/connectors');
+  revalidatePath('/admin/releases');
+}
+
+export async function createRelease(formData: FormData) {
+  const email = await requireAdminEmail();
+  const payload = {
+    version: formData.get('version'),
+    download_url: formData.get('download_url'),
+    checksum_sha256: formData.get('checksum_sha256'),
+    release_notes: formData.get('release_notes') || '',
+    min_supported_version: formData.get('min_supported_version') || '',
+  };
+  await djangoAdminFetch('/api/mgmt/releases/', email, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  revalidatePath('/admin/releases');
+}
+
+export async function createInstallationToken(branchId: string): Promise<string> {
+  const email = await requireAdminEmail();
+  const data = await djangoAdminFetch<{ raw_token: string }>(
+    '/api/mgmt/installation-tokens/',
+    email,
+    { method: 'POST', body: JSON.stringify({ branch_id: branchId }) },
+  );
+  revalidatePath('/admin/installation-tokens');
+  return data.raw_token;
 }
