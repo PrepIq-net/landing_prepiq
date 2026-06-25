@@ -12,6 +12,7 @@ import {
   User,
   Clock,
   Calendar,
+  Database,
 } from "iconoir-react";
 import { prisma } from "@/lib/prisma";
 
@@ -89,6 +90,16 @@ export default async function AdminLayout({
 
           {currentUser?.role === "ADMIN" && (
             <>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mt-6 px-3">
+                Backend Operations
+              </div>
+              <Link
+                href="/admin/connectors"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-sm font-medium"
+              >
+                <Database className="w-4.5 h-4.5 opacity-70" />
+                Connectors
+              </Link>
               <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mt-6 px-3">
                 System Administration
               </div>
