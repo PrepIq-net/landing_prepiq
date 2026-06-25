@@ -10,6 +10,8 @@ import {
   Mail,
   Calendar,
   Database,
+  CloudDownload,
+  Key,
   User,
   Clock,
 } from "iconoir-react";
@@ -43,10 +45,12 @@ const CONTENT_SECTIONS: NavSection[] = [
 
 const ADMIN_SECTIONS: NavSection[] = [
   {
-    title: "Backend Operations",
+    title: "PIQ Connector",
     variant: "operations",
     items: [
-      { href: "/admin/connectors", label: "Connectors", icon: Database },
+      { href: "/admin/connectors", label: "Machines", icon: Database },
+      { href: "/admin/releases", label: "Releases", icon: CloudDownload },
+      { href: "/admin/installation-tokens", label: "Install Tokens", icon: Key },
     ],
   },
   {
