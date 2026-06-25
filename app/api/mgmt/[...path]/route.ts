@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 async function proxyToDjango(
   req: NextRequest,
-  params: Promise<{ path: string[] }>,
+  context: { params: Promise<{ path: string[] }> },
 ) {
   // Validate session
   const session = await auth();
@@ -27,7 +27,7 @@ async function proxyToDjango(
     return NextResponse.json({ error: "Server misconfigured" }, { status: 500 });
   }
 
-  const { path } = await params;
+  const { path } = await context.params;
   const search = req.nextUrl.search;
   const djangoUrl = `${djangoBase}/api/mgmt/${path.join("/")}/${search}`;
 
