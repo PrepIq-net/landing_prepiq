@@ -16,11 +16,11 @@ import {
   toggleConnectorActive,
   revokeConnectorTokens,
   retryReconciliation,
-  requestSchemaRefresh,
-  requestSyncNow,
 } from '@/lib/actions/connector-actions';
 import { ConnectorTabs } from './ConnectorTabs';
 import { LogsTab } from './LogsTab';
+import { SchemaTab } from './SchemaTab';
+import type { DiscoveredTable, FieldMapping } from './SchemaTab';
 
 interface ConnectorDetail {
   id: string;
@@ -70,29 +70,6 @@ interface AccessToken {
   revoked_at: string | null;
   is_expired: boolean;
   created_at: string;
-}
-
-interface DiscoveredColumn {
-  id: string;
-  column_name: string;
-  data_type: string;
-  is_nullable: boolean;
-  is_primary_key: boolean;
-  ai_field_guess: string;
-  ai_confidence: number | null;
-}
-
-interface DiscoveredTable {
-  id: string;
-  schema_name: string;
-  table_name: string;
-  row_count_estimate: number | null;
-  ai_entity_guess: string;
-  ai_confidence: number | null;
-  is_confirmed: boolean;
-  confirmed_entity: string;
-  column_count: number;
-  columns: DiscoveredColumn[];
 }
 
 interface SyncedSale {
@@ -167,6 +144,7 @@ export default async function ConnectorDetailPage({
   let checkpoints: SyncCheckpoint[] = [];
   let tokens: AccessToken[] = [];
   let tables: DiscoveredTable[] = [];
+  let fieldMappings: FieldMapping[] = [];
   let unreconciledSales: SyncedSale[] = [];
   let unreconciledCount = 0;
   let initialLogs: ConnectorLog[] = [];
@@ -186,10 +164,12 @@ export default async function ConnectorDetailPage({
     ).catch(() => ({ count: 0, results: [] }));
     tokens = res.results;
   } else if (tab === 'schema') {
-    tables = await djangoAdminFetch<DiscoveredTable[]>(
-      `/api/mgmt/connectors/${id}/schema/`,
-      email,
-    ).catch(() => []);
+    const [tablesRes, mappingsRes] = await Promise.allSettled([
+      djangoAdminFetch<DiscoveredTable[]>(`/api/mgmt/connectors/${id}/schema/`, email),
+      djangoAdminFetch<FieldMapping[]>(`/api/mgmt/connectors/${id}/field-mappings/`, email),
+    ]);
+    tables = tablesRes.status === 'fulfilled' ? tablesRes.value : [];
+    fieldMappings = mappingsRes.status === 'fulfilled' ? mappingsRes.value : [];
   } else if (tab === 'sales') {
     const res = await djangoAdminFetch<Paginated<SyncedSale>>(
       `/api/mgmt/connectors/${id}/synced-sales/?is_reconciled=false`,
@@ -485,108 +465,11 @@ export default async function ConnectorDetailPage({
 
       {/* Tab: Schema */}
       {tab === 'schema' && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-display font-semibold text-foreground">Discovered Schema</h2>
-            <div className="flex items-center gap-3">
-              <p className="text-[11px] text-muted-foreground">
-                Tables discovered by the connector in the remote database.
-              </p>
-              <form action={async () => { 'use server'; await requestSchemaRefresh(id); }}>
-                <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
-                  Request Schema Refresh
-                </Button>
-              </form>
-              <form action={async () => { 'use server'; await requestSyncNow(id); }}>
-                <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
-                  Sync Now
-                </Button>
-              </form>
-            </div>
-          </div>
-          {tables.length === 0 ? (
-            <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl px-6 py-10 text-center space-y-2">
-              <div className="text-sm text-foreground font-medium">No schema discovered yet</div>
-              <p className="text-[12px] text-muted-foreground max-w-sm mx-auto">
-                The connector will enumerate available tables on its first connection and report them here.
-                Once discovered, you can confirm entity mappings (e.g. which table is "Sales", which is "Products").
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {tables.map((table) => (
-                <div key={table.id} className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
-                  <div className="flex items-center justify-between px-6 py-4 bg-[#232327] border-b border-[#2A2A2E]">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-sm text-foreground font-bold">
-                        {table.schema_name ? `${table.schema_name}.` : ''}{table.table_name}
-                      </span>
-                      {table.row_count_estimate != null && (
-                        <span className="text-[10px] font-mono text-muted-foreground">
-                          ~{table.row_count_estimate.toLocaleString()} rows
-                        </span>
-                      )}
-                      <span className="text-[10px] text-muted-foreground">
-                        {table.column_count} cols
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {table.ai_entity_guess && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-muted-foreground">AI guess:</span>
-                          <span className={`text-[11px] font-bold ${table.is_confirmed ? 'text-green-400' : 'text-amber-400'}`}>
-                            {table.confirmed_entity || table.ai_entity_guess}
-                          </span>
-                          {table.ai_confidence != null && (
-                            <span className="text-[10px] text-muted-foreground">
-                              ({Math.round(table.ai_confidence * 100)}%)
-                            </span>
-                          )}
-                          {table.is_confirmed && (
-                            <span className="text-[10px] text-green-400/70">✓ confirmed</span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {table.columns.length > 0 && (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="hover:bg-transparent border-b border-[#2A2A2E]">
-                          {['Column', 'Type', 'PK', 'AI Field Guess', 'Confidence'].map((h) => (
-                            <TableHead key={h} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-2">
-                              {h}
-                            </TableHead>
-                          ))}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {table.columns.map((col) => (
-                          <TableRow key={col.id} className="border-b border-[#2A2A2E]/50 hover:bg-[#2A2A2E]/30">
-                            <TableCell className="px-6 py-2 font-mono text-[11px] text-foreground">
-                              {col.column_name}
-                              {!col.is_nullable && <span className="text-red-400 ml-1">*</span>}
-                            </TableCell>
-                            <TableCell className="px-6 py-2 font-mono text-[11px] text-muted-foreground">{col.data_type || '—'}</TableCell>
-                            <TableCell className="px-6 py-2 text-[11px] text-muted-foreground">
-                              {col.is_primary_key ? '✓' : ''}
-                            </TableCell>
-                            <TableCell className="px-6 py-2 text-[11px] text-amber-400/80 font-mono">
-                              {col.ai_field_guess || '—'}
-                            </TableCell>
-                            <TableCell className="px-6 py-2 text-[11px] text-muted-foreground">
-                              {col.ai_confidence != null ? `${Math.round(col.ai_confidence * 100)}%` : '—'}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <SchemaTab
+          connectorId={id}
+          tables={tables}
+          fieldMappings={fieldMappings}
+        />
       )}
 
       {/* Tab: Logs */}

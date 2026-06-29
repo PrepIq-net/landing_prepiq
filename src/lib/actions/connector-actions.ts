@@ -44,6 +44,37 @@ export async function requestSyncNow(connectorId: string) {
   revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
+export async function confirmTable(connectorId: string, tableId: string, entity: string) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(
+    `/api/mgmt/connectors/${connectorId}/schema/${tableId}/confirm/`,
+    email,
+    { method: 'POST', body: JSON.stringify({ confirmed_entity: entity }) },
+  );
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
+export async function confirmMapping(connectorId: string, mappingId: string) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(
+    `/api/mgmt/connectors/${connectorId}/field-mappings/${mappingId}/confirm/`,
+    email,
+    { method: 'POST' },
+  );
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
+export async function confirmAllMappings(connectorId: string, tableId?: string) {
+  const email = await requireAdminEmail();
+  const body = tableId ? JSON.stringify({ table_id: tableId }) : undefined;
+  await djangoAdminFetch(
+    `/api/mgmt/connectors/${connectorId}/field-mappings/bulk-confirm/`,
+    email,
+    { method: 'POST', body },
+  );
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
 export async function retryReconciliation(connectorId: string) {
   const email = await requireAdminEmail();
   await djangoAdminFetch(
