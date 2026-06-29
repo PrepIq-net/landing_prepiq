@@ -28,6 +28,22 @@ export async function revokeConnectorTokens(connectorId: string) {
   revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
+export async function requestSchemaRefresh(connectorId: string) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(`/api/mgmt/connectors/${connectorId}/request-schema/`, email, {
+    method: 'POST',
+  });
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
+export async function requestSyncNow(connectorId: string) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(`/api/mgmt/connectors/${connectorId}/request-sync/`, email, {
+    method: 'POST',
+  });
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
 export async function retryReconciliation(connectorId: string) {
   const email = await requireAdminEmail();
   await djangoAdminFetch(

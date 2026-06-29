@@ -16,6 +16,8 @@ import {
   toggleConnectorActive,
   revokeConnectorTokens,
   retryReconciliation,
+  requestSchemaRefresh,
+  requestSyncNow,
 } from '@/lib/actions/connector-actions';
 import { ConnectorTabs } from './ConnectorTabs';
 import { LogsTab } from './LogsTab';
@@ -486,9 +488,21 @@ export default async function ConnectorDetailPage({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-display font-semibold text-foreground">Discovered Schema</h2>
-            <p className="text-[11px] text-muted-foreground">
-              Tables discovered by the connector in the remote database.
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-[11px] text-muted-foreground">
+                Tables discovered by the connector in the remote database.
+              </p>
+              <form action={async () => { 'use server'; await requestSchemaRefresh(id); }}>
+                <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
+                  Request Schema Refresh
+                </Button>
+              </form>
+              <form action={async () => { 'use server'; await requestSyncNow(id); }}>
+                <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
+                  Sync Now
+                </Button>
+              </form>
+            </div>
           </div>
           {tables.length === 0 ? (
             <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl px-6 py-10 text-center space-y-2">
