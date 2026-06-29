@@ -8,6 +8,7 @@ const TABS = [
   { key: 'tokens', label: 'Tokens' },
   { key: 'schema', label: 'Schema & Fields' },
   { key: 'sales', label: 'Unreconciled Sales' },
+  { key: 'logs', label: 'Logs' },
 ] as const;
 
 export function ConnectorTabs({ active }: { active: string }) {

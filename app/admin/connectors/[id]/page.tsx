@@ -18,6 +18,7 @@ import {
   retryReconciliation,
 } from '@/lib/actions/connector-actions';
 import { ConnectorTabs } from './ConnectorTabs';
+import { LogsTab } from './LogsTab';
 
 interface ConnectorDetail {
   id: string;
@@ -108,6 +109,15 @@ interface Paginated<T> {
   results: T[];
 }
 
+interface ConnectorLog {
+  id: string;
+  level: 'debug' | 'info' | 'warn' | 'error';
+  message: string;
+  fields: Record<string, string>;
+  logged_at: string;
+  received_at: string;
+}
+
 const STATUS_COLOUR: Record<string, string> = {
   ONLINE: 'text-green-400',
   OFFLINE: 'text-red-400',
@@ -157,6 +167,8 @@ export default async function ConnectorDetailPage({
   let tables: DiscoveredTable[] = [];
   let unreconciledSales: SyncedSale[] = [];
   let unreconciledCount = 0;
+  let initialLogs: ConnectorLog[] = [];
+  let initialLogsCount = 0;
 
   if (tab === 'summary') {
     const [batchesRes, checkpointsRes] = await Promise.allSettled([
@@ -183,6 +195,13 @@ export default async function ConnectorDetailPage({
     ).catch(() => ({ count: 0, results: [] }));
     unreconciledSales = res.results;
     unreconciledCount = res.count;
+  } else if (tab === 'logs') {
+    const res = await djangoAdminFetch<Paginated<ConnectorLog>>(
+      `/api/mgmt/connectors/${id}/remote-logs/?page_size=50`,
+      email,
+    ).catch(() => ({ count: 0, results: [] }));
+    initialLogs = res.results;
+    initialLogsCount = res.count;
   }
 
   const heartbeatMs = connector.last_heartbeat_at
@@ -554,6 +573,15 @@ export default async function ConnectorDetailPage({
             </div>
           )}
         </div>
+      )}
+
+      {/* Tab: Logs */}
+      {tab === 'logs' && (
+        <LogsTab
+          connectorId={id}
+          initialLogs={initialLogs}
+          initialCount={initialLogsCount}
+        />
       )}
 
       {/* Tab: Unreconciled Sales */}
