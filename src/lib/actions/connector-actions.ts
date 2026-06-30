@@ -3,6 +3,7 @@
 import { auth } from '@/auth';
 import { djangoAdminFetch } from '@/lib/django-api';
 import { revalidatePath } from 'next/cache';
+import { createHash } from 'crypto';
 
 async function requireAdminEmail(): Promise<string> {
   const session = await auth();
@@ -115,6 +116,23 @@ export async function createRelease(formData: FormData) {
     body: JSON.stringify(payload),
   });
   revalidatePath('/admin/releases');
+}
+
+export async function computeChecksumFromUrl(downloadUrl: string): Promise<string> {
+  await requireAdminEmail();
+  if (!downloadUrl) throw new Error('Download URL is required');
+  const res = await fetch(downloadUrl);
+  if (!res.ok || !res.body) {
+    throw new Error(`Could not fetch download URL (${res.status})`);
+  }
+  const hash = createHash('sha256');
+  const reader = res.body.getReader();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    hash.update(value);
+  }
+  return hash.digest('hex');
 }
 
 export async function createInstallationToken(branchId: string): Promise<string> {
