@@ -34,6 +34,7 @@ export interface DiscoveredTable {
   schema_name: string;
   table_name: string;
   row_count_estimate: number | null;
+  sample_rows: Record<string, string>[];
   ai_entity_guess: string;
   ai_confidence: number | null;
   is_confirmed: boolean;
@@ -163,6 +164,40 @@ function TableCard({
           </Button>
         </div>
       </div>
+
+      {/* Sample data — real example rows so admins can verify before confirming */}
+      {table.sample_rows && table.sample_rows.length > 0 && (
+        <div className="px-6 py-4 border-b border-[#2A2A2E] bg-[#18181B] overflow-x-auto">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block mb-2">
+            Sample data
+          </span>
+          <table className="text-[11px] font-mono">
+            <thead>
+              <tr>
+                {table.columns.map((col) => (
+                  <th
+                    key={col.id}
+                    className="text-left text-muted-foreground font-normal pr-4 pb-1 whitespace-nowrap"
+                  >
+                    {col.column_name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {table.sample_rows.map((row, i) => (
+                <tr key={i}>
+                  {table.columns.map((col) => (
+                    <td key={col.id} className="text-foreground pr-4 py-0.5 whitespace-nowrap">
+                      {row[col.column_name] ?? '—'}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Field mappings — only shown after table is confirmed */}
       {table.is_confirmed && (

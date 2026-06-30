@@ -40,6 +40,7 @@ export function LogsTab({ connectorId, initialLogs, initialCount }: Props) {
   const [count, setCount] = useState(initialCount);
   const [levelFilter, setLevelFilter] = useState('');
   const [autoRefresh, setAutoRefresh] = useState(false);
+  const [view, setView] = useState<'table' | 'json'>('table');
   const [loading, setLoading] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -86,6 +87,23 @@ export function LogsTab({ connectorId, initialLogs, initialCount }: Props) {
           )}
         </h2>
         <div className="flex items-center gap-3">
+          <div className="flex items-center text-xs border border-[#2A2A2E] rounded overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setView('table')}
+              className={`px-2 py-1.5 ${view === 'table' ? 'bg-[#2A2A2E] text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Table
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('json')}
+              className={`px-2 py-1.5 ${view === 'json' ? 'bg-[#2A2A2E] text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              JSON
+            </button>
+          </div>
+
           <select
             value={levelFilter}
             onChange={handleLevelChange}
@@ -120,6 +138,13 @@ export function LogsTab({ connectorId, initialLogs, initialCount }: Props) {
         </div>
       </div>
 
+      {view === 'json' ? (
+        <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-auto max-h-[600px]">
+          <pre className="text-[11px] font-mono text-foreground p-4 whitespace-pre-wrap break-all">
+            {logs.length > 0 ? JSON.stringify(logs, null, 2) : 'No log entries yet.'}
+          </pre>
+        </div>
+      ) : (
       <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
         <Table>
           <TableHeader className="bg-[#232327]">
@@ -172,6 +197,7 @@ export function LogsTab({ connectorId, initialLogs, initialCount }: Props) {
           </TableBody>
         </Table>
       </div>
+      )}
     </div>
   );
 }

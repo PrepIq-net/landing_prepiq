@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createRelease } from '@/lib/actions/connector-actions';
+import { ChecksumField } from './ChecksumField';
 
 export default async function NewReleasePage() {
   const session = await auth();
@@ -46,31 +47,7 @@ export default async function NewReleasePage() {
           />
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-            Download URL *
-          </label>
-          <input
-            name="download_url"
-            type="url"
-            required
-            placeholder="https://releases.prepiq.com/connector/v1.5.1/piq-connector-linux-amd64"
-            className="w-full bg-[#232327] border border-[#2A2A2E] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-            SHA-256 Checksum *
-          </label>
-          <input
-            name="checksum_sha256"
-            required
-            placeholder="e3b0c44298fc1c149afb…"
-            className="w-full bg-[#232327] border border-[#2A2A2E] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-          />
-          <p className="text-[10px] text-muted-foreground">Run: <code className="font-mono">sha256sum piq-connector-linux-amd64</code></p>
-        </div>
+        <ChecksumField />
 
         <div className="space-y-1.5">
           <label className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
