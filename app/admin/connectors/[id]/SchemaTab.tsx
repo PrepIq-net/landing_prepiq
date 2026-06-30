@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Table,
@@ -56,10 +56,19 @@ export interface FieldMapping {
   confirmed_at: string | null;
 }
 
+export interface SyncCheckpoint {
+  id: string;
+  data_type: string;
+  last_synced_id: string;
+  last_synced_at: string | null;
+  updated_at: string;
+}
+
 interface SchemaTabProps {
   connectorId: string;
   tables: DiscoveredTable[];
   fieldMappings: FieldMapping[];
+  checkpoints: SyncCheckpoint[];
 }
 
 const ENTITY_OPTIONS = [
@@ -84,16 +93,19 @@ function TableCard({
   table,
   mappings,
   connectorId,
+  checkpoint,
 }: {
   table: DiscoveredTable;
   mappings: FieldMapping[];
   connectorId: string;
+  checkpoint?: SyncCheckpoint;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [selectedEntity, setSelectedEntity] = useState(
     table.confirmed_entity || table.ai_entity_guess || 'sales',
   );
+  const [actionStatus, setActionStatus] = useState<{ text: string; isError: boolean } | null>(null);
 
   const requiredFields = ENTITY_REQUIRED_FIELDS[table.confirmed_entity] ?? [];
   const confirmedFields = new Set(mappings.filter((m) => m.is_confirmed).map((m) => m.canonical_field));
@@ -101,11 +113,36 @@ function TableCard({
   const unconfirmedMappings = mappings.filter((m) => !m.is_confirmed);
   const allReady = table.is_confirmed && requiredFields.length > 0 && missingFields.length === 0;
 
-  const act = (fn: () => Promise<unknown>) =>
+  const act = (fn: () => Promise<unknown>, successText: string) =>
     startTransition(async () => {
-      await fn();
-      router.refresh();
+      try {
+        await fn();
+        setActionStatus({ text: successText, isError: false });
+        router.refresh();
+      } catch (err) {
+        setActionStatus({
+          text: err instanceof Error ? err.message : 'Action failed',
+          isError: true,
+        });
+      }
     });
+
+  // Auto-poll while the table is confirmed but mappings haven't landed yet —
+  // AI field-mapping runs async (Celery), so without this the "No field
+  // mappings yet" message never clears itself.
+  const pollAttempts = useRef(0);
+  useEffect(() => {
+    if (!table.is_confirmed || mappings.length > 0) {
+      pollAttempts.current = 0;
+      return;
+    }
+    if (pollAttempts.current >= 10) return;
+    const t = setTimeout(() => {
+      pollAttempts.current += 1;
+      router.refresh();
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [table.is_confirmed, mappings.length, router]);
 
   return (
     <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
@@ -157,13 +194,33 @@ function TableCard({
             variant="outline"
             size="sm"
             className={`text-xs border-[#2A2A2E] ${table.is_confirmed ? 'hover:bg-accent' : 'hover:bg-green-500/10 hover:border-green-500/30 hover:text-green-400'}`}
-            onClick={() => act(() => confirmTable(connectorId, table.id, selectedEntity))}
+            onClick={() =>
+              act(
+                () => confirmTable(connectorId, table.id, selectedEntity),
+                table.is_confirmed ? 'Updated — re-running AI field mapping…' : 'Confirmed — generating field mappings…',
+              )
+            }
             disabled={isPending}
           >
-            {table.is_confirmed ? 'Update' : 'Confirm'}
+            {isPending ? '…' : table.is_confirmed ? 'Update' : 'Confirm'}
           </Button>
         </div>
       </div>
+
+      {(checkpoint || actionStatus) && (
+        <div className="px-6 py-1.5 bg-[#18181B] border-b border-[#2A2A2E] flex items-center justify-between text-[10px]">
+          <span className="text-muted-foreground">
+            {checkpoint
+              ? `Last synced: ${checkpoint.last_synced_at ? new Date(checkpoint.last_synced_at).toLocaleString() : 'never'}`
+              : ''}
+          </span>
+          {actionStatus && (
+            <span className={actionStatus.isError ? 'text-red-400' : 'text-green-400'}>
+              {actionStatus.text}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Sample data — real example rows so admins can verify before confirming */}
       {table.sample_rows && table.sample_rows.length > 0 && (
@@ -220,7 +277,7 @@ function TableCard({
                 variant="outline"
                 size="sm"
                 className="text-xs border-[#2A2A2E] hover:bg-green-500/10 hover:border-green-500/30 hover:text-green-400"
-                onClick={() => act(() => confirmAllMappings(connectorId, table.id))}
+                onClick={() => act(() => confirmAllMappings(connectorId, table.id), 'All fields confirmed — sync requested')}
                 disabled={isPending}
               >
                 Confirm All ({unconfirmedMappings.length})
@@ -256,7 +313,7 @@ function TableCard({
                       variant="ghost"
                       size="sm"
                       className="h-6 text-[10px] px-2 text-muted-foreground hover:text-green-400"
-                      onClick={() => act(() => confirmMapping(connectorId, m.id))}
+                      onClick={() => act(() => confirmMapping(connectorId, m.id), 'Field confirmed')}
                       disabled={isPending}
                     >
                       Confirm
@@ -315,9 +372,11 @@ function TableCard({
   );
 }
 
-export function SchemaTab({ connectorId, tables, fieldMappings }: SchemaTabProps) {
+export function SchemaTab({ connectorId, tables, fieldMappings, checkpoints }: SchemaTabProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [actionStatus, setActionStatus] = useState<{ text: string; isError: boolean } | null>(null);
+  const [isSyncPolling, setIsSyncPolling] = useState(false);
 
   const mappingsByTableId = useMemo(() => {
     const map = new Map<string, FieldMapping[]>();
@@ -329,11 +388,42 @@ export function SchemaTab({ connectorId, tables, fieldMappings }: SchemaTabProps
     return map;
   }, [fieldMappings]);
 
-  const act = (fn: () => Promise<unknown>) =>
+  const checkpointByDataType = useMemo(() => {
+    const map = new Map<string, SyncCheckpoint>();
+    for (const c of checkpoints) map.set(c.data_type, c);
+    return map;
+  }, [checkpoints]);
+
+  const act = (fn: () => Promise<unknown>, successText: string, pollAfter = false) =>
     startTransition(async () => {
-      await fn();
-      router.refresh();
+      try {
+        await fn();
+        setActionStatus({ text: successText, isError: false });
+        router.refresh();
+        if (pollAfter) setIsSyncPolling(true);
+      } catch (err) {
+        setActionStatus({ text: err instanceof Error ? err.message : 'Action failed', isError: true });
+      }
     });
+
+  // After "Sync Now", briefly poll so newly-synced checkpoints / record
+  // counts show up here without a manual refresh.
+  const syncPollAttempts = useRef(0);
+  useEffect(() => {
+    if (!isSyncPolling) {
+      syncPollAttempts.current = 0;
+      return;
+    }
+    if (syncPollAttempts.current >= 8) {
+      setIsSyncPolling(false);
+      return;
+    }
+    const t = setTimeout(() => {
+      syncPollAttempts.current += 1;
+      router.refresh();
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [isSyncPolling, checkpoints, router]);
 
   const confirmedTables = tables.filter((t) => t.is_confirmed);
   const readyCount = confirmedTables.filter((t) => {
@@ -361,11 +451,16 @@ export function SchemaTab({ connectorId, tables, fieldMappings }: SchemaTabProps
               {readyCount}/{tables.length} ready
             </span>
           )}
+          {actionStatus && (
+            <span className={`text-[11px] ${actionStatus.isError ? 'text-red-400' : 'text-green-400'}`}>
+              {actionStatus.text}
+            </span>
+          )}
           <Button
             variant="outline"
             size="sm"
             className="border-[#2A2A2E] hover:bg-accent text-xs"
-            onClick={() => act(() => requestSchemaRefresh(connectorId))}
+            onClick={() => act(() => requestSchemaRefresh(connectorId), 'Schema refresh requested — connector will re-submit on its next heartbeat')}
             disabled={isPending}
           >
             Request Schema Refresh
@@ -374,10 +469,10 @@ export function SchemaTab({ connectorId, tables, fieldMappings }: SchemaTabProps
             variant="outline"
             size="sm"
             className="border-[#2A2A2E] hover:bg-accent text-xs"
-            onClick={() => act(() => requestSyncNow(connectorId))}
+            onClick={() => act(() => requestSyncNow(connectorId), isSyncPolling ? 'Syncing…' : 'Sync requested', true)}
             disabled={isPending}
           >
-            Sync Now
+            {isSyncPolling ? 'Syncing…' : 'Sync Now'}
           </Button>
         </div>
       </div>
@@ -411,6 +506,7 @@ export function SchemaTab({ connectorId, tables, fieldMappings }: SchemaTabProps
               table={table}
               mappings={mappingsByTableId.get(table.id) ?? []}
               connectorId={connectorId}
+              checkpoint={checkpointByDataType.get(table.confirmed_entity)}
             />
           ))}
         </div>

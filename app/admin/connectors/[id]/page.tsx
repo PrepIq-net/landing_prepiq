@@ -149,6 +149,7 @@ export default async function ConnectorDetailPage({
   let unreconciledCount = 0;
   let initialLogs: ConnectorLog[] = [];
   let initialLogsCount = 0;
+  let schemaCheckpoints: SyncCheckpoint[] = [];
 
   if (tab === 'summary') {
     const [batchesRes, checkpointsRes] = await Promise.allSettled([
@@ -164,12 +165,14 @@ export default async function ConnectorDetailPage({
     ).catch(() => ({ count: 0, results: [] }));
     tokens = res.results;
   } else if (tab === 'schema') {
-    const [tablesRes, mappingsRes] = await Promise.allSettled([
+    const [tablesRes, mappingsRes, checkpointsRes] = await Promise.allSettled([
       djangoAdminFetch<DiscoveredTable[]>(`/api/mgmt/connectors/${id}/schema/`, email),
       djangoAdminFetch<FieldMapping[]>(`/api/mgmt/connectors/${id}/field-mappings/`, email),
+      djangoAdminFetch<SyncCheckpoint[]>(`/api/mgmt/connectors/${id}/checkpoints/`, email),
     ]);
     tables = tablesRes.status === 'fulfilled' ? tablesRes.value : [];
     fieldMappings = mappingsRes.status === 'fulfilled' ? mappingsRes.value : [];
+    schemaCheckpoints = checkpointsRes.status === 'fulfilled' ? checkpointsRes.value : [];
   } else if (tab === 'sales') {
     const res = await djangoAdminFetch<Paginated<SyncedSale>>(
       `/api/mgmt/connectors/${id}/synced-sales/?is_reconciled=false`,
@@ -469,6 +472,7 @@ export default async function ConnectorDetailPage({
           connectorId={id}
           tables={tables}
           fieldMappings={fieldMappings}
+          checkpoints={schemaCheckpoints}
         />
       )}
 
