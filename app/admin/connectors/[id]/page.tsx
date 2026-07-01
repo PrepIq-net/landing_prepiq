@@ -12,10 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { redirect } from 'next/navigation';
 import {
   toggleConnectorActive,
   revokeConnectorTokens,
   retryReconciliation,
+  deleteConnector,
+  markSalesReconciled,
 } from '@/lib/actions/connector-actions';
 import { ConnectorTabs } from './ConnectorTabs';
 import { LogsTab } from './LogsTab';
@@ -301,6 +304,23 @@ export default async function ConnectorDetailPage({
             </Button>
           </form>
 
+          <form
+            action={async () => {
+              'use server';
+              await deleteConnector(id);
+              redirect('/admin/connectors');
+            }}
+          >
+            <Button
+              type="submit"
+              variant="outline"
+              size="sm"
+              className="border-red-900/50 text-red-400 hover:bg-red-950/30 hover:border-red-700/50"
+            >
+              Delete Machine
+            </Button>
+          </form>
+
           {connector.unreconciled_count > 0 && (
             <form
               action={async () => {
@@ -496,16 +516,28 @@ export default async function ConnectorDetailPage({
               )}
             </h2>
             {connector.unreconciled_count > 0 && (
-              <form
-                action={async () => {
-                  'use server';
-                  await retryReconciliation(id);
-                }}
-              >
-                <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
-                  Retry Reconciliation
-                </Button>
-              </form>
+              <div className="flex gap-2">
+                <form
+                  action={async () => {
+                    'use server';
+                    await retryReconciliation(id);
+                  }}
+                >
+                  <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
+                    Retry Reconciliation
+                  </Button>
+                </form>
+                <form
+                  action={async () => {
+                    'use server';
+                    await markSalesReconciled(id);
+                  }}
+                >
+                  <Button type="submit" variant="outline" size="sm" className="border-[#2A2A2E] hover:bg-accent text-xs">
+                    Force Mark All Reconciled
+                  </Button>
+                </form>
+              </div>
             )}
           </div>
           <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
