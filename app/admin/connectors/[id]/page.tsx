@@ -516,58 +516,6 @@ export default async function ConnectorDetailPage({
         </div>
       )}
 
-      <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl px-6 py-4">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
-          Danger Zone
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-red-900/50 text-red-400 hover:bg-red-950/30 hover:border-red-700/50"
-              >
-                Delete Machine
-              </Button>
-            </AlertDialogTrigger>
-
-            <AlertDialogContent className="bg-[#1C1C1F] border border-[#2A2A2E]">
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to delete this machine?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                <form
-                  action={async () => {
-                    "use server";
-                    await deleteConnector(id);
-                    redirect("/admin/connectors");
-                  }}
-                >
-                  <AlertDialogAction asChild>
-                    <Button
-                      type="submit"
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Confirm
-                    </Button>
-                  </AlertDialogAction>
-                </form>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-
       {/* Tab: Tokens */}
       {tab === "tokens" && (
         <div className="space-y-3">
@@ -768,6 +716,57 @@ export default async function ConnectorDetailPage({
           </div>
         </div>
       )}
+      <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl px-6 py-4">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
+          Danger Zone
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-red-900/50 text-red-400 hover:bg-red-950/30 hover:border-red-700/50"
+              >
+                Delete Machine
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent className="bg-[#1C1C1F] border border-[#2A2A2E]">
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure you want to delete this machine?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                <form
+                  action={async () => {
+                    "use server";
+                    await deleteConnector(id);
+                    redirect("/admin/connectors");
+                  }}
+                >
+                  <AlertDialogAction asChild>
+                    <Button
+                      type="submit"
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Confirm
+                    </Button>
+                  </AlertDialogAction>
+                </form>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
     </div>
   );
 }
