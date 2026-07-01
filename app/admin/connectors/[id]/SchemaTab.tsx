@@ -209,7 +209,7 @@ function TableCard({
 
       {(checkpoint || actionStatus) && (
         <div className="px-6 py-1.5 bg-[#18181B] border-b border-[#2A2A2E] flex items-center justify-between text-[10px]">
-          <span className="text-muted-foreground">
+          <span className="text-muted-foreground" suppressHydrationWarning>
             {checkpoint
               ? `Last synced: ${checkpoint.last_synced_at ? new Date(checkpoint.last_synced_at).toLocaleString() : 'never'}`
               : ''}
