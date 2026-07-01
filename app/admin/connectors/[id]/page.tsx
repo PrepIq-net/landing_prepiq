@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 interface ConnectorDetail {
   id: string;
@@ -335,22 +336,6 @@ export default async function ConnectorDetailPage({
             </Button>
           </form>
 
-          <form
-            action={async () => {
-              "use server";
-              await revokeConnectorTokens(id);
-            }}
-          >
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="border-[#2A2A2E] hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-            >
-              Revoke All Tokens
-            </Button>
-          </form>
-
           {connector.unreconciled_count > 0 && (
             <form
               action={async () => {
@@ -643,24 +628,29 @@ export default async function ConnectorDetailPage({
                     Retry Reconciliation
                   </Button>
                 </form>
-                <form
+
+                <ConfirmDialog
+                  trigger={
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      size="sm"
+                      className="border-[#2A2A2E] hover:bg-accent text-xs"
+                    >
+                      Force Mark All Reconciled
+                    </Button>
+                  }
                   action={async () => {
                     "use server";
-                    await markSalesReconciled(id);
+                    await retryReconciliation(id);
                   }}
-                >
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    size="sm"
-                    className="border-[#2A2A2E] hover:bg-accent text-xs"
-                  >
-                    Force Mark All Reconciled
-                  </Button>
-                </form>
+                  title='Are you sure you want to Force "Mark All Reconciled"'
+                  description="This action cannot be undone."
+                />
               </div>
             )}
           </div>
+
           <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
             <Table>
               <TableHeader className="bg-[#232327]">
@@ -716,14 +706,33 @@ export default async function ConnectorDetailPage({
           </div>
         </div>
       )}
-      <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl px-6 py-4">
+
+      <div className="bg-red-900/5 border border-red-900/50 rounded-xl px-6 py-4">
         <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
-          Danger Zone
+          Danger Action Zone
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <ConfirmDialog
+            trigger={
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-[#2A2A2E] hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+              >
+                Revoke All Tokens
+              </Button>
+            }
+            title="Are you sure you want to revoke all tokens?"
+            description="This action cannot be undone."
+            action={async () => {
+              "use server";
+              await revokeConnectorTokens(id);
+            }}
+          />
+
+          <ConfirmDialog
+            trigger={
               <Button
                 variant="outline"
                 size="sm"
@@ -731,40 +740,15 @@ export default async function ConnectorDetailPage({
               >
                 Delete Machine
               </Button>
-            </AlertDialogTrigger>
-
-            <AlertDialogContent className="bg-[#1C1C1F] border border-[#2A2A2E]">
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to delete this machine?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                <form
-                  action={async () => {
-                    "use server";
-                    await deleteConnector(id);
-                    redirect("/admin/connectors");
-                  }}
-                >
-                  <AlertDialogAction asChild>
-                    <Button
-                      type="submit"
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Confirm
-                    </Button>
-                  </AlertDialogAction>
-                </form>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            }
+            title="Are you sure you want to delete this machine?"
+            description="This action cannot be undone."
+            action={async () => {
+              "use server";
+              await deleteConnector(id);
+              redirect("/admin/connectors");
+            }}
+          />
         </div>
       </div>
     </div>
