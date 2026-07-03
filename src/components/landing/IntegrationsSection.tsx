@@ -1,113 +1,102 @@
 import { useTranslation } from "react-i18next";
+import { IntegrationsContent, SectionContent } from "@/types/cms";
 
-const POS_SYSTEMS = [
-  {
-    name: "Loyverse",
-    status: "live" as const,
-    desc: "Real-time sales sync",
-    initial: "L",
-    color: "hsl(40 70% 39%)",
-  },
-  {
-    name: "Square",
-    status: "soon" as const,
-    desc: "Coming soon",
-    initial: "S",
-    color: "hsl(220 14% 50%)",
-  },
-  {
-    name: "Toast",
-    status: "soon" as const,
-    desc: "Coming soon",
-    initial: "T",
-    color: "hsl(220 14% 50%)",
-  },
-  {
-    name: "Clover",
-    status: "soon" as const,
-    desc: "Coming soon",
-    initial: "C",
-    color: "hsl(220 14% 50%)",
-  },
+const POS_META = [
+  { initial: "L", color: "hsl(40 70% 39%)" },
+  { initial: "S", color: "hsl(220 14% 50%)" },
+  { initial: "T", color: "hsl(220 14% 50%)" },
+  { initial: "C", color: "hsl(220 14% 50%)" },
 ];
 
-const IntegrationsSection = () => {
-  const { t } = useTranslation();
+const TICKER_LOGOS = ["Loyverse", "Square", "Toast", "Lightspeed", "Clover", "Shopify", "Aloha"];
+
+const IntegrationsSection = ({ dbContent }: { dbContent?: SectionContent<IntegrationsContent> }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
+  const isFr = currentLang === "fr";
+
+  const content: IntegrationsContent = dbContent?.[currentLang] || {
+    badge: t("integrations.badge"),
+    titleLine1: isFr ? "Fonctionne avec votre" : "Works with your",
+    titleLine2: isFr ? "système actuel" : "existing stack",
+    body: isFr
+      ? "PrepIQ se connecte directement à votre POS pour récupérer les données de vente automatiquement — sans export manuel, sans tableur. D'autres intégrations arrivent bientôt."
+      : "PrepIQ connects directly to your POS to pull sales data automatically — no manual exports, no spreadsheets. More integrations are on the way.",
+    csvNote: isFr
+      ? "Vous n'utilisez pas encore un POS pris en charge ? Vous pouvez importer vos ventes via CSV ou notre API REST — PrepIQ fonctionne dans les deux cas."
+      : "Not using a supported POS yet? You can import sales via CSV or connect through our REST API — PrepIQ works either way.",
+    posSystems: [
+      { name: "Loyverse", status: "live" },
+      { name: "Square", status: "soon" },
+      { name: "Toast", status: "soon" },
+      { name: "Clover", status: "soon" },
+    ],
+    tickerLabel: t("logoTicker.title"),
+  };
+
+  const tripledLogos = [...TICKER_LOGOS, ...TICKER_LOGOS, ...TICKER_LOGOS];
 
   return (
-    <section id="integrations" className="py-20 md:py-28 border-t border-border/50 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.03] blur-[100px]" />
-      </div>
-
-      <div className="section-container relative z-10">
+    <section id="integrations" className="py-20 md:py-28 border-t border-border/50">
+      <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center max-w-5xl mx-auto">
-
-          {/* Left — text */}
           <div>
-            <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-              {t("integrations.badge")}
-            </span>
+            <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">{content.badge}</span>
             <h2 className="text-2xl sm:text-3xl md:text-[2.5rem] font-semibold text-foreground leading-tight mb-5">
-              Works with your<br />
-              <span className="text-primary">existing stack</span>
+              {content.titleLine1}
+              <br />
+              <span className="text-primary">{content.titleLine2}</span>
             </h2>
-            <p className="text-sm sm:text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-sm">
-              PrepIQ connects directly to your POS to pull sales data automatically — no manual exports, no spreadsheets. More integrations are on the way.
-            </p>
-            <p className="text-xs text-muted-foreground/50 leading-relaxed max-w-sm">
-              Not using a supported POS yet? You can import sales via CSV or connect through our REST API — PrepIQ works either way.
-            </p>
+            <p className="text-sm sm:text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-sm">{content.body}</p>
+            <p className="text-xs text-muted-foreground/50 leading-relaxed max-w-sm">{content.csvNote}</p>
           </div>
 
-          {/* Right — POS cards */}
           <div className="grid grid-cols-2 gap-3">
-            {POS_SYSTEMS.map((pos) => {
+            {content.posSystems.map((pos, i) => {
               const isLive = pos.status === "live";
+              const meta = POS_META[i];
               return (
-                <div
-                  key={pos.name}
-                  className={`relative rounded-2xl border p-5 flex flex-col gap-3 transition-colors ${
-                    isLive
-                      ? "border-primary/25 bg-primary/[0.04]"
-                      : "border-border/40 bg-card/40 opacity-60"
-                  }`}
-                >
-                  {/* Icon */}
+                <div key={pos.name} className={`rounded-2xl border p-5 flex flex-col gap-3 ${isLive ? "border-primary/25 bg-primary/[0.04]" : "border-border/40 bg-card/40 opacity-60"}`}>
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold"
-                    style={{
-                      background: isLive ? "hsl(40 70% 39% / 0.15)" : "hsl(220 14% 20% / 0.4)",
-                      color: isLive ? pos.color : "hsl(220 14% 55%)",
-                    }}
+                    style={{ background: isLive ? "hsl(40 70% 39% / 0.15)" : "hsl(220 14% 20% / 0.4)", color: isLive ? meta.color : "hsl(220 14% 55%)" }}
                   >
-                    {pos.initial}
+                    {meta.initial}
                   </div>
-
-                  {/* Name + status */}
                   <div>
-                    <p className={`text-sm font-semibold ${isLive ? "text-foreground" : "text-muted-foreground/60"}`}>
-                      {pos.name}
-                    </p>
+                    <p className={`text-sm font-semibold ${isLive ? "text-foreground" : "text-muted-foreground/60"}`}>{pos.name}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${isLive ? "bg-success animate-pulse" : "bg-muted-foreground/25"}`}
-                      />
+                      <span className={`h-1.5 w-1.5 rounded-full ${isLive ? "bg-success" : "bg-muted-foreground/25"}`} />
                       <span className={`text-[11px] ${isLive ? "text-success" : "text-muted-foreground/40"}`}>
-                        {pos.desc}
+                        {isLive ? (isFr ? "Synchronisation en direct" : "Real-time sales sync") : isFr ? "Bientôt disponible" : "Coming soon"}
                       </span>
                     </div>
                   </div>
-
-                  {/* Live glow */}
-                  {isLive && (
-                    <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-primary/10 blur-2xl pointer-events-none" />
-                  )}
                 </div>
               );
             })}
           </div>
+        </div>
 
+        {/* Ticker */}
+        <div className="relative mt-16 sm:mt-20 -mx-6 md:-mx-8 lg:-mx-16 pt-10 sm:pt-14 border-t border-border/30 overflow-hidden">
+          <p className="text-center text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary/60 font-medium mb-8 px-6">{content.tickerLabel}</p>
+          <div className="absolute left-0 top-10 bottom-0 w-28 sm:w-48 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-10 bottom-0 w-28 sm:w-48 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          <div className="flex w-max items-center animate-[ticker_40s_linear_infinite]" style={{ gap: "3rem" }}>
+            {tripledLogos.map((name, i) => {
+              const isLive = name === "Loyverse";
+              return (
+                <div
+                  key={`${name}-${i}`}
+                  className={`flex-shrink-0 flex items-center gap-2.5 rounded-full border px-5 py-2.5 ${isLive ? "border-primary/25 bg-primary/[0.06]" : "border-border/30 bg-card/20 opacity-50"}`}
+                >
+                  <span className={`text-[13px] sm:text-sm font-medium whitespace-nowrap ${isLive ? "text-foreground/80" : "text-muted-foreground/40"}`}>{name}</span>
+                  {isLive && <span className="h-1.5 w-1.5 rounded-full bg-success" />}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
