@@ -2,18 +2,45 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, GraphUp, Timer, DollarCircle, Percentage } from "iconoir-react";
 import { useTranslation } from "react-i18next";
+import { ValueContent, SectionContent } from "@/types/cms";
 
 const presets = [2000, 4000, 8000, 15000];
 
-const ValueSection = () => {
+const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> }) => {
   const { t, i18n } = useTranslation();
+  const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [spend, setSpend] = useState(4000);
+
+  const content: ValueContent = dbContent?.[currentLang] || {
+    title: t("value.title"),
+    subtitle: t("value.subtitle"),
+    metrics: {
+      waste: { label: t("value.metrics.waste.label"), desc: t("value.metrics.waste.desc") },
+      revenue: { label: t("value.metrics.revenue.label"), desc: t("value.metrics.revenue.desc") },
+      saved: { label: t("value.metrics.saved.label"), desc: t("value.metrics.saved.desc") },
+    },
+    calculator: {
+      title: t("value.calculator.title"),
+      subtitle: t("value.calculator.subtitle"),
+      inputLabel: t("value.calculator.inputLabel"),
+      monthlyRecovery: t("value.calculator.monthlyRecovery"),
+      annualImpact: t("value.calculator.annualImpact"),
+      projection: t("value.calculator.projection"),
+      breakdown: t("value.calculator.breakdown"),
+      roiNote: t("value.calculator.roiNote"),
+      categories: {
+        waste: t("value.calculator.categories.waste"),
+        stockout: t("value.calculator.categories.stockout"),
+        labor: t("value.calculator.categories.labor"),
+      },
+    },
+  };
 
   const metrics = [
     {
       value: "5–12%",
-      label: t("value.metrics.waste.label"),
-      desc: t("value.metrics.waste.desc"),
+      label: content.metrics.waste.label,
+      desc: content.metrics.waste.desc,
       icon: ArrowDown,
       color: "text-[hsl(var(--success))]",
       iconBg: "bg-[hsl(var(--success)/.1)]",
@@ -21,8 +48,8 @@ const ValueSection = () => {
     },
     {
       value: "3–8%",
-      label: t("value.metrics.revenue.label"),
-      desc: t("value.metrics.revenue.desc"),
+      label: content.metrics.revenue.label,
+      desc: content.metrics.revenue.desc,
       icon: GraphUp,
       color: "text-primary",
       iconBg: "bg-primary/10",
@@ -30,8 +57,8 @@ const ValueSection = () => {
     },
     {
       value: "2+ hrs",
-      label: t("value.metrics.saved.label"),
-      desc: t("value.metrics.saved.desc"),
+      label: content.metrics.saved.label,
+      desc: content.metrics.saved.desc,
       icon: Timer,
       color: "text-foreground",
       iconBg: "bg-muted",
@@ -41,9 +68,9 @@ const ValueSection = () => {
 
   // Monthly breakdown categories for the chart
   const breakdownCategories = [
-    { key: "waste", label: t("value.calculator.categories.waste"), pctLow: 0.05, pctHigh: 0.12, color: "bg-[hsl(var(--success))]", textColor: "text-[hsl(var(--success))]" },
-    { key: "stockout", label: t("value.calculator.categories.stockout"), pctLow: 0.03, pctHigh: 0.08, color: "bg-primary", textColor: "text-primary" },
-    { key: "labor", label: t("value.calculator.categories.labor"), pctLow: 0.01, pctHigh: 0.03, color: "bg-[hsl(var(--info))]", textColor: "text-[hsl(var(--info))]" },
+    { key: "waste", label: content.calculator.categories.waste, pctLow: 0.05, pctHigh: 0.12, color: "bg-[hsl(var(--success))]", textColor: "text-[hsl(var(--success))]" },
+    { key: "stockout", label: content.calculator.categories.stockout, pctLow: 0.03, pctHigh: 0.08, color: "bg-primary", textColor: "text-primary" },
+    { key: "labor", label: content.calculator.categories.labor, pctLow: 0.01, pctHigh: 0.03, color: "bg-[hsl(var(--info))]", textColor: "text-[hsl(var(--info))]" },
   ];
 
   const { low, high } = useMemo(
@@ -96,10 +123,10 @@ const ValueSection = () => {
           className="text-center mb-10 md:mb-16 px-2"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
-            {t("value.title")}
+            {content.title}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-            {t("value.subtitle")}
+            {content.subtitle}
           </p>
         </motion.div>
 
@@ -142,8 +169,8 @@ const ValueSection = () => {
               <DollarCircle className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">{t("value.calculator.title")}</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground">{t("value.calculator.subtitle")}</p>
+              <p className="text-sm font-semibold text-foreground">{content.calculator.title}</p>
+              <p className="text-[11px] sm:text-xs text-muted-foreground">{content.calculator.subtitle}</p>
             </div>
           </div>
 
@@ -152,7 +179,7 @@ const ValueSection = () => {
             <div className="p-5 sm:p-8 space-y-5">
               <div className="space-y-2">
                 <label className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("value.calculator.inputLabel")}
+                  {content.calculator.inputLabel}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground font-medium">{i18n.resolvedLanguage === 'fr' ? '€' : '$'}</span>
@@ -203,7 +230,7 @@ const ValueSection = () => {
               {/* Savings summary */}
               <div className="space-y-3 pt-2">
                 <div className="text-center space-y-1 p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">{t("value.calculator.monthlyRecovery")}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">{content.calculator.monthlyRecovery}</p>
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={`${low}-${high}`}
@@ -219,7 +246,7 @@ const ValueSection = () => {
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
-                  <span className="text-xs text-muted-foreground">{t("value.calculator.annualImpact")}</span>
+                  <span className="text-xs text-muted-foreground">{content.calculator.annualImpact}</span>
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={`${annualLow}-${annualHigh}`}
@@ -239,7 +266,7 @@ const ValueSection = () => {
               {/* 6-month bar chart */}
               <div>
                 <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">
-                  {t("value.calculator.projection")}
+                  {content.calculator.projection}
                 </p>
                 <div className="flex items-end gap-3 sm:gap-4" style={{ height: "200px" }}>
                   {chartData.map((d, i) => {
@@ -284,7 +311,7 @@ const ValueSection = () => {
               {/* Legend / breakdown */}
               <div className="space-y-2.5">
                 <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("value.calculator.breakdown")}
+                  {content.calculator.breakdown}
                 </p>
                 {breakdown.map((cat) => (
                   <div key={cat.key} className="flex items-center justify-between">
@@ -312,7 +339,7 @@ const ValueSection = () => {
               <div className="rounded-lg bg-[hsl(var(--success)/.08)] px-3 sm:px-4 py-2.5 sm:py-3 flex items-start gap-2.5">
                 <Percentage className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[hsl(var(--success))] mt-0.5 shrink-0" />
                 <p className="text-[11px] sm:text-xs text-[hsl(var(--success))] leading-relaxed">
-                  {t("value.calculator.roiNote")}
+                  {content.calculator.roiNote}
                 </p>
               </div>
             </div>
