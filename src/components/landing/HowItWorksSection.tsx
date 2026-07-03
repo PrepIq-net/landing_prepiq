@@ -79,7 +79,7 @@ const HowItWorksSection = ({ dbContent }: { dbContent?: SectionContent<HowItWork
   ];
 
   return (
-    <section ref={sectionRef} id="how-it-works" className="relative py-20 md:py-28 border-t border-border/50">
+    <section ref={sectionRef} id="how-it-works" className="relative py-20 md:py-28 border-t border-border/50 scroll-mt-20">
       <SeamAccent />
       <div className="section-container">
         <motion.div

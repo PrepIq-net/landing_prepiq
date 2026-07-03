@@ -112,7 +112,7 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
   const addOns = useMemo(() => content.addOns.items.map((item, i) => ({ ...item, ...ADDON_META[i] })), [content]);
 
   return (
-    <section id="pricing" className="relative py-20 md:py-32 border-t border-border/50">
+    <section id="pricing" className="relative py-20 md:py-32 border-t border-border/50 scroll-mt-20">
       <SeamAccent />
       <div className="section-container">
         <motion.div

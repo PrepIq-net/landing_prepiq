@@ -39,7 +39,7 @@ const IntegrationsSection = ({ dbContent }: { dbContent?: SectionContent<Integra
   const tripledLogos = [...TICKER_LOGOS, ...TICKER_LOGOS, ...TICKER_LOGOS];
 
   return (
-    <section id="integrations" className="relative py-20 md:py-28 border-t border-border/50">
+    <section id="integrations" className="relative py-20 md:py-28 border-t border-border/50 scroll-mt-20">
       <SeamAccent />
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center max-w-5xl mx-auto">
