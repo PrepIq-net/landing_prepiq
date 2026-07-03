@@ -2,11 +2,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "iconoir-react";
-import { useRef, useState } from "react";
-import CalendlyModal from "./CalendlyModal";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { HeroContent, SectionContent } from "@/types/cms";
 import { CountUp } from "./motion-primitives";
+import { CALENDLY_URL } from "@/lib/constants";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -59,8 +59,6 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
     }
   };
 
-  const [demoOpen, setDemoOpen] = useState(false);
-
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: videoWrapRef,
@@ -76,7 +74,6 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
   ];
 
   return (
-    <>
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
         <div className="absolute inset-0 pattern-grid opacity-[0.1] pointer-events-none" />
         <div className="absolute inset-0 wash-gold-top pointer-events-none" />
@@ -87,11 +84,11 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
             whileInView="visible"
             viewport={{ once: true }}
             transition={{ staggerChildren: 0.06 }}
-            className="max-w-3xl"
+            className="mx-auto max-w-3xl text-center"
           >
             <motion.span
               variants={fadeUp}
-              className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block"
+              className="mb-5 block text-xs uppercase tracking-[0.25em] text-primary/80 font-medium"
             >
               {content.badge}
             </motion.span>
@@ -109,14 +106,14 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
 
             <motion.p
               variants={fadeUp}
-              className="mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]"
+              className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]"
             >
               {content.subtitle}
             </motion.p>
 
             <motion.div
               variants={fadeUp}
-              className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground sm:text-sm"
+              className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground sm:text-sm"
             >
               {[content.proof.lessWaste, content.proof.noStockouts, content.proof.betterMargins].map((item) => (
                 <span key={item} className="flex items-center gap-2">
@@ -128,7 +125,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
 
             <motion.div
               variants={fadeUp}
-              className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
+              className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
             >
               <Button variant="hero" size="lg" className="group w-full sm:w-auto rounded-xl px-8">
                 <span className="flex items-center gap-2 text-base">
@@ -136,19 +133,16 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>
-              <Button
-                variant="hero-outline"
-                size="lg"
-                onClick={() => setDemoOpen(true)}
-                className="w-full sm:w-auto rounded-xl px-8 text-base"
-              >
-                {content.ctaDemo}
+              <Button asChild variant="hero-outline" size="lg" className="w-full sm:w-auto rounded-xl px-8 text-base">
+                <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
+                  {content.ctaDemo}
+                </a>
               </Button>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-10 flex items-start gap-10 sm:gap-16">
+            <motion.div variants={fadeUp} className="mt-10 flex justify-center gap-10 sm:gap-16">
               {stats.map((stat, i) => (
-                <div key={stat.label} className="space-y-1">
+                <div key={stat.label} className="space-y-1 text-center">
                   <p className={`font-display text-3xl font-semibold sm:text-4xl ${i === 0 ? "text-primary" : "text-foreground"}`}>
                     <CountUp value={stat.value} />
                   </p>
@@ -170,25 +164,24 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           className="relative left-1/2 right-1/2 mt-14 w-screen -mx-[50vw] px-4 sm:px-6 md:mt-20 md:px-10"
         >
-          <motion.div
-            className="relative mx-auto max-w-[1800px] overflow-hidden rounded-2xl border border-border bg-card shadow-l2"
-            style={{ aspectRatio: "1906 / 1032", scale: videoScale, y: videoY }}
-          >
-            <video
-              src="/videos/app-demo.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
+          <div className="relative mx-auto max-w-[1800px] rounded-[2rem] pattern-dots-accent p-6 sm:p-10 md:p-14 [mask-image:radial-gradient(ellipse_75%_75%_at_50%_50%,black_60%,transparent_100%)]">
+            <motion.div
+              className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-l2"
+              style={{ aspectRatio: "1906 / 1032", scale: videoScale, y: videoY }}
+            >
+              <video
+                src="/videos/app-demo.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </div>
         </motion.div>
       </section>
-
-      <CalendlyModal open={demoOpen} onOpenChange={setDemoOpen} />
-    </>
   );
 };
 
