@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   SunLight,
   Activity,
@@ -17,8 +17,12 @@ import {
 } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { HowItWorksContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 type Phase = "plan" | "live" | "review";
+
+const AUTO_ADVANCE_MS = 6000;
+const NEXT_PHASE: Record<Phase, Phase> = { plan: "live", live: "review", review: "plan" };
 
 const transition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] as const };
 const SIGNAL_ICONS = [DatabaseScript, Calendar, Clock, SunLight, Cloud, UserStar, FlashOff, GraphUp];
@@ -27,6 +31,16 @@ const HowItWorksSection = ({ dbContent }: { dbContent?: SectionContent<HowItWork
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [activePhase, setActivePhase] = useState<Phase>("plan");
+  const [autoRotate, setAutoRotate] = useState(true);
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { amount: 0.2 });
+
+  // Cycle through the three phases until the visitor takes over
+  useEffect(() => {
+    if (!autoRotate || !inView) return;
+    const id = setInterval(() => setActivePhase((p) => NEXT_PHASE[p]), AUTO_ADVANCE_MS);
+    return () => clearInterval(id);
+  }, [autoRotate, inView]);
 
   const content: HowItWorksContent = dbContent?.[currentLang] || {
     badge: t("howItWorks.badge"),
@@ -65,7 +79,8 @@ const HowItWorksSection = ({ dbContent }: { dbContent?: SectionContent<HowItWork
   ];
 
   return (
-    <section id="how-it-works" className="py-20 md:py-28 border-t border-border/50">
+    <section ref={sectionRef} id="how-it-works" className="relative py-20 md:py-28 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -90,7 +105,10 @@ const HowItWorksSection = ({ dbContent }: { dbContent?: SectionContent<HowItWork
             return (
               <button
                 key={p.id}
-                onClick={() => setActivePhase(p.id)}
+                onClick={() => {
+                  setActivePhase(p.id);
+                  setAutoRotate(false);
+                }}
                 className={`group relative rounded-xl sm:rounded-2xl px-3 py-3 sm:px-6 sm:py-5 text-left transition-colors duration-200 border ${
                   active ? "border-border bg-card" : "border-transparent hover:bg-card/50 hover:border-border/50"
                 }`}
@@ -110,9 +128,21 @@ const HowItWorksSection = ({ dbContent }: { dbContent?: SectionContent<HowItWork
                 {active && (
                   <motion.div
                     layoutId="phase-indicator"
-                    className={`absolute bottom-0 left-6 right-6 h-[2px] rounded-full ${p.dot}`}
+                    className={`absolute bottom-0 left-6 right-6 h-[2px] rounded-full overflow-hidden ${
+                      autoRotate ? "bg-border" : p.dot
+                    }`}
                     transition={transition}
-                  />
+                  >
+                    {autoRotate && inView && (
+                      <motion.div
+                        key={activePhase}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: AUTO_ADVANCE_MS / 1000, ease: "linear" }}
+                        className={`h-full w-full origin-left rounded-full ${p.dot}`}
+                      />
+                    )}
+                  </motion.div>
                 )}
               </button>
             );

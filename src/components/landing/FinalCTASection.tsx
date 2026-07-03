@@ -5,6 +5,7 @@ import { useState } from "react";
 import CalendlyModal from "./CalendlyModal";
 import { useTranslation } from "react-i18next";
 import { FinalCTAContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const FALLBACK_PROOFS = {
   en: ["30-day free pilot — no credit card", "Live in under 48 hours", "Works with any POS system"],
@@ -27,7 +28,9 @@ const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTACon
 
   return (
     <>
-      <section className="relative py-20 sm:py-28 md:py-36 border-t border-border/50">
+      <section className="relative py-20 sm:py-28 md:py-36 border-t border-border/50 overflow-hidden">
+        <SeamAccent />
+        <div className="absolute inset-0 wash-gold-bottom pointer-events-none" />
         <div className="section-container relative text-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}

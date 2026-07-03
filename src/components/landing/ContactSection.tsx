@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { submitContactForm } from "@/lib/actions/contact-actions";
 import { ContactContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactContent> }) => {
   const { t, i18n } = useTranslation();
@@ -84,7 +85,8 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
     "w-full rounded-xl border border-border bg-background/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-background transition-colors duration-200";
 
   return (
-    <section id="contact" className="py-20 md:py-32 border-t border-border/50">
+    <section id="contact" className="relative py-20 md:py-32 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <div className="grid gap-10 lg:gap-16 lg:grid-cols-5 items-start">
           {/* Left — copy + contact info */}

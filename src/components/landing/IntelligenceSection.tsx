@@ -15,6 +15,7 @@ import {
 } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { IntelligenceContent, SectionContent } from "@/types/cms";
+import { CountUp, SeamAccent } from "./motion-primitives";
 
 const SIGNAL_ICONS = [DatabaseScript, Calendar, Cloud, GraphUp, WarningTriangle, User];
 
@@ -72,7 +73,8 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
   };
 
   return (
-    <section id="intelligence" className="py-20 md:py-32 border-t border-border/50">
+    <section id="intelligence" className="relative py-20 md:py-32 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -124,13 +126,27 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
           <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-5 mb-10 sm:mb-14">
             {content.pipelineSteps.map((step, i) => (
               <div key={step} className="flex items-center gap-2 sm:gap-3 md:gap-5">
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center gap-1.5 sm:gap-2"
+                >
                   <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
                     <span className="text-[10px] sm:text-xs font-semibold text-primary">{i + 1}</span>
                   </div>
                   <span className="text-xs sm:text-sm font-medium text-foreground">{step}</span>
-                </div>
-                {i < content.pipelineSteps.length - 1 && <div className="w-5 sm:w-8 md:w-12 h-px bg-border" />}
+                </motion.div>
+                {i < content.pipelineSteps.length - 1 && (
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 + 0.1, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-5 sm:w-8 md:w-12 h-px bg-primary/40 origin-left"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -144,8 +160,9 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
+                  whileHover={{ y: -3, transition: { duration: 0.2, delay: 0 } }}
                   transition={{ delay: i * 0.06 }}
-                  className="rounded-xl border border-border bg-card p-4 sm:p-5 md:p-6"
+                  className="rounded-xl border border-border bg-card p-4 sm:p-5 md:p-6 hover:border-primary/20 hover:shadow-l3 transition-[border-color,box-shadow] duration-200"
                 >
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div
@@ -181,9 +198,9 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
               {content.leakTypes.map((label, i) => {
                 const meta = LEAK_META[i];
                 return (
-                  <div key={label} className="rounded-xl border border-border bg-card/50 p-3 sm:p-4 text-center">
+                  <div key={label} className="rounded-xl border border-border bg-card/50 p-3 sm:p-4 text-center hover:border-primary/20 transition-colors duration-200">
                     <meta.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground mx-auto mb-1.5 sm:mb-2" />
-                    <p className="text-base sm:text-lg font-semibold text-foreground">{meta.saved}</p>
+                    <p className="text-base sm:text-lg font-semibold text-foreground"><CountUp value={meta.saved} /></p>
                     <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 uppercase tracking-wider mt-0.5 sm:mt-1">{label}</p>
                   </div>
                 );
@@ -191,7 +208,7 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
             </div>
             <div className="text-center mt-4 sm:mt-6 rounded-xl border border-primary/20 bg-primary/[0.04] p-4 sm:p-5">
               <p className="text-[10px] sm:text-[11px] text-muted-foreground/50 uppercase tracking-wider mb-1">{content.totalProtectionLabel}</p>
-              <p className="text-2xl sm:text-3xl font-semibold text-foreground">$4,140</p>
+              <p className="text-2xl sm:text-3xl font-semibold text-foreground"><CountUp value="$4,140" /></p>
               <p className="text-[11px] sm:text-[12px] text-muted-foreground/60 mt-1">{content.roiNote}</p>
             </div>
           </div>

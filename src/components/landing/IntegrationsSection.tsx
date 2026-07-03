@@ -1,5 +1,7 @@
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { IntegrationsContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const POS_META = [
   { initial: "L", color: "hsl(40 70% 39%)" },
@@ -37,10 +39,16 @@ const IntegrationsSection = ({ dbContent }: { dbContent?: SectionContent<Integra
   const tripledLogos = [...TICKER_LOGOS, ...TICKER_LOGOS, ...TICKER_LOGOS];
 
   return (
-    <section id="integrations" className="py-20 md:py-28 border-t border-border/50">
+    <section id="integrations" className="relative py-20 md:py-28 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center max-w-5xl mx-auto">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
             <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">{content.badge}</span>
             <h2 className="text-2xl sm:text-3xl md:text-[2.5rem] font-semibold text-foreground leading-tight mb-5">
               {content.titleLine1}
@@ -49,14 +57,22 @@ const IntegrationsSection = ({ dbContent }: { dbContent?: SectionContent<Integra
             </h2>
             <p className="text-sm sm:text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-sm">{content.body}</p>
             <p className="text-xs text-muted-foreground/50 leading-relaxed max-w-sm">{content.csvNote}</p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-2 gap-3">
             {content.posSystems.map((pos, i) => {
               const isLive = pos.status === "live";
               const meta = POS_META[i];
               return (
-                <div key={pos.name} className={`rounded-2xl border p-5 flex flex-col gap-3 ${isLive ? "border-primary/25 bg-primary/[0.04]" : "border-border/40 bg-card/40 opacity-60"}`}>
+                <motion.div
+                  key={pos.name}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                  className={`rounded-2xl border p-5 flex flex-col gap-3 transition-colors duration-200 ${isLive ? "border-primary/25 bg-primary/[0.04] hover:border-primary/40" : "border-border/40 bg-card/40 opacity-60 hover:opacity-80"}`}
+                >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold"
                     style={{ background: isLive ? "hsl(40 70% 39% / 0.15)" : "hsl(220 14% 20% / 0.4)", color: isLive ? meta.color : "hsl(220 14% 55%)" }}
@@ -72,7 +88,7 @@ const IntegrationsSection = ({ dbContent }: { dbContent?: SectionContent<Integra
                       </span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

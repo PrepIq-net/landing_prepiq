@@ -6,6 +6,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Building, Shop, Bonfire, StatsReport, Globe, Clock, Language, Brain, CheckCircle } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { BuiltForScaleContent, SectionContent } from "@/types/cms";
+import { CountUp, SeamAccent } from "./motion-primitives";
 
 const createPinIcon = (isActive: boolean) =>
   L.divIcon({
@@ -90,7 +91,8 @@ const BuiltForScaleSection = ({ dbContent }: { dbContent?: SectionContent<BuiltF
   const selectedBranch = branches.find((b) => b.name === activeBranch) || branches[0];
 
   return (
-    <section className="py-20 md:py-28 border-t border-border/50">
+    <section className="relative py-20 md:py-28 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10 md:mb-16 px-2">
           <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-4 block">{content.badge}</span>
@@ -103,7 +105,7 @@ const BuiltForScaleSection = ({ dbContent }: { dbContent?: SectionContent<BuiltF
           {content.personas.map((p, i) => {
             const Icon = PERSONA_ICONS[i];
             return (
-              <div key={p.title} className="bg-card p-4 sm:p-6 space-y-2 sm:space-y-3">
+              <div key={p.title} className="bg-card p-4 sm:p-6 space-y-2 sm:space-y-3 hover:bg-accent/40 transition-colors duration-200">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                   <Icon className="h-4 w-4 text-primary" />
                 </div>
@@ -170,7 +172,14 @@ const BuiltForScaleSection = ({ dbContent }: { dbContent?: SectionContent<BuiltF
                       <span className="text-[10px] font-semibold text-primary">{branch.accuracy}%</span>
                     </div>
                     <div className="h-1 rounded-full overflow-hidden bg-secondary">
-                      <div className="h-full rounded-full bg-primary/70" style={{ width: `${branch.accuracy}%` }} />
+                      <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        className="h-full rounded-full bg-primary/70 origin-left"
+                        style={{ width: `${branch.accuracy}%` }}
+                      />
                     </div>
                   </button>
                 ))}
@@ -205,8 +214,8 @@ const BuiltForScaleSection = ({ dbContent }: { dbContent?: SectionContent<BuiltF
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/40 rounded-xl overflow-hidden border border-border mb-16 sm:mb-24">
           {networkStats.map((stat) => (
-            <div key={stat.label} className="bg-card px-4 sm:px-6 py-4 sm:py-6 text-center">
-              <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary mb-1">{stat.value}</p>
+            <div key={stat.label} className="bg-card px-4 sm:px-6 py-4 sm:py-6 text-center hover:bg-accent/40 transition-colors duration-200">
+              <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary mb-1"><CountUp value={stat.value} /></p>
               <p className="text-xs sm:text-sm font-medium text-foreground">{stat.label}</p>
             </div>
           ))}

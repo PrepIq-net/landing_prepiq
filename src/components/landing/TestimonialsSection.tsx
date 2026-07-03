@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { QuoteMessage, StarSolid } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { TestimonialsContent, SectionContent } from "@/types/cms";
+import { CountUp, SeamAccent } from "./motion-primitives";
 
 const FALLBACK_TESTIMONIALS = {
   en: [
@@ -41,7 +42,8 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
   ];
 
   return (
-    <section className="py-28 border-t border-border/50">
+    <section className="relative py-28 border-t border-border/50 section-band">
+      <SeamAccent />
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -67,8 +69,9 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
               transition={{ delay: i * 0.1 }}
-              className="rounded-2xl border border-border bg-card p-7 md:p-8 flex flex-col hover:border-primary/20 transition-colors duration-200"
+              className="rounded-2xl border border-border bg-card p-7 md:p-8 flex flex-col hover:border-primary/25 hover:shadow-l3 transition-[border-color,box-shadow] duration-200"
             >
               <div className="flex gap-0.5 mb-4">
                 {[...Array(5)].map((_, j) => (
@@ -102,8 +105,8 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
           className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border"
         >
           {trustSignals.map((signal) => (
-            <div key={signal.label} className="bg-card px-5 py-5 text-center">
-              <p className="text-xl md:text-2xl font-semibold text-primary mb-1">{signal.value}</p>
+            <div key={signal.label} className="bg-card px-5 py-5 text-center hover:bg-accent/40 transition-colors duration-200">
+              <p className="text-xl md:text-2xl font-semibold text-primary mb-1"><CountUp value={signal.value} /></p>
               <p className="text-xs text-muted-foreground">{signal.label}</p>
             </div>
           ))}

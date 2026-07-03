@@ -1,11 +1,12 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "iconoir-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CalendlyModal from "./CalendlyModal";
 import { useTranslation } from "react-i18next";
 import { HeroContent, SectionContent } from "@/types/cms";
+import { CountUp } from "./motion-primitives";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -15,6 +16,25 @@ const fadeUp = {
     transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] as const },
   },
 };
+
+const wordUp = {
+  hidden: { opacity: 0, y: "0.45em" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const WordReveal = ({ text }: { text: string }) => (
+  <>
+    {text.split(" ").map((word, i) => (
+      <motion.span key={`${word}-${i}`} variants={wordUp} className="inline-block whitespace-pre">
+        {word}{" "}
+      </motion.span>
+    ))}
+  </>
+);
 
 const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> }) => {
   const { t, i18n } = useTranslation();
@@ -41,6 +61,14 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
 
   const [demoOpen, setDemoOpen] = useState(false);
 
+  const videoWrapRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: videoWrapRef,
+    offset: ["start end", "start 0.35"],
+  });
+  const videoScale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
+  const videoY = useTransform(scrollYProgress, [0, 1], [28, 0]);
+
   const stats = [
     { value: "92%", label: content.stats.accuracy },
     { value: "−34%", label: content.stats.waste },
@@ -51,6 +79,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
     <>
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
         <div className="absolute inset-0 pattern-grid opacity-[0.1] pointer-events-none" />
+        <div className="absolute inset-0 wash-gold-top pointer-events-none" />
 
         <div className="section-container relative">
           <motion.div
@@ -68,12 +97,14 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
             </motion.span>
 
             <motion.h1
-              variants={fadeUp}
+              transition={{ staggerChildren: 0.05 }}
               className="font-display text-[2.2rem] font-semibold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-[2.8rem] md:text-[3.4rem]"
             >
-              {content.titleLine1}
+              <WordReveal text={content.titleLine1} />
               <br />
-              <span className="text-gradient-gold">{content.titleLine2}</span>
+              <motion.span variants={wordUp} className="text-gradient-gold inline-block">
+                {content.titleLine2}
+              </motion.span>
             </motion.h1>
 
             <motion.p
@@ -119,7 +150,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
               {stats.map((stat, i) => (
                 <div key={stat.label} className="space-y-1">
                   <p className={`font-display text-3xl font-semibold sm:text-4xl ${i === 0 ? "text-primary" : "text-foreground"}`}>
-                    {stat.value}
+                    <CountUp value={stat.value} />
                   </p>
                   <p className="text-[11px] uppercase tracking-widest text-muted-foreground/60 sm:text-xs">
                     {stat.label}
@@ -132,15 +163,16 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          ref={videoWrapRef}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.2, delay: 0.1, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           className="relative left-1/2 right-1/2 mt-14 w-screen -mx-[50vw] px-4 sm:px-6 md:mt-20 md:px-10"
         >
-          <div
+          <motion.div
             className="relative mx-auto max-w-[1800px] overflow-hidden rounded-2xl border border-border bg-card shadow-l2"
-            style={{ aspectRatio: "1906 / 1032" }}
+            style={{ aspectRatio: "1906 / 1032", scale: videoScale, y: videoY }}
           >
             <video
               src="/videos/app-demo.mp4"
@@ -151,7 +183,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
               preload="auto"
               className="h-full w-full object-cover"
             />
-          </div>
+          </motion.div>
         </motion.div>
       </section>
 

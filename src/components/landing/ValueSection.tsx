@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, GraphUp, Timer, DollarCircle, Percentage } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { ValueContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const presets = [2000, 4000, 8000, 15000];
 
@@ -114,7 +115,8 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
   );
 
   return (
-    <section id="value" className="py-20 md:py-24 border-t border-border/50">
+    <section id="value" className="relative py-20 md:py-24 border-t border-border/50 section-band">
+      <SeamAccent />
       <div className="section-container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -138,8 +140,9 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
               transition={{ delay: i * 0.1 }}
-              className={`relative rounded-xl border ${m.border} bg-card p-5 sm:p-8 space-y-3 sm:space-y-4 group hover:border-primary/30 transition-colors duration-300`}
+              className={`relative rounded-xl border ${m.border} bg-card p-5 sm:p-8 space-y-3 sm:space-y-4 group hover:border-primary/30 hover:shadow-l3 transition-[border-color,box-shadow] duration-300`}
             >
               <div className={`inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg ${m.iconBg}`}>
                 <m.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${m.color}`} />
