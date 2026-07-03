@@ -73,7 +73,7 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
   };
 
   return (
-    <section id="intelligence" className="relative py-20 md:py-32 border-t border-border/50">
+    <section id="intelligence" className="relative py-20 md:py-32 border-t border-border/50 scroll-mt-20">
       <SeamAccent />
       <div className="section-container">
         <motion.div

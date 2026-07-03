@@ -1,5 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowRight, CheckCircle, Building, User } from "iconoir-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  ArrowRight,
+  CheckCircle,
+  Building,
+  User,
+} from "iconoir-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -8,7 +16,11 @@ import { submitContactForm } from "@/lib/actions/contact-actions";
 import { ContactContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
 
-const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactContent> }) => {
+const ContactSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<ContactContent>;
+}) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
@@ -16,7 +28,11 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
     getInTouch: t("contact.getInTouch"),
     title: t("contact.title").replace(/<\/?gold>/g, ""),
     subtitle: t("contact.subtitle"),
-    contactInfo: { email: t("contact.email"), phone: t("contact.phone"), office: t("contact.office") },
+    contactInfo: {
+      email: t("contact.email"),
+      phone: t("contact.phone"),
+      office: t("contact.office"),
+    },
     trustPoint: t("contact.trustPoint"),
     formHeader: t("contact.formHeader"),
     optionalEmail: t("contact.optionalEmail"),
@@ -36,14 +52,31 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
   };
 
   const contactInfo = [
-    { icon: Mail, label: content.contactInfo.email, value: "hello@prepiq.com", href: "mailto:hello@prepiq.com" },
-    { icon: Phone, label: content.contactInfo.phone, value: "+1 (800) 773-7749", href: "tel:+18007737749" },
-    { icon: MapPin, label: content.contactInfo.office, value: "San Francisco, CA", href: "#" },
+    {
+      icon: Mail,
+      label: content.contactInfo.email,
+      value: "customer@prepiq.net",
+      href: "mailto:customer@prepiq.net",
+    },
+    {
+      icon: Phone,
+      label: content.contactInfo.phone,
+      value: "+256 709 802 259",
+      href: "tel:+256709802259",
+    },
+    {
+      icon: MapPin,
+      label: content.contactInfo.office,
+      value: "Kampala, UG",
+      href: "#",
+    },
   ];
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedLocations, setSelectedLocations] = useState<string | null>(null);
+  const [selectedLocations, setSelectedLocations] = useState<string | null>(
+    null,
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -85,7 +118,10 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
     "w-full rounded-xl border border-border bg-background/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-background transition-colors duration-200";
 
   return (
-    <section id="contact" className="relative py-20 md:py-32 border-t border-border/50">
+    <section
+      id="contact"
+      className="relative py-20 md:py-32 border-t border-border/50 section-band scroll-mt-20"
+    >
       <SeamAccent />
       <div className="section-container">
         <div className="grid gap-10 lg:gap-16 lg:grid-cols-5 items-start">
@@ -108,27 +144,45 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
               </p>
             </div>
 
-            <div className="space-y-1">
-              {contactInfo.map((item) => (
-                <a
+            <div className="space-y-3">
+              {contactInfo.map((item, i) => (
+                <motion.a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 -mx-3 sm:-mx-4 group hover:bg-accent/40 transition-colors duration-200"
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.3,
+                    delay: i * 0.08,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  whileHover={{
+                    y: -3,
+                    transition: { duration: 0.2, delay: 0 },
+                  }}
+                  className="flex items-center gap-3 sm:gap-4 rounded-2xl border border-border bg-card/60 px-4 sm:px-5 py-3.5 sm:py-4 group hover:border-primary/25 hover:shadow-l2 transition-[border-color,box-shadow] duration-200"
                 >
-                  <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-accent border border-border/30 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors duration-200 shrink-0">
-                    <item.icon className="h-4.5 w-4.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-primary/10 border border-primary/15 group-hover:bg-primary/15 group-hover:border-primary/25 transition-colors duration-200 shrink-0">
+                    <item.icon className="h-4.5 w-4.5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-[11px] uppercase tracking-wider text-muted-foreground/50 mb-0.5">{item.label}</p>
-                    <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{item.value}</p>
+                    <p className="text-[11px] uppercase tracking-wider text-muted-foreground/50 mb-0.5">
+                      {item.label}
+                    </p>
+                    <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                      {item.value}
+                    </p>
                   </div>
-                </a>
+                </motion.a>
               ))}
             </div>
 
-            <div className="flex items-center gap-2.5">
-              <div className="h-2 w-2 rounded-full bg-[hsl(var(--success))]" />
-              <span className="text-xs text-muted-foreground/60">{content.trustPoint}</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--success)/.2)] bg-[hsl(var(--success)/.08)] px-3 py-1.5">
+              <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))]" />
+              <span className="text-xs font-medium text-[hsl(var(--success))]">
+                {content.trustPoint}
+              </span>
             </div>
           </motion.div>
 
@@ -144,12 +198,19 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
               <div className="px-5 sm:px-8 md:px-10 py-4 sm:py-5 border-b border-border/50 bg-accent/30 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-                  <span className="text-sm font-medium text-foreground">{content.formHeader}</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {content.formHeader}
+                  </span>
                 </div>
-                <span className="text-[10px] sm:text-xs text-muted-foreground/40 hidden sm:inline">{content.optionalEmail}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground/40 hidden sm:inline">
+                  {content.optionalEmail}
+                </span>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-5 sm:p-8 md:p-10 space-y-5 sm:space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="p-5 sm:p-8 md:p-10 space-y-5 sm:space-y-6"
+              >
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="space-y-2.5">
                     <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
@@ -169,7 +230,8 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
                   <div className="space-y-2.5">
                     <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
                       <Mail className="h-3 w-3" />
-                      {content.contactInfo.email} <span className="text-destructive">*</span>
+                      {content.contactInfo.email}{" "}
+                      <span className="text-destructive">*</span>
                     </label>
                     <input
                       name="email"
@@ -247,12 +309,26 @@ const ContactSection = ({ dbContent }: { dbContent?: SectionContent<ContactConte
                       className="rounded-xl bg-[hsl(var(--success)/.08)] border border-[hsl(var(--success)/.15)] p-5 text-center"
                     >
                       <CheckCircle className="h-6 w-6 text-[hsl(var(--success))] mx-auto mb-2" />
-                      <p className="text-sm font-medium text-foreground">{content.sent}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{content.sentSubtitle}</p>
+                      <p className="text-sm font-medium text-foreground">
+                        {content.sent}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {content.sentSubtitle}
+                      </p>
                     </motion.div>
                   ) : (
-                    <motion.div key="button" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <Button type="submit" variant="hero" size="xl" className="w-full group" disabled={loading}>
+                    <motion.div
+                      key="button"
+                      initial={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <Button
+                        type="submit"
+                        variant="hero"
+                        size="xl"
+                        className="w-full group"
+                        disabled={loading}
+                      >
                         <span className="flex items-center justify-center gap-2">
                           {loading ? (
                             <>

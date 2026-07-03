@@ -143,7 +143,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             className="fixed top-14 right-0 bottom-0 w-[280px] bg-background border-l border-border/50 z-50 md:hidden shadow-[-8px_0_30px_rgba(0,0,0,0.5)]"
           >
             <div className="flex flex-col h-full p-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {links.map((link, i) => (
                   <motion.a
                     key={link.id}
@@ -151,7 +151,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg px-3 py-3 hover:bg-accent/50"
+                    className="block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border border-border/60 bg-accent/40 active:bg-accent/70 hover:border-primary/25"
                     onClick={() => setMobileOpen(false)}
                   >
                     {currentLang === "fr" ? link.labelFr : link.labelEn}
