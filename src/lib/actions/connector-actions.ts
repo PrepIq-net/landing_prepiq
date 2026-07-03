@@ -45,6 +45,14 @@ export async function requestSyncNow(connectorId: string) {
   revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
+export async function requestRequeueDead(connectorId: string) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(`/api/mgmt/connectors/${connectorId}/request-requeue-dead/`, email, {
+    method: 'POST',
+  });
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
 export async function confirmTable(connectorId: string, tableId: string, entity: string) {
   const email = await requireAdminEmail();
   await djangoAdminFetch(

@@ -17,9 +17,11 @@ import {
   toggleConnectorActive,
   revokeConnectorTokens,
   retryReconciliation,
+  requestRequeueDead,
   deleteConnector,
   markSalesReconciled,
 } from "@/lib/actions/connector-actions";
+import { AutoRefresh } from "./AutoRefresh";
 import { ConnectorTabs } from "./ConnectorTabs";
 import { LogsTab } from "./LogsTab";
 import { SchemaTab } from "./SchemaTab";
@@ -53,6 +55,8 @@ interface ConnectorDetail {
   is_active: boolean;
   unreconciled_count: number;
   created_at: string;
+  /** Agent-reported extras (heartbeat metadata): pending_count, dead_count… */
+  metadata?: Record<string, unknown>;
 }
 
 interface SyncBatch {
@@ -235,8 +239,12 @@ export default async function ConnectorDetailPage({
             : `${Math.round(heartbeatMs / 86_400_000)}d ago`
       : "—";
 
+  const pendingCount = Number(connector.metadata?.pending_count ?? 0) || 0;
+  const deadCount = Number(connector.metadata?.dead_count ?? 0) || 0;
+
   return (
     <div className="space-y-8">
+      <AutoRefresh />
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="space-y-1">
@@ -287,6 +295,16 @@ export default async function ConnectorDetailPage({
             label: "Unreconciled",
             value: connector.unreconciled_count,
             highlight: connector.unreconciled_count > 0,
+          },
+          {
+            label: "Queue (pending)",
+            value: pendingCount,
+            highlight: pendingCount > 0,
+          },
+          {
+            label: "Queue (stuck)",
+            value: deadCount,
+            highlight: deadCount > 0,
           },
           { label: "Active", value: connector.is_active ? "YES" : "NO" },
           {
@@ -351,6 +369,24 @@ export default async function ConnectorDetailPage({
               >
                 Retry Reconciliation (
                 {connector.unreconciled_count.toLocaleString()})
+              </Button>
+            </form>
+          )}
+
+          {deadCount > 0 && (
+            <form
+              action={async () => {
+                "use server";
+                await requestRequeueDead(id);
+              }}
+            >
+              <Button
+                type="submit"
+                variant="outline"
+                size="sm"
+                className="border-[#2A2A2E] hover:bg-accent"
+              >
+                Requeue Stuck Batches ({deadCount.toLocaleString()})
               </Button>
             </form>
           )}
