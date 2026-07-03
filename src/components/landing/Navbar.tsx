@@ -26,7 +26,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 20);
@@ -40,6 +40,12 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
           : "h-16 border-b border-transparent bg-transparent backdrop-blur-none"
       }`}
     >
+      <motion.div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-[2px] origin-left bg-primary/80"
+        style={{ scaleX: scrollYProgress }}
+      />
+
       <div
         className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500 ${
           scrolled ? "opacity-100" : "opacity-0"

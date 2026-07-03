@@ -1,9 +1,10 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { PricingContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const PLAN_META = {
   core: { monthlyPrice: 49, yearlyPrice: 499, trial: true, popular: false, limits: { branches: "1", staffEn: "Up to 15", staffFr: "Jusqu'à 15" } },
@@ -110,7 +111,8 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
   const addOns = useMemo(() => content.addOns.items.map((item, i) => ({ ...item, ...ADDON_META[i] })), [content]);
 
   return (
-    <section id="pricing" className="py-20 md:py-32 border-t border-border/50">
+    <section id="pricing" className="relative py-20 md:py-32 border-t border-border/50">
+      <SeamAccent />
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -166,9 +168,10 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                whileHover={{ y: -5, transition: { duration: 0.2, delay: 0 } }}
                 transition={{ delay: i * 0.06 }}
-                className={`relative rounded-2xl border flex flex-col ${
-                  plan.popular ? "border-primary/40 bg-card" : "border-border bg-card/80"
+                className={`relative rounded-2xl border flex flex-col hover:shadow-l2 transition-[border-color,box-shadow] duration-200 ${
+                  plan.popular ? "border-primary/40 bg-card shadow-l3" : "border-border bg-card/80 hover:border-primary/25"
                 }`}
               >
                 {plan.popular && (
@@ -186,8 +189,19 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                   </div>
 
                   <div className="mb-7">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">{currentLang === "fr" ? `${price} €` : `$${price}`}</span>
+                    <div className="flex items-baseline gap-1.5 overflow-hidden">
+                      <AnimatePresence mode="popLayout" initial={false}>
+                        <motion.span
+                          key={price}
+                          initial={{ y: "0.6em", opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: "-0.6em", opacity: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="inline-block text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground"
+                        >
+                          {currentLang === "fr" ? `${price} €` : `$${price}`}
+                        </motion.span>
+                      </AnimatePresence>
                       <span className="text-sm text-muted-foreground/40">{content.perMonth}</span>
                     </div>
                     <p className="text-xs text-muted-foreground/40 mt-2">
@@ -249,7 +263,7 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
             {addOns.map((addon) => (
               <div
                 key={addon.name}
-                className="rounded-2xl border border-border bg-card/80 p-5 sm:p-6 flex flex-col"
+                className="rounded-2xl border border-border bg-card/80 p-5 sm:p-6 flex flex-col hover:border-primary/25 hover:bg-card transition-colors duration-200"
               >
                 <div className="flex items-start justify-between mb-3">
                   <p className="text-sm font-semibold text-foreground">{addon.name}</p>

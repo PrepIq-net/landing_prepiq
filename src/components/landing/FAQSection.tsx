@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Plus, Minus } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FAQContent, SectionContent } from "@/types/cms";
+import { SeamAccent } from "./motion-primitives";
 
 const FALLBACK_ITEMS = {
   en: [
@@ -96,7 +97,8 @@ const FAQSection = ({ dbContent }: { dbContent?: SectionContent<FAQContent> }) =
   const rightFaqs = content.items.slice(6);
 
   return (
-    <section className="py-20 md:py-32 border-t border-border/50">
+    <section className="relative py-20 md:py-32 border-t border-border/50 section-band">
+      <SeamAccent />
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

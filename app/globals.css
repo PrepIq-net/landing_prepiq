@@ -131,6 +131,20 @@
     );
   }
 
+  /* Subtle tonal band to break the single-charcoal monotone between sections */
+  .section-band {
+    background: linear-gradient(180deg, hsl(240 6% 9.6%) 0%, hsl(var(--background)) 100%);
+  }
+
+  /* Faint gold radial washes for opening/closing moments */
+  .wash-gold-top {
+    background: radial-gradient(ellipse 60% 45% at 50% 0%, hsl(40 70% 39% / 0.06), transparent 70%);
+  }
+
+  .wash-gold-bottom {
+    background: radial-gradient(ellipse 60% 55% at 50% 100%, hsl(40 70% 39% / 0.09), transparent 70%);
+  }
+
   .pattern-squares {
     background-image:
       linear-gradient(hsla(40, 70%, 39%, 0.07) 1px, transparent 1px),
