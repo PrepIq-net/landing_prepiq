@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "iconoir-react";
-import { useState } from "react";
-import CalendlyModal from "./CalendlyModal";
 import { useTranslation } from "react-i18next";
 import { FinalCTAContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
+import { CALENDLY_URL } from "@/lib/constants";
 
 const FALLBACK_PROOFS = {
   en: ["30-day free pilot — no credit card", "Live in under 48 hours", "Works with any POS system"],
@@ -15,7 +14,6 @@ const FALLBACK_PROOFS = {
 const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTAContent> }) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
-  const [demoOpen, setDemoOpen] = useState(false);
 
   const content: FinalCTAContent = dbContent?.[currentLang] || {
     badge: t("finalCTA.badge"),
@@ -27,7 +25,6 @@ const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTACon
   };
 
   return (
-    <>
       <section className="relative py-20 sm:py-28 md:py-36 border-t border-border/50 overflow-hidden">
         <SeamAccent />
         <div className="absolute inset-0 wash-gold-bottom pointer-events-none" />
@@ -59,8 +56,10 @@ const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTACon
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Button>
-              <Button variant="hero-outline" size="xl" onClick={() => setDemoOpen(true)} className="w-full sm:w-auto">
-                {content.ctaDemo}
+              <Button asChild variant="hero-outline" size="xl" className="w-full sm:w-auto">
+                <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
+                  {content.ctaDemo}
+                </a>
               </Button>
             </div>
 
@@ -75,8 +74,6 @@ const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTACon
           </motion.div>
         </div>
       </section>
-      <CalendlyModal open={demoOpen} onOpenChange={setDemoOpen} />
-    </>
   );
 };
 

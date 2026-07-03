@@ -114,6 +114,12 @@
     background-size: 24px 24px;
   }
 
+  /* Bolder dot field for framing a feature element (e.g. the hero demo video) */
+  .pattern-dots-accent {
+    background-image: radial-gradient(circle, hsla(40, 75%, 50%, 0.28) 1.75px, transparent 1.75px);
+    background-size: 22px 22px;
+  }
+
   .pattern-grid {
     background-image:
       linear-gradient(hsla(40, 70%, 39%, 0.06) 1px, transparent 1px),

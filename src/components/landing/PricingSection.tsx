@@ -5,6 +5,7 @@ import { ArrowRight, Check } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { PricingContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
+import { APP_URL } from "@/lib/constants";
 
 const PLAN_META = {
   core: { monthlyPrice: 49, yearlyPrice: 499, trial: true, popular: false, limits: { branches: "1", staffEn: "Up to 15", staffFr: "Jusqu'à 15" } },
@@ -236,11 +237,18 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                     ))}
                   </div>
 
-                  <Button variant={plan.popular ? "hero" : "hero-outline"} size="lg" className="w-full group">
-                    <span className="flex items-center justify-center gap-2">
-                      {plan.cta}
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                    </span>
+                  <Button asChild variant={plan.popular ? "hero" : "hero-outline"} size="lg" className="w-full group">
+                    {plan.key === "command" ? (
+                      <a href="#contact" className="flex items-center justify-center gap-2">
+                        {plan.cta}
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                      </a>
+                    ) : (
+                      <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                        {plan.cta}
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                      </a>
+                    )}
                   </Button>
                 </div>
               </motion.div>

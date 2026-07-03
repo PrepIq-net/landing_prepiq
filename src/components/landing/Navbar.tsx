@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { APP_URL } from "@/lib/constants";
 
 interface NavLink {
   id: string;
@@ -92,11 +93,15 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
         <div className="hidden items-center gap-3 md:flex">
           <LanguageSwitcher />
-          <Button variant="ghost" size="sm">
-            {t("navbar.logIn")}
+          <Button asChild variant="ghost" size="sm">
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+              {t("navbar.logIn")}
+            </a>
           </Button>
-          <Button variant="hero" size="sm">
-            {t("navbar.startFree")}
+          <Button asChild variant="hero" size="sm">
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+              {t("navbar.startFree")}
+            </a>
           </Button>
         </div>
 
@@ -154,19 +159,15 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                 ))}
               </div>
               <div className="flex flex-col gap-2.5 pt-6 mt-6 border-t border-border/50">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-center"
-                >
-                  {t("navbar.logIn")}
+                <Button asChild variant="ghost" size="sm" className="w-full justify-center">
+                  <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                    {t("navbar.logIn")}
+                  </a>
                 </Button>
-                <Button
-                  variant="hero"
-                  size="sm"
-                  className="w-full justify-center"
-                >
-                  {t("navbar.startFree")}
+                <Button asChild variant="hero" size="sm" className="w-full justify-center">
+                  <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                    {t("navbar.startFree")}
+                  </a>
                 </Button>
               </div>
             </div>
