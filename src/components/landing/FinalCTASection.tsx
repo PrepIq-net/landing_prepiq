@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FinalCTAContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
-import { CALENDLY_URL } from "@/lib/constants";
+import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
 const FALLBACK_PROOFS = {
   en: ["30-day free pilot — no credit card", "Live in under 48 hours", "Works with any POS system"],
@@ -50,11 +50,11 @@ const FinalCTASection = ({ dbContent }: { dbContent?: SectionContent<FinalCTACon
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-              <Button variant="hero" size="xl" className="group w-full sm:w-auto">
-                <span className="flex items-center gap-2">
+              <Button asChild variant="hero" size="xl" className="group w-full sm:w-auto">
+                <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                   {content.ctaStart}
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                </span>
+                </a>
               </Button>
               <Button asChild variant="hero-outline" size="xl" className="w-full sm:w-auto">
                 <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">

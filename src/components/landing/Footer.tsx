@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslation } from "react-i18next";
 
 interface FooterLink {
@@ -37,9 +38,13 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
         <div className="grid gap-8 sm:gap-12 grid-cols-2 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div className="space-y-5 col-span-2 sm:col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <span className="font-display text-sm font-bold text-primary-foreground">P</span>
-              </div>
+              <Image
+                src="/logo/golden-main-transparent.png"
+                alt="PrepIQ Logo"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain"
+              />
               <span className="font-display text-lg font-semibold text-foreground">PrepIQ</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
