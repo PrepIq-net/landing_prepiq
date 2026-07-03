@@ -5,9 +5,9 @@ import { CostOfGuessingContent, SectionContent } from "@/types/cms";
 import { CountUp, SeamAccent } from "./motion-primitives";
 
 const PROBLEM_META = [
-  { icon: WarningTriangle, impact: "$2,400" },
-  { icon: MinusCircle, impact: "14%" },
-  { icon: PageEdit, impact: "0%" },
+  { icon: WarningTriangle, impact: "$2,400", color: "hsl(var(--warning))", bg: "hsl(var(--warning) / 0.08)", border: "hsl(var(--warning) / 0.18)" },
+  { icon: MinusCircle, impact: "14%", color: "hsl(var(--destructive))", bg: "hsl(var(--destructive) / 0.08)", border: "hsl(var(--destructive) / 0.18)" },
+  { icon: PageEdit, impact: "0%", color: "hsl(var(--info))", bg: "hsl(var(--info) / 0.08)", border: "hsl(var(--info) / 0.18)" },
 ];
 
 const PRESSURE_META = [
@@ -16,6 +16,8 @@ const PRESSURE_META = [
   { icon: Calendar, metric: "2.4×" },
   { icon: WarningTriangle, metric: "+42%" },
 ];
+
+const PRESSURE_COLOR = { color: "hsl(var(--warning))", bg: "hsl(var(--warning) / 0.08)", border: "hsl(var(--warning) / 0.18)" };
 
 const CostOfGuessingSection = ({ dbContent }: { dbContent?: SectionContent<CostOfGuessingContent> }) => {
   const { t, i18n } = useTranslation();
@@ -73,12 +75,15 @@ const CostOfGuessingSection = ({ dbContent }: { dbContent?: SectionContent<CostO
                 transition={{ delay: i * 0.06 }}
                 className="rounded-xl border border-border bg-card p-5 sm:p-7 space-y-4 hover:border-primary/25 hover:shadow-l3 transition-[border-color,box-shadow] duration-200"
               >
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
-                  <meta.icon className="h-4.5 w-4.5 text-muted-foreground" />
+                <div
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: meta.bg, border: `1px solid ${meta.border}` }}
+                >
+                  <meta.icon className="h-4.5 w-4.5" style={{ color: meta.color }} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-1">{p.title}</h3>
-                  <p className="text-xs sm:text-sm font-medium text-primary">→ {p.result}</p>
+                  <p className="text-xs sm:text-sm font-medium" style={{ color: meta.color }}>→ {p.result}</p>
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
                 <div className="pt-3 border-t border-border">
@@ -101,17 +106,23 @@ const CostOfGuessingSection = ({ dbContent }: { dbContent?: SectionContent<CostO
                 viewport={{ once: true }}
                 whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
                 transition={{ delay: i * 0.06 }}
-                className="rounded-xl border border-border bg-card p-5 space-y-3 hover:border-primary/25 hover:shadow-l3 transition-[border-color,box-shadow] duration-200"
+                className="rounded-xl border bg-card p-5 space-y-3 hover:shadow-l3 transition-[border-color,box-shadow] duration-200"
+                style={{ borderColor: PRESSURE_COLOR.border }}
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent">
-                  <meta.icon className="h-4 w-4 text-muted-foreground" />
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: PRESSURE_COLOR.bg, border: `1px solid ${PRESSURE_COLOR.border}` }}
+                >
+                  <meta.icon className="h-4 w-4" style={{ color: PRESSURE_COLOR.color }} />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-foreground mb-1">{p.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
                 </div>
-                <div className="pt-2.5 border-t border-border">
-                  <CountUp value={meta.metric} className="text-lg font-semibold text-foreground" />
+                <div className="pt-2.5 border-t border-border/70">
+                  <span style={{ color: PRESSURE_COLOR.color }}>
+                    <CountUp value={meta.metric} className="text-lg font-semibold" />
+                  </span>
                   <span className="text-[11px] text-muted-foreground ml-2">{p.metricLabel}</span>
                 </div>
               </motion.div>

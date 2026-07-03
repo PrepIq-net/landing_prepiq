@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { HeroContent, SectionContent } from "@/types/cms";
 import { CountUp } from "./motion-primitives";
-import { CALENDLY_URL } from "@/lib/constants";
+import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -127,11 +127,11 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
               variants={fadeUp}
               className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
             >
-              <Button variant="hero" size="lg" className="group w-full sm:w-auto rounded-xl px-8">
-                <span className="flex items-center gap-2 text-base">
+              <Button asChild variant="hero" size="lg" className="group w-full sm:w-auto rounded-xl px-8">
+                <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-base">
                   {content.ctaStart}
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </span>
+                </a>
               </Button>
               <Button asChild variant="hero-outline" size="lg" className="w-full sm:w-auto rounded-xl px-8 text-base">
                 <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">

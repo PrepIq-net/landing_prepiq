@@ -104,10 +104,10 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="group flex items-start gap-3 sm:gap-5 rounded-xl border border-border bg-card p-4 sm:p-5 hover:border-primary/20 transition-colors duration-200"
+                className="group flex items-start gap-3 sm:gap-5 rounded-xl border border-border bg-card p-4 sm:p-5 hover:border-primary/25 hover:shadow-l2 transition-[border-color,box-shadow] duration-200"
               >
-                <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent group-hover:bg-primary/10 transition-colors duration-200">
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
+                <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary/10 border border-primary/15 group-hover:bg-primary/15 group-hover:border-primary/25 transition-colors duration-200">
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm font-medium text-foreground mb-0.5 sm:mb-1">{s.label}</p>
@@ -198,8 +198,8 @@ const IntelligenceSection = ({ dbContent }: { dbContent?: SectionContent<Intelli
               {content.leakTypes.map((label, i) => {
                 const meta = LEAK_META[i];
                 return (
-                  <div key={label} className="rounded-xl border border-border bg-card/50 p-3 sm:p-4 text-center hover:border-primary/20 transition-colors duration-200">
-                    <meta.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground mx-auto mb-1.5 sm:mb-2" />
+                  <div key={label} className="rounded-xl border border-border bg-card/50 p-3 sm:p-4 text-center hover:border-primary/25 hover:shadow-l2 transition-[border-color,box-shadow] duration-200">
+                    <meta.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary mx-auto mb-1.5 sm:mb-2" />
                     <p className="text-base sm:text-lg font-semibold text-foreground"><CountUp value={meta.saved} /></p>
                     <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 uppercase tracking-wider mt-0.5 sm:mt-1">{label}</p>
                   </div>

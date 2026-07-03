@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Phone,
-  MapPin,
   ArrowRight,
   CheckCircle,
   Building,
@@ -63,12 +62,6 @@ const ContactSection = ({
       label: content.contactInfo.phone,
       value: "+256 709 802 259",
       href: "tel:+256709802259",
-    },
-    {
-      icon: MapPin,
-      label: content.contactInfo.office,
-      value: "Kampala, UG",
-      href: "#",
     },
   ];
 
