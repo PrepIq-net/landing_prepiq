@@ -18,6 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { HowItWorksContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
+import { GoldText } from "./GoldText";
 
 type Phase = "plan" | "live" | "review";
 
@@ -87,7 +88,7 @@ const HowItWorksSection = ({
 
   const fallbackContent: HowItWorksContent = {
     badge: t("howItWorks.badge"),
-    title: t("howItWorks.title").replace(/<\/?gold>/g, ""),
+    title: t("howItWorks.title"),
     subtitle: t("howItWorks.subtitle"),
     signalsTitle: t("howItWorks.signalsTitle"),
     signals: [
@@ -235,7 +236,7 @@ const HowItWorksSection = ({
             {content.badge}
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-            {content.title}
+            <GoldText text={content.title} />
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
             {content.subtitle}

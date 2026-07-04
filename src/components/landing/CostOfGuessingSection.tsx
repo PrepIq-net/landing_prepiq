@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { CostOfGuessingContent, SectionContent } from "@/types/cms";
 import { CountUp, SeamAccent } from "./motion-primitives";
+import { GoldText } from "./GoldText";
 
 const PROBLEM_META = [
   {
@@ -109,7 +110,7 @@ const CostOfGuessingSection = ({
         metricLabel: t("whyNow.items.delivery.label"),
       },
     ],
-    cta: t("whyNow.cta").replace(/<\/?gold>/g, ""),
+    cta: t("whyNow.cta"),
   };
 
   const problems = Array.isArray(content.problems) ? content.problems : [];
@@ -246,7 +247,9 @@ const CostOfGuessingSection = ({
           transition={{ delay: 0.2 }}
           className="text-center text-base sm:text-lg text-foreground font-medium mt-10 sm:mt-14 px-2"
         >
-          <span className="text-gradient-gold">{content.cta}</span>
+          <span className="text-gradient-gold">
+            <GoldText text={content.cta} />
+          </span>
         </motion.p>
       </div>
     </section>
