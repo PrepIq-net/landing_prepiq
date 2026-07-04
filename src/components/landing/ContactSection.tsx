@@ -23,7 +23,7 @@ const ContactSection = ({
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const content: ContactContent = dbContent?.[currentLang] || {
+  const fallbackContent: ContactContent = {
     getInTouch: t("contact.getInTouch"),
     title: t("contact.title").replace(/<\/?gold>/g, ""),
     subtitle: t("contact.subtitle"),
@@ -48,6 +48,18 @@ const ContactSection = ({
     sending: t("contact.sending"),
     send: t("contact.send"),
     noSpam: t("contact.noSpam"),
+  };
+
+  const localizedContent = dbContent?.[currentLang] as
+    | Partial<ContactContent>
+    | undefined;
+  const content: ContactContent = {
+    ...fallbackContent,
+    ...localizedContent,
+    contactInfo: {
+      ...fallbackContent.contactInfo,
+      ...(localizedContent?.contactInfo ?? {}),
+    },
   };
 
   const contactInfo = [

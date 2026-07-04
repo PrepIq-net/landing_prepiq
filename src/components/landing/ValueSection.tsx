@@ -1,24 +1,43 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowDown, GraphUp, Timer, DollarCircle, Percentage } from "iconoir-react";
+import {
+  ArrowDown,
+  GraphUp,
+  Timer,
+  DollarCircle,
+  Percentage,
+} from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { ValueContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
 
 const presets = [2000, 4000, 8000, 15000];
 
-const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> }) => {
+const ValueSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<ValueContent>;
+}) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [spend, setSpend] = useState(4000);
 
-  const content: ValueContent = dbContent?.[currentLang] || {
+  const fallbackContent: ValueContent = {
     title: t("value.title"),
     subtitle: t("value.subtitle"),
     metrics: {
-      waste: { label: t("value.metrics.waste.label"), desc: t("value.metrics.waste.desc") },
-      revenue: { label: t("value.metrics.revenue.label"), desc: t("value.metrics.revenue.desc") },
-      saved: { label: t("value.metrics.saved.label"), desc: t("value.metrics.saved.desc") },
+      waste: {
+        label: t("value.metrics.waste.label"),
+        desc: t("value.metrics.waste.desc"),
+      },
+      revenue: {
+        label: t("value.metrics.revenue.label"),
+        desc: t("value.metrics.revenue.desc"),
+      },
+      saved: {
+        label: t("value.metrics.saved.label"),
+        desc: t("value.metrics.saved.desc"),
+      },
     },
     calculator: {
       title: t("value.calculator.title"),
@@ -33,6 +52,36 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
         waste: t("value.calculator.categories.waste"),
         stockout: t("value.calculator.categories.stockout"),
         labor: t("value.calculator.categories.labor"),
+      },
+    },
+  };
+
+  const localizedContent = dbContent?.[currentLang] as
+    | Partial<ValueContent>
+    | undefined;
+  const content: ValueContent = {
+    ...fallbackContent,
+    ...localizedContent,
+    metrics: {
+      waste: {
+        ...fallbackContent.metrics.waste,
+        ...(localizedContent?.metrics?.waste ?? {}),
+      },
+      revenue: {
+        ...fallbackContent.metrics.revenue,
+        ...(localizedContent?.metrics?.revenue ?? {}),
+      },
+      saved: {
+        ...fallbackContent.metrics.saved,
+        ...(localizedContent?.metrics?.saved ?? {}),
+      },
+    },
+    calculator: {
+      ...fallbackContent.calculator,
+      ...(localizedContent?.calculator ?? {}),
+      categories: {
+        ...fallbackContent.calculator.categories,
+        ...(localizedContent?.calculator?.categories ?? {}),
       },
     },
   };
@@ -69,9 +118,30 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
 
   // Monthly breakdown categories for the chart
   const breakdownCategories = [
-    { key: "waste", label: content.calculator.categories.waste, pctLow: 0.05, pctHigh: 0.12, color: "bg-[hsl(var(--success))]", textColor: "text-[hsl(var(--success))]" },
-    { key: "stockout", label: content.calculator.categories.stockout, pctLow: 0.03, pctHigh: 0.08, color: "bg-primary", textColor: "text-primary" },
-    { key: "labor", label: content.calculator.categories.labor, pctLow: 0.01, pctHigh: 0.03, color: "bg-[hsl(var(--info))]", textColor: "text-[hsl(var(--info))]" },
+    {
+      key: "waste",
+      label: content.calculator.categories.waste,
+      pctLow: 0.05,
+      pctHigh: 0.12,
+      color: "bg-[hsl(var(--success))]",
+      textColor: "text-[hsl(var(--success))]",
+    },
+    {
+      key: "stockout",
+      label: content.calculator.categories.stockout,
+      pctLow: 0.03,
+      pctHigh: 0.08,
+      color: "bg-primary",
+      textColor: "text-primary",
+    },
+    {
+      key: "labor",
+      label: content.calculator.categories.labor,
+      pctLow: 0.01,
+      pctHigh: 0.03,
+      color: "bg-[hsl(var(--info))]",
+      textColor: "text-[hsl(var(--info))]",
+    },
   ];
 
   const { low, high } = useMemo(
@@ -79,7 +149,7 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
       low: Math.round(spend * 0.05),
       high: Math.round(spend * 0.12),
     }),
-    [spend]
+    [spend],
   );
 
   const midSavings = Math.round((low + high) / 2);
@@ -111,11 +181,14 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
         high: Math.round(spend * cat.pctHigh),
         mid: Math.round(spend * ((cat.pctLow + cat.pctHigh) / 2)),
       })),
-    [spend]
+    [spend],
   );
 
   return (
-    <section id="value" className="relative py-20 md:py-24 border-t border-border/50 section-band">
+    <section
+      id="value"
+      className="relative py-20 md:py-24 border-t border-border/50 section-band"
+    >
       <SeamAccent />
       <div className="section-container px-4 sm:px-6">
         <motion.div
@@ -144,17 +217,27 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
               transition={{ delay: i * 0.1 }}
               className={`relative rounded-xl border ${m.border} bg-card p-5 sm:p-8 space-y-3 sm:space-y-4 group hover:border-primary/30 hover:shadow-l3 transition-[border-color,box-shadow] duration-300`}
             >
-              <div className={`inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg ${m.iconBg}`}>
+              <div
+                className={`inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg ${m.iconBg}`}
+              >
                 <m.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${m.color}`} />
               </div>
               <div>
-                <p className={`text-3xl sm:text-4xl md:text-5xl font-display font-semibold ${m.color} tracking-tight`}>
+                <p
+                  className={`text-3xl sm:text-4xl md:text-5xl font-display font-semibold ${m.color} tracking-tight`}
+                >
                   {m.value}
                 </p>
-                <p className="text-xs sm:text-sm font-medium text-foreground mt-1.5 sm:mt-2">{m.label}</p>
+                <p className="text-xs sm:text-sm font-medium text-foreground mt-1.5 sm:mt-2">
+                  {m.label}
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
-              <div className={`absolute top-0 right-0 h-16 w-16 rounded-tr-xl rounded-bl-[40px] ${m.iconBg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {m.desc}
+              </p>
+              <div
+                className={`absolute top-0 right-0 h-16 w-16 rounded-tr-xl rounded-bl-[40px] ${m.iconBg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+              />
             </motion.div>
           ))}
         </div>
@@ -172,8 +255,12 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
               <DollarCircle className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">{content.calculator.title}</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground">{content.calculator.subtitle}</p>
+              <p className="text-sm font-semibold text-foreground">
+                {content.calculator.title}
+              </p>
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
+                {content.calculator.subtitle}
+              </p>
             </div>
           </div>
 
@@ -185,11 +272,20 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                   {content.calculator.inputLabel}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground font-medium">{i18n.resolvedLanguage === 'fr' ? '€' : '$'}</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base text-muted-foreground font-medium">
+                    {i18n.resolvedLanguage === "fr" ? "€" : "$"}
+                  </span>
                   <input
                     type="number"
                     value={spend}
-                    onChange={(e) => setSpend(Math.max(0, Math.min(50000, Number(e.target.value) || 0)))}
+                    onChange={(e) =>
+                      setSpend(
+                        Math.max(
+                          0,
+                          Math.min(50000, Number(e.target.value) || 0),
+                        ),
+                      )
+                    }
                     className="w-full rounded-lg border border-border bg-background pl-9 pr-4 py-3 sm:py-3.5 text-base sm:text-lg font-display font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-shadow"
                   />
                 </div>
@@ -222,10 +318,14 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                     key={p}
                     onClick={() => setSpend(p)}
                     className={`rounded-lg px-3 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-medium transition-all duration-200 ${
-                      spend === p ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground hover:text-foreground hover:bg-muted"
+                      spend === p
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-accent text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                   >
-                    {i18n.resolvedLanguage === 'fr' ? `${p.toLocaleString()} €` : `$${p.toLocaleString()}`}
+                    {i18n.resolvedLanguage === "fr"
+                      ? `${p.toLocaleString()} €`
+                      : `$${p.toLocaleString()}`}
                   </button>
                 ))}
               </div>
@@ -233,7 +333,9 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
               {/* Savings summary */}
               <div className="space-y-3 pt-2">
                 <div className="text-center space-y-1 p-4 rounded-xl bg-primary/[0.04] border border-primary/10">
-                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">{content.calculator.monthlyRecovery}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                    {content.calculator.monthlyRecovery}
+                  </p>
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={`${low}-${high}`}
@@ -243,13 +345,17 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                       transition={{ duration: 0.25 }}
                       className="text-2xl sm:text-3xl font-display font-semibold text-primary tracking-tight"
                     >
-                      {i18n.resolvedLanguage === 'fr' ? `${low.toLocaleString()} € – ${high.toLocaleString()} €` : `$${low.toLocaleString()} – $${high.toLocaleString()}`}
+                      {i18n.resolvedLanguage === "fr"
+                        ? `${low.toLocaleString()} € – ${high.toLocaleString()} €`
+                        : `$${low.toLocaleString()} – $${high.toLocaleString()}`}
                     </motion.p>
                   </AnimatePresence>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
-                  <span className="text-xs text-muted-foreground">{content.calculator.annualImpact}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {content.calculator.annualImpact}
+                  </span>
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={`${annualLow}-${annualHigh}`}
@@ -257,7 +363,9 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                       animate={{ opacity: 1 }}
                       className="text-sm font-semibold text-foreground font-display"
                     >
-                      {i18n.resolvedLanguage === 'fr' ? `${annualLow.toLocaleString()} € – ${annualHigh.toLocaleString()} €` : `$${annualLow.toLocaleString()} – $${annualHigh.toLocaleString()}`}
+                      {i18n.resolvedLanguage === "fr"
+                        ? `${annualLow.toLocaleString()} € – ${annualHigh.toLocaleString()} €`
+                        : `$${annualLow.toLocaleString()} – $${annualHigh.toLocaleString()}`}
                     </motion.span>
                   </AnimatePresence>
                 </div>
@@ -271,23 +379,34 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                 <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">
                   {content.calculator.projection}
                 </p>
-                <div className="flex items-end gap-3 sm:gap-4" style={{ height: "200px" }}>
+                <div
+                  className="flex items-end gap-3 sm:gap-4"
+                  style={{ height: "200px" }}
+                >
                   {chartData.map((d, i) => {
                     const totalHeight = 200;
-                    const barPx = Math.max((d.total / maxTotal) * (totalHeight - 40), 8);
+                    const barPx = Math.max(
+                      (d.total / maxTotal) * (totalHeight - 40),
+                      8,
+                    );
                     const wastePx = d.total ? (d.waste / d.total) * barPx : 0;
-                    const stockoutPx = d.total ? (d.stockout / d.total) * barPx : 0;
+                    const stockoutPx = d.total
+                      ? (d.stockout / d.total) * barPx
+                      : 0;
                     const laborPx = d.total ? (d.labor / d.total) * barPx : 0;
 
                     return (
-                      <div key={d.month} className="flex-1 flex flex-col items-center justify-end h-full gap-1.5">
+                      <div
+                        key={d.month}
+                        className="flex-1 flex flex-col items-center justify-end h-full gap-1.5"
+                      >
                         <motion.span
                           key={`val-${d.total}-${i}`}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="text-[9px] sm:text-[10px] font-semibold text-muted-foreground font-display"
                         >
-                          {i18n.resolvedLanguage === 'fr'
+                          {i18n.resolvedLanguage === "fr"
                             ? `${d.total > 999 ? `${(d.total / 1000).toFixed(1)}k` : d.total} €`
                             : `$${d.total > 999 ? `${(d.total / 1000).toFixed(1)}k` : d.total}`}
                         </motion.span>
@@ -297,14 +416,29 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                           style={{ height: barPx }}
                           initial={{ scaleY: 0 }}
                           animate={{ scaleY: 1 }}
-                          transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
+                          transition={{
+                            delay: i * 0.1,
+                            duration: 0.6,
+                            ease: "easeOut",
+                          }}
                         >
-                          <div className="bg-[hsl(var(--success))]" style={{ height: wastePx }} />
-                          <div className="bg-primary" style={{ height: stockoutPx }} />
-                          <div className="bg-[hsl(var(--info))]" style={{ height: laborPx }} />
+                          <div
+                            className="bg-[hsl(var(--success))]"
+                            style={{ height: wastePx }}
+                          />
+                          <div
+                            className="bg-primary"
+                            style={{ height: stockoutPx }}
+                          />
+                          <div
+                            className="bg-[hsl(var(--info))]"
+                            style={{ height: laborPx }}
+                          />
                         </motion.div>
 
-                        <span className="text-[10px] sm:text-[11px] text-muted-foreground/60 font-medium">{d.label}</span>
+                        <span className="text-[10px] sm:text-[11px] text-muted-foreground/60 font-medium">
+                          {d.label}
+                        </span>
                       </div>
                     );
                   })}
@@ -317,10 +451,15 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                   {content.calculator.breakdown}
                 </p>
                 {breakdown.map((cat) => (
-                  <div key={cat.key} className="flex items-center justify-between">
+                  <div
+                    key={cat.key}
+                    className="flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-2.5">
                       <div className={`h-2.5 w-2.5 rounded-sm ${cat.color}`} />
-                      <span className="text-xs text-muted-foreground">{cat.label}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {cat.label}
+                      </span>
                     </div>
                     <AnimatePresence mode="wait">
                       <motion.span
@@ -329,7 +468,7 @@ const ValueSection = ({ dbContent }: { dbContent?: SectionContent<ValueContent> 
                         animate={{ opacity: 1 }}
                         className={`text-xs font-semibold ${cat.textColor}`}
                       >
-                        {i18n.resolvedLanguage === 'fr'
+                        {i18n.resolvedLanguage === "fr"
                           ? `${cat.low.toLocaleString()} € – ${cat.high.toLocaleString()} €`
                           : `$${cat.low.toLocaleString()} – $${cat.high.toLocaleString()}`}
                       </motion.span>

@@ -6,18 +6,64 @@ import { CountUp, SeamAccent } from "./motion-primitives";
 
 const FALLBACK_TESTIMONIALS = {
   en: [
-    { quote: "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.", name: "Chef Adamu", role: "Head Chef", company: "Lagos Kitchen Co.", metric: "9% waste reduction" },
-    { quote: "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.", name: "Sarah K.", role: "Ops Manager", company: "FreshBite", metric: "$3,200/mo saved" },
-    { quote: "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.", name: "Marcus T.", role: "Owner", company: "3-Branch Network", metric: "92% accuracy" },
+    {
+      quote:
+        "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.",
+      name: "Chef Adamu",
+      role: "Head Chef",
+      company: "Lagos Kitchen Co.",
+      metric: "9% waste reduction",
+    },
+    {
+      quote:
+        "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.",
+      name: "Sarah K.",
+      role: "Ops Manager",
+      company: "FreshBite",
+      metric: "$3,200/mo saved",
+    },
+    {
+      quote:
+        "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.",
+      name: "Marcus T.",
+      role: "Owner",
+      company: "3-Branch Network",
+      metric: "92% accuracy",
+    },
   ],
   fr: [
-    { quote: "Je devinais la mise en place chaque matin. Maintenant, je la valide. PrepIQ a changé notre vision du gaspillage.", name: "Chef Adamu", role: "Chef de Cuisine", company: "Lagos Kitchen Co.", metric: "-9% de gaspillage" },
-    { quote: "Nous avons réduit le gaspillage de 9% dès le premier mois. La prévision fonctionne tout simplement. Notre marge a bondi.", name: "Sarah K.", role: "Responsable Opérations", company: "FreshBite", metric: "3 200€/mois sauvés" },
-    { quote: "Enfin un système qui comprend la réalité d'une cuisine. Pas de superflu, pas de formation. Juste de l'intelligence.", name: "Marcus T.", role: "Propriétaire", company: "3-Branch Network", metric: "92% de précision" },
+    {
+      quote:
+        "Je devinais la mise en place chaque matin. Maintenant, je la valide. PrepIQ a changé notre vision du gaspillage.",
+      name: "Chef Adamu",
+      role: "Chef de Cuisine",
+      company: "Lagos Kitchen Co.",
+      metric: "-9% de gaspillage",
+    },
+    {
+      quote:
+        "Nous avons réduit le gaspillage de 9% dès le premier mois. La prévision fonctionne tout simplement. Notre marge a bondi.",
+      name: "Sarah K.",
+      role: "Responsable Opérations",
+      company: "FreshBite",
+      metric: "3 200€/mois sauvés",
+    },
+    {
+      quote:
+        "Enfin un système qui comprend la réalité d'une cuisine. Pas de superflu, pas de formation. Juste de l'intelligence.",
+      name: "Marcus T.",
+      role: "Propriétaire",
+      company: "3-Branch Network",
+      metric: "92% de précision",
+    },
   ],
 };
 
-const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<TestimonialsContent> }) => {
+const TestimonialsSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<TestimonialsContent>;
+}) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
@@ -34,6 +80,9 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
     },
   };
 
+  const items = Array.isArray(content.items)
+    ? content.items
+    : FALLBACK_TESTIMONIALS[currentLang] || FALLBACK_TESTIMONIALS.en;
   const trustSignals = [
     { value: "40+", label: content.stats.powered },
     { value: "8,000+", label: content.stats.processed },
@@ -63,7 +112,7 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-3 mb-14">
-          {content.items.map((item, i) => (
+          {items.map((item, i) => (
             <motion.div
               key={item.name}
               initial={{ opacity: 0, y: 20 }}
@@ -80,16 +129,24 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
               </div>
 
               <QuoteMessage className="h-5 w-5 text-primary/30 mb-3" />
-              <p className="text-sm text-foreground leading-relaxed flex-1">&ldquo;{item.quote}&rdquo;</p>
+              <p className="text-sm text-foreground leading-relaxed flex-1">
+                &ldquo;{item.quote}&rdquo;
+              </p>
 
               <div className="mt-6 pt-5 border-t border-border">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">{item.role}, {item.company}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {item.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {item.role}, {item.company}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-primary">{item.metric}</span>
+                    <span className="text-sm font-semibold text-primary">
+                      {item.metric}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -105,8 +162,13 @@ const TestimonialsSection = ({ dbContent }: { dbContent?: SectionContent<Testimo
           className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border"
         >
           {trustSignals.map((signal) => (
-            <div key={signal.label} className="bg-card px-5 py-5 text-center hover:bg-accent/40 transition-colors duration-200">
-              <p className="text-xl md:text-2xl font-semibold text-primary mb-1"><CountUp value={signal.value} /></p>
+            <div
+              key={signal.label}
+              className="bg-card px-5 py-5 text-center hover:bg-accent/40 transition-colors duration-200"
+            >
+              <p className="text-xl md:text-2xl font-semibold text-primary mb-1">
+                <CountUp value={signal.value} />
+              </p>
               <p className="text-xs text-muted-foreground">{signal.label}</p>
             </div>
           ))}
