@@ -17,6 +17,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { BuiltForScaleContent, SectionContent } from "@/types/cms";
 import { CountUp, SeamAccent } from "./motion-primitives";
+import { GoldText } from "./GoldText";
 
 const createPinIcon = (isActive: boolean) =>
   L.divIcon({
@@ -256,7 +257,7 @@ const BuiltForScaleSection = ({
             {content.badge}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
-            {content.title}
+            <GoldText text={content.title} />
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
             {content.subtitle}

@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { submitContactForm } from "@/lib/actions/contact-actions";
 import { ContactContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
+import { GoldText } from "./GoldText";
 
 const ContactSection = ({
   dbContent,
@@ -25,7 +26,7 @@ const ContactSection = ({
 
   const fallbackContent: ContactContent = {
     getInTouch: t("contact.getInTouch"),
-    title: t("contact.title").replace(/<\/?gold>/g, ""),
+    title: t("contact.title"),
     subtitle: t("contact.subtitle"),
     contactInfo: {
       email: t("contact.email"),
@@ -142,7 +143,7 @@ const ContactSection = ({
                 {content.getInTouch}
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-                {content.title}
+                <GoldText text={content.title} />
               </h2>
               <p className="text-muted-foreground max-w-md leading-relaxed text-sm sm:text-base">
                 {content.subtitle}

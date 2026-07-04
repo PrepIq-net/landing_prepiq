@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FinalCTAContent, SectionContent } from "@/types/cms";
 import { SeamAccent } from "./motion-primitives";
+import { GoldText } from "./GoldText";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
 const FALLBACK_PROOFS = {
@@ -29,7 +30,7 @@ const FinalCTASection = ({
 
   const content: FinalCTAContent = dbContent?.[currentLang] || {
     badge: t("finalCTA.badge"),
-    title: t("finalCTA.title").replace(/<\/?gold>/g, ""),
+    title: t("finalCTA.title"),
     subtitle: t("finalCTA.subtitle"),
     ctaStart: t("finalCTA.ctaStart"),
     ctaDemo: t("finalCTA.ctaDemo"),
@@ -58,7 +59,7 @@ const FinalCTASection = ({
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground leading-tight lg:leading-[1.15] mb-4 sm:mb-6">
-            {content.title}
+            <GoldText text={content.title} />
           </h2>
 
           <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed mb-8 sm:mb-10">
