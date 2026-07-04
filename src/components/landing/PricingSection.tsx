@@ -8,9 +8,32 @@ import { SeamAccent } from "./motion-primitives";
 import { APP_URL } from "@/lib/constants";
 
 const PLAN_META = {
-  core: { monthlyPrice: 49, yearlyPrice: 499, trial: true, popular: false, limits: { branches: "1", staffEn: "Up to 15", staffFr: "Jusqu'à 15" } },
-  intelligence: { monthlyPrice: 149, yearlyPrice: 1519, trial: false, popular: true, limits: { branches: "10", staffEn: "Unlimited", staffFr: "Illimité" } },
-  command: { monthlyPrice: 349, yearlyPrice: 3559, trial: false, popular: false, limits: { branchesEn: "Unlimited", branchesFr: "Illimité", staffEn: "Unlimited", staffFr: "Illimité" } },
+  core: {
+    monthlyPrice: 49,
+    yearlyPrice: 499,
+    trial: true,
+    popular: false,
+    limits: { branches: "1", staffEn: "Up to 15", staffFr: "Jusqu'à 15" },
+  },
+  intelligence: {
+    monthlyPrice: 149,
+    yearlyPrice: 1519,
+    trial: false,
+    popular: true,
+    limits: { branches: "10", staffEn: "Unlimited", staffFr: "Illimité" },
+  },
+  command: {
+    monthlyPrice: 349,
+    yearlyPrice: 3559,
+    trial: false,
+    popular: false,
+    limits: {
+      branchesEn: "Unlimited",
+      branchesFr: "Illimité",
+      staffEn: "Unlimited",
+      staffFr: "Illimité",
+    },
+  },
 } as const;
 
 const ADDON_META = [
@@ -23,35 +46,125 @@ const ADDON_META = [
 
 const FALLBACK_FEATURES = {
   en: {
-    core: ["Single-branch operations", "Basic role & permission management", "POS integration + CSV fallback", "Daily prep forecast engine", "Manual override & waste logging", "Manual 86 tracking", "7–14 day variance history"],
-    intelligence: ["Everything in Core", "POS + inventory auto-reconciliation", "Waste-to-cost attribution", "Staff accountability engine", "Forecast confidence + learning loop", "Predictive drift detection", "Margin protection signals", "30–90 day trend analysis", "6 AM executive PDF report", "CSV & PDF exports"],
-    command: ["Everything in Intelligence", "Multi-branch rollup & comparison", "Executive command center", "Procurement anomaly detection", "Advanced forecasting & benchmarking", "Audit/compliance exports + API", "Centralized admin controls", "Custom enterprise pricing at scale"],
+    core: [
+      "Single-branch operations",
+      "Basic role & permission management",
+      "POS integration + CSV fallback",
+      "Daily prep forecast engine",
+      "Manual override & waste logging",
+      "Manual 86 tracking",
+      "7–14 day variance history",
+    ],
+    intelligence: [
+      "Everything in Core",
+      "POS + inventory auto-reconciliation",
+      "Waste-to-cost attribution",
+      "Staff accountability engine",
+      "Forecast confidence + learning loop",
+      "Predictive drift detection",
+      "Margin protection signals",
+      "30–90 day trend analysis",
+      "6 AM executive PDF report",
+      "CSV & PDF exports",
+    ],
+    command: [
+      "Everything in Intelligence",
+      "Multi-branch rollup & comparison",
+      "Executive command center",
+      "Procurement anomaly detection",
+      "Advanced forecasting & benchmarking",
+      "Audit/compliance exports + API",
+      "Centralized admin controls",
+      "Custom enterprise pricing at scale",
+    ],
   },
   fr: {
-    core: ["Gestion d'un seul site", "Rôles et permissions de base", "Intégration POS + import CSV", "Moteur de prévision quotidien", "Ajustements manuels et saisie des pertes", "Suivi manuel des ruptures", "Historique des écarts (7–14 jours)"],
-    intelligence: ["Tout ce qui est dans Core", "Réconciliation POS + inventaire auto", "Attribution coût des pertes", "Moteur de responsabilité équipe", "Confiance prévision + boucle d'apprentissage", "Détection prédictive de dérive", "Signaux de protection de marge", "Analyse de tendances (30–90 jours)", "Rapport PDF exécutif à 6h00", "Exports CSV et PDF"],
-    command: ["Tout ce qui est dans Intelligence", "Consolidation et comparaison multi-sites", "Centre de commande exécutif", "Détection d'anomalies d'achats", "Prévisions avancées et benchmarking", "Exports conformité + API", "Contrôles admin centralisés", "Tarification entreprise sur mesure"],
+    core: [
+      "Gestion d'un seul site",
+      "Rôles et permissions de base",
+      "Intégration POS + import CSV",
+      "Moteur de prévision quotidien",
+      "Ajustements manuels et saisie des pertes",
+      "Suivi manuel des ruptures",
+      "Historique des écarts (7–14 jours)",
+    ],
+    intelligence: [
+      "Tout ce qui est dans Core",
+      "Réconciliation POS + inventaire auto",
+      "Attribution coût des pertes",
+      "Moteur de responsabilité équipe",
+      "Confiance prévision + boucle d'apprentissage",
+      "Détection prédictive de dérive",
+      "Signaux de protection de marge",
+      "Analyse de tendances (30–90 jours)",
+      "Rapport PDF exécutif à 6h00",
+      "Exports CSV et PDF",
+    ],
+    command: [
+      "Tout ce qui est dans Intelligence",
+      "Consolidation et comparaison multi-sites",
+      "Centre de commande exécutif",
+      "Détection d'anomalies d'achats",
+      "Prévisions avancées et benchmarking",
+      "Exports conformité + API",
+      "Contrôles admin centralisés",
+      "Tarification entreprise sur mesure",
+    ],
   },
 };
 
 const FALLBACK_ADDONS = {
   en: [
-    { name: "Tax Engine", desc: "Automatically calculate and apply local tax rules across jurisdictions, so every location stays compliant without manual work." },
-    { name: "Liability Shield", desc: "Generates audit-ready waste logs, HACCP-aligned reports, and timestamped records for regulatory inspections and insurance claims." },
-    { name: "Enterprise SSO", desc: "Single sign-on via SAML/OIDC for your entire org. One login, centralized access control, and automatic provisioning." },
-    { name: "Advanced API", desc: "Full REST API access to push forecasts, pull waste data, and integrate PrepIQ into your existing ERP, BI, or procurement systems." },
-    { name: "Dedicated Analyst", desc: "A named PrepIQ analyst reviews your data weekly, delivers optimization recommendations, and helps you hit waste-reduction targets." },
+    {
+      name: "Tax Engine",
+      desc: "Automatically calculate and apply local tax rules across jurisdictions, so every location stays compliant without manual work.",
+    },
+    {
+      name: "Liability Shield",
+      desc: "Generates audit-ready waste logs, HACCP-aligned reports, and timestamped records for regulatory inspections and insurance claims.",
+    },
+    {
+      name: "Enterprise SSO",
+      desc: "Single sign-on via SAML/OIDC for your entire org. One login, centralized access control, and automatic provisioning.",
+    },
+    {
+      name: "Advanced API",
+      desc: "Full REST API access to push forecasts, pull waste data, and integrate PrepIQ into your existing ERP, BI, or procurement systems.",
+    },
+    {
+      name: "Dedicated Analyst",
+      desc: "A named PrepIQ analyst reviews your data weekly, delivers optimization recommendations, and helps you hit waste-reduction targets.",
+    },
   ],
   fr: [
-    { name: "Moteur Fiscal", desc: "Calcul et application automatique des taxes locales selon les juridictions pour rester conforme sans effort." },
-    { name: "Bouclier Légal", desc: "Génère des registres de pertes conformes HACCP et des rapports horodatés pour les inspections et assurances." },
-    { name: "SSO Entreprise", desc: "Connexion unique via SAML/OIDC pour toute l'organisation. Un seul login, accès centralisé." },
-    { name: "API Avancée", desc: "Accès complet à l'API REST pour pousser les prévisions et intégrer PrepIQ à vos ERP ou BI existants." },
-    { name: "Analyste Dédié", desc: "Un analyste PrepIQ examine vos données chaque semaine et vous aide à atteindre vos objectifs de réduction des pertes." },
+    {
+      name: "Moteur Fiscal",
+      desc: "Calcul et application automatique des taxes locales selon les juridictions pour rester conforme sans effort.",
+    },
+    {
+      name: "Bouclier Légal",
+      desc: "Génère des registres de pertes conformes HACCP et des rapports horodatés pour les inspections et assurances.",
+    },
+    {
+      name: "SSO Entreprise",
+      desc: "Connexion unique via SAML/OIDC pour toute l'organisation. Un seul login, accès centralisé.",
+    },
+    {
+      name: "API Avancée",
+      desc: "Accès complet à l'API REST pour pousser les prévisions et intégrer PrepIQ à vos ERP ou BI existants.",
+    },
+    {
+      name: "Analyste Dédié",
+      desc: "Un analyste PrepIQ examine vos données chaque semaine et vous aide à atteindre vos objectifs de réduction des pertes.",
+    },
   ],
 };
 
-const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingContent> }) => {
+const PricingSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<PricingContent>;
+}) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [annual, setAnnual] = useState(true);
@@ -72,9 +185,24 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
     mostPopular: t("pricing.mostPopular"),
     footer: t("pricing.footer"),
     plans: {
-      core: { name: t("pricing.plans.core.name"), tagline: t("pricing.plans.core.tagline"), cta: t("pricing.plans.core.cta"), features: FALLBACK_FEATURES[currentLang].core },
-      intelligence: { name: t("pricing.plans.intelligence.name"), tagline: t("pricing.plans.intelligence.tagline"), cta: t("pricing.plans.intelligence.cta"), features: FALLBACK_FEATURES[currentLang].intelligence },
-      command: { name: t("pricing.plans.command.name"), tagline: t("pricing.plans.command.tagline"), cta: t("pricing.plans.command.cta"), features: FALLBACK_FEATURES[currentLang].command },
+      core: {
+        name: t("pricing.plans.core.name"),
+        tagline: t("pricing.plans.core.tagline"),
+        cta: t("pricing.plans.core.cta"),
+        features: FALLBACK_FEATURES[currentLang].core,
+      },
+      intelligence: {
+        name: t("pricing.plans.intelligence.name"),
+        tagline: t("pricing.plans.intelligence.tagline"),
+        cta: t("pricing.plans.intelligence.cta"),
+        features: FALLBACK_FEATURES[currentLang].intelligence,
+      },
+      command: {
+        name: t("pricing.plans.command.name"),
+        tagline: t("pricing.plans.command.tagline"),
+        cta: t("pricing.plans.command.cta"),
+        features: FALLBACK_FEATURES[currentLang].command,
+      },
     },
     addOns: {
       title: t("pricing.addOns.title"),
@@ -93,26 +221,50 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
     return currentLang === "fr" ? limits.branchesFr : limits.branchesEn;
   };
 
-  const plans = useMemo(() => (["core", "intelligence", "command"] as const).map((key) => {
-    const meta = PLAN_META[key];
-    return {
-      key,
-      name: content.plans[key].name,
-      tagline: content.plans[key].tagline,
-      cta: content.plans[key].cta,
-      features: content.plans[key].features,
-      monthlyPrice: meta.monthlyPrice,
-      yearlyPrice: meta.yearlyPrice,
-      trial: meta.trial ? (currentLang === "fr" ? "Essai gratuit de 30 jours" : "30-day free pilot") : null,
-      popular: meta.popular,
-      limits: { branches: branchesLabel(key), staff: staffLabel(key) },
-    };
-  }), [content, currentLang]);
+  const plans = useMemo(
+    () =>
+      (["core", "intelligence", "command"] as const).map((key) => {
+        const meta = PLAN_META[key];
+        const planContent = content.plans[key] || {
+          name: "",
+          tagline: "",
+          cta: "",
+          features: [],
+        };
+        return {
+          key,
+          name: planContent.name,
+          tagline: planContent.tagline,
+          cta: planContent.cta,
+          features: Array.isArray(planContent.features)
+            ? planContent.features
+            : [],
+          monthlyPrice: meta.monthlyPrice,
+          yearlyPrice: meta.yearlyPrice,
+          trial: meta.trial
+            ? currentLang === "fr"
+              ? "Essai gratuit de 30 jours"
+              : "30-day free pilot"
+            : null,
+          popular: meta.popular,
+          limits: { branches: branchesLabel(key), staff: staffLabel(key) },
+        };
+      }),
+    [content, currentLang],
+  );
 
-  const addOns = useMemo(() => content.addOns.items.map((item, i) => ({ ...item, ...ADDON_META[i] })), [content]);
+  const addOns = useMemo(() => {
+    const items = Array.isArray(content.addOns?.items)
+      ? content.addOns.items
+      : [];
+    return items.map((item, i) => ({ ...item, ...ADDON_META[i] }));
+  }, [content]);
 
   return (
-    <section id="pricing" className="relative py-20 md:py-32 border-t border-border/50 scroll-mt-20">
+    <section
+      id="pricing"
+      className="relative py-20 md:py-32 border-t border-border/50 scroll-mt-20"
+    >
       <SeamAccent />
       <div className="section-container">
         <motion.div
@@ -134,11 +286,17 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
 
         {/* Billing toggle */}
         <div className="flex items-center justify-center gap-3 sm:gap-4 mb-10 md:mb-16 flex-wrap">
-          <span className={`text-sm font-medium transition-colors duration-200 ${!annual ? "text-foreground" : "text-muted-foreground/40"}`}>{content.monthly}</span>
+          <span
+            className={`text-sm font-medium transition-colors duration-200 ${!annual ? "text-foreground" : "text-muted-foreground/40"}`}
+          >
+            {content.monthly}
+          </span>
           <button
             onClick={() => setAnnual(!annual)}
             className={`relative h-8 w-14 rounded-full border transition-colors duration-200 ${
-              annual ? "bg-primary/20 border-primary/30" : "bg-accent border-border"
+              annual
+                ? "bg-primary/20 border-primary/30"
+                : "bg-accent border-border"
             }`}
           >
             <motion.div
@@ -149,7 +307,9 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
               }`}
             />
           </button>
-          <span className={`text-sm font-medium transition-colors duration-200 ${annual ? "text-foreground" : "text-muted-foreground/40"}`}>
+          <span
+            className={`text-sm font-medium transition-colors duration-200 ${annual ? "text-foreground" : "text-muted-foreground/40"}`}
+          >
             {content.annual}
           </span>
           {annual && (
@@ -162,7 +322,9 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
         {/* Plan cards */}
         <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto mb-14 md:mb-20">
           {plans.map((plan, i) => {
-            const price = annual ? Math.round(plan.yearlyPrice / 12) : plan.monthlyPrice;
+            const price = annual
+              ? Math.round(plan.yearlyPrice / 12)
+              : plan.monthlyPrice;
             return (
               <motion.div
                 key={plan.key}
@@ -172,7 +334,9 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                 whileHover={{ y: -5, transition: { duration: 0.2, delay: 0 } }}
                 transition={{ delay: i * 0.06 }}
                 className={`relative rounded-2xl border flex flex-col hover:shadow-l2 transition-[border-color,box-shadow] duration-200 ${
-                  plan.popular ? "border-primary/40 bg-card shadow-l3" : "border-border bg-card/80 hover:border-primary/25"
+                  plan.popular
+                    ? "border-primary/40 bg-card shadow-l3"
+                    : "border-border bg-card/80 hover:border-primary/25"
                 }`}
               >
                 {plan.popular && (
@@ -185,8 +349,12 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
 
                 <div className="p-5 sm:p-7 md:p-8 flex flex-col flex-1">
                   <div className="mb-7">
-                    <p className="text-base font-semibold text-foreground mb-2">{plan.name}</p>
-                    <p className="text-sm text-muted-foreground/60">{plan.tagline}</p>
+                    <p className="text-base font-semibold text-foreground mb-2">
+                      {plan.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground/60">
+                      {plan.tagline}
+                    </p>
                   </div>
 
                   <div className="mb-7">
@@ -197,17 +365,32 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                           initial={{ y: "0.6em", opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: "-0.6em", opacity: 0 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{
+                            duration: 0.25,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
                           className="inline-block text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground"
                         >
                           {currentLang === "fr" ? `${price} €` : `$${price}`}
                         </motion.span>
                       </AnimatePresence>
-                      <span className="text-sm text-muted-foreground/40">{content.perMonth}</span>
+                      <span className="text-sm text-muted-foreground/40">
+                        {content.perMonth}
+                      </span>
                     </div>
                     <p className="text-xs text-muted-foreground/40 mt-2">
-                      {currentLang === "fr" ? "par site" : "per location"} · {annual ? content.billedAnnually : content.billedMonthly}
-                      {annual && <span className="text-muted-foreground/50"> · {currentLang === "fr" ? `${plan.yearlyPrice} €` : `$${plan.yearlyPrice}`}{content.perYear}</span>}
+                      {currentLang === "fr" ? "par site" : "per location"} ·{" "}
+                      {annual ? content.billedAnnually : content.billedMonthly}
+                      {annual && (
+                        <span className="text-muted-foreground/50">
+                          {" "}
+                          ·{" "}
+                          {currentLang === "fr"
+                            ? `${plan.yearlyPrice} €`
+                            : `$${plan.yearlyPrice}`}
+                          {content.perYear}
+                        </span>
+                      )}
                     </p>
                     {plan.trial && (
                       <p className="text-xs text-[hsl(var(--success))] font-medium mt-2.5 flex items-center gap-1.5">
@@ -219,12 +402,20 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
 
                   <div className="flex gap-3 mb-7">
                     <div className="rounded-xl bg-accent/40 border border-border/20 px-4 py-3 flex-1 text-center">
-                      <p className="text-sm font-semibold text-foreground">{plan.limits.branches}</p>
-                      <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">{content.branches}</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        {plan.limits.branches}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">
+                        {content.branches}
+                      </p>
                     </div>
                     <div className="rounded-xl bg-accent/40 border border-border/20 px-4 py-3 flex-1 text-center">
-                      <p className="text-sm font-semibold text-foreground">{plan.limits.staff}</p>
-                      <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">{content.staff}</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        {plan.limits.staff}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">
+                        {content.staff}
+                      </p>
                     </div>
                   </div>
 
@@ -232,19 +423,34 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                     {plan.features.map((f) => (
                       <div key={f} className="flex items-start gap-3">
                         <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground leading-snug">{f}</span>
+                        <span className="text-sm text-muted-foreground leading-snug">
+                          {f}
+                        </span>
                       </div>
                     ))}
                   </div>
 
-                  <Button asChild variant={plan.popular ? "hero" : "hero-outline"} size="lg" className="w-full group">
+                  <Button
+                    asChild
+                    variant={plan.popular ? "hero" : "hero-outline"}
+                    size="lg"
+                    className="w-full group"
+                  >
                     {plan.key === "command" ? (
-                      <a href="#contact" className="flex items-center justify-center gap-2">
+                      <a
+                        href="#contact"
+                        className="flex items-center justify-center gap-2"
+                      >
                         {plan.cta}
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                       </a>
                     ) : (
-                      <a href={APP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                      <a
+                        href={APP_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2"
+                      >
                         {plan.cta}
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                       </a>
@@ -274,10 +480,18 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                 className="rounded-2xl border border-border bg-card/80 p-5 sm:p-6 flex flex-col hover:border-primary/25 hover:bg-card transition-colors duration-200"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <p className="text-sm font-semibold text-foreground">{addon.name}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {addon.name}
+                  </p>
                   <div className="text-right shrink-0 ml-4">
-                    <span className="text-base font-semibold text-foreground">{currentLang === "fr" ? `${addon.price} €` : `$${addon.price}`}</span>
-                    <span className="text-xs text-muted-foreground/40">{content.perMonth}</span>
+                    <span className="text-base font-semibold text-foreground">
+                      {currentLang === "fr"
+                        ? `${addon.price} €`
+                        : `$${addon.price}`}
+                    </span>
+                    <span className="text-xs text-muted-foreground/40">
+                      {content.perMonth}
+                    </span>
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed flex-1 mb-4">
@@ -285,7 +499,10 @@ const PricingSection = ({ dbContent }: { dbContent?: SectionContent<PricingConte
                 </p>
                 <div className="flex items-center gap-1.5">
                   {addon.plans.map((p) => (
-                    <span key={p} className="text-[10px] font-medium text-muted-foreground/50 bg-accent/60 border border-border/30 rounded-md px-2 py-0.5">
+                    <span
+                      key={p}
+                      className="text-[10px] font-medium text-muted-foreground/50 bg-accent/60 border border-border/30 rounded-md px-2 py-0.5"
+                    >
                       {p}
                     </span>
                   ))}
