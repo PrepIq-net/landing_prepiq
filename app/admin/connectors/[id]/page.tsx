@@ -107,6 +107,22 @@ interface Paginated<T> {
   results: T[];
 }
 
+interface SyncHealthRollup {
+  data_type: string;
+  status: string;
+  batches: number;
+  records: number | null;
+  accepted: number | null;
+  rejected: number | null;
+  duplicates: number | null;
+}
+
+interface SyncHealth {
+  batches_24h: SyncHealthRollup[];
+  stuck_batches: number;
+  agent_queue: { pending_count: number; dead_count: number };
+}
+
 interface ConnectorLog {
   id: string;
   level: "debug" | "info" | "warn" | "error";
@@ -127,6 +143,7 @@ const STATUS_COLOUR: Record<string, string> = {
 const BATCH_STATUS_COLOUR: Record<string, string> = {
   COMPLETED: "text-green-400",
   FAILED: "text-red-400",
+  EXPIRED: "text-red-400",
   PARTIAL: "text-amber-400",
   PROCESSING: "text-blue-400",
   RECEIVED: "text-muted-foreground",
@@ -169,9 +186,10 @@ export default async function ConnectorDetailPage({
   let initialLogs: ConnectorLog[] = [];
   let initialLogsCount = 0;
   let schemaCheckpoints: SyncCheckpoint[] = [];
+  let syncHealth: SyncHealth | null = null;
 
   if (tab === "summary") {
-    const [batchesRes, checkpointsRes] = await Promise.allSettled([
+    const [batchesRes, checkpointsRes, healthRes] = await Promise.allSettled([
       djangoAdminFetch<Paginated<SyncBatch>>(
         `/api/mgmt/connectors/${id}/batches/?page_size=10`,
         email,
@@ -180,10 +198,15 @@ export default async function ConnectorDetailPage({
         `/api/mgmt/connectors/${id}/checkpoints/`,
         email,
       ),
+      djangoAdminFetch<SyncHealth>(
+        `/api/mgmt/connectors/${id}/sync-health/`,
+        email,
+      ),
     ]);
     batches = batchesRes.status === "fulfilled" ? batchesRes.value.results : [];
     checkpoints =
       checkpointsRes.status === "fulfilled" ? checkpointsRes.value : [];
+    syncHealth = healthRes.status === "fulfilled" ? healthRes.value : null;
   } else if (tab === "tokens") {
     const res = await djangoAdminFetch<Paginated<AccessToken>>(
       `/api/mgmt/connectors/${id}/tokens/`,
@@ -399,6 +422,97 @@ export default async function ConnectorDetailPage({
       {/* Tab: Summary */}
       {tab === "summary" && (
         <div className="space-y-8">
+          {syncHealth && (
+            <section className="space-y-3">
+              <div className="flex items-baseline justify-between">
+                <h2 className="text-base font-display font-semibold text-foreground">
+                  Delivery Health — last 24h
+                </h2>
+                {(syncHealth.stuck_batches > 0 ||
+                  syncHealth.agent_queue.dead_count > 0) && (
+                  <span className="text-xs font-bold text-red-400">
+                    {syncHealth.stuck_batches > 0 &&
+                      `${syncHealth.stuck_batches} batch(es) stuck server-side`}
+                    {syncHealth.stuck_batches > 0 &&
+                      syncHealth.agent_queue.dead_count > 0 &&
+                      " · "}
+                    {syncHealth.agent_queue.dead_count > 0 &&
+                      `${syncHealth.agent_queue.dead_count} dead on the agent`}
+                  </span>
+                )}
+              </div>
+              <div className="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-[#232327]">
+                    <TableRow className="hover:bg-transparent border-b border-[#2A2A2E]">
+                      {[
+                        "Data Type",
+                        "Status",
+                        "Batches",
+                        "Records",
+                        "Accepted",
+                        "Rejected",
+                        "Duplicates",
+                      ].map((h) => (
+                        <TableHead
+                          key={h}
+                          className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-6 py-3"
+                        >
+                          {h}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {syncHealth.batches_24h.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          className="px-6 py-6 text-center text-sm text-muted-foreground"
+                        >
+                          No batches received in the last 24 hours.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      syncHealth.batches_24h.map((row) => (
+                        <TableRow
+                          key={`${row.data_type}-${row.status}`}
+                          className="border-b border-[#2A2A2E] hover:bg-[#2A2A2E]/50"
+                        >
+                          <TableCell className="px-6 py-3 text-sm font-mono text-foreground">
+                            {row.data_type}
+                          </TableCell>
+                          <TableCell
+                            className={`px-6 py-3 text-[11px] font-mono font-bold ${BATCH_STATUS_COLOUR[row.status] ?? "text-muted-foreground"}`}
+                          >
+                            {row.status}
+                          </TableCell>
+                          <TableCell className="px-6 py-3 text-[11px] font-mono text-muted-foreground">
+                            {row.batches}
+                          </TableCell>
+                          <TableCell className="px-6 py-3 text-[11px] font-mono text-muted-foreground">
+                            {row.records ?? 0}
+                          </TableCell>
+                          <TableCell className="px-6 py-3 text-[11px] font-mono text-green-400/80">
+                            {row.accepted ?? 0}
+                          </TableCell>
+                          <TableCell
+                            className={`px-6 py-3 text-[11px] font-mono ${(row.rejected ?? 0) > 0 ? "text-red-400" : "text-muted-foreground"}`}
+                          >
+                            {row.rejected ?? 0}
+                          </TableCell>
+                          <TableCell className="px-6 py-3 text-[11px] font-mono text-muted-foreground">
+                            {row.duplicates ?? 0}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </section>
+          )}
+
           <section className="space-y-3">
             <h2 className="text-base font-display font-semibold text-foreground">
               Sync Checkpoints
