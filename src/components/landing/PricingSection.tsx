@@ -261,6 +261,12 @@ const PricingSection = ({
     return items.map((item, i) => ({ ...item, ...ADDON_META[i] }));
   }, [content]);
 
+  const [footerBefore, footerLink, footerAfter] = useMemo(() => {
+    const match = content.footer?.match(/^(.*)<primary>\s*(.*?)\s*<\/primary>(.*)$/s);
+    if (!match) return [content.footer, null, ""];
+    return [match[1], match[2], match[3]];
+  }, [content.footer]);
+
   return (
     <section
       id="pricing"
@@ -514,7 +520,16 @@ const PricingSection = ({
         </div>
 
         <p className="text-center text-xs text-muted-foreground/40 mt-10 md:mt-14 max-w-lg mx-auto leading-relaxed px-2">
-          {content.footer}
+          {footerBefore}
+          {footerLink && (
+            <a
+              href="#contact"
+              className="text-primary font-medium hover:underline underline-offset-4"
+            >
+              {footerLink}
+            </a>
+          )}
+          {footerAfter}
         </p>
       </div>
     </section>
