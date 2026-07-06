@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { APP_URL } from "@/lib/constants";
 
 interface NavLink {
   id: string;
@@ -26,7 +27,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 20);
@@ -40,6 +41,12 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
           : "h-16 border-b border-transparent bg-transparent backdrop-blur-none"
       }`}
     >
+      <motion.div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-[2px] origin-left bg-primary/80"
+        style={{ scaleX: scrollYProgress }}
+      />
+
       <div
         className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500 ${
           scrolled ? "opacity-100" : "opacity-0"
@@ -86,11 +93,15 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
         <div className="hidden items-center gap-3 md:flex">
           <LanguageSwitcher />
-          <Button variant="ghost" size="sm">
-            {t("navbar.logIn")}
+          <Button asChild variant="ghost" size="sm">
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+              {t("navbar.logIn")}
+            </a>
           </Button>
-          <Button variant="hero" size="sm">
-            {t("navbar.startFree")}
+          <Button asChild variant="hero" size="sm">
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+              {t("navbar.startFree")}
+            </a>
           </Button>
         </div>
 
@@ -132,7 +143,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             className="fixed top-14 right-0 bottom-0 w-[280px] bg-background border-l border-border/50 z-50 md:hidden shadow-[-8px_0_30px_rgba(0,0,0,0.5)]"
           >
             <div className="flex flex-col h-full p-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {links.map((link, i) => (
                   <motion.a
                     key={link.id}
@@ -140,7 +151,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg px-3 py-3 hover:bg-accent/50"
+                    className="block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border border-border/60 bg-accent/40 active:bg-accent/70 hover:border-primary/25"
                     onClick={() => setMobileOpen(false)}
                   >
                     {currentLang === "fr" ? link.labelFr : link.labelEn}
@@ -148,19 +159,15 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                 ))}
               </div>
               <div className="flex flex-col gap-2.5 pt-6 mt-6 border-t border-border/50">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-center"
-                >
-                  {t("navbar.logIn")}
+                <Button asChild variant="ghost" size="sm" className="w-full justify-center">
+                  <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                    {t("navbar.logIn")}
+                  </a>
                 </Button>
-                <Button
-                  variant="hero"
-                  size="sm"
-                  className="w-full justify-center"
-                >
-                  {t("navbar.startFree")}
+                <Button asChild variant="hero" size="sm" className="w-full justify-center">
+                  <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                    {t("navbar.startFree")}
+                  </a>
                 </Button>
               </div>
             </div>
