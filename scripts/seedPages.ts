@@ -80,6 +80,113 @@ const FAQ_ITEMS = {
   ],
 };
 
+const EXPLORE = {
+  en: {
+    badge: "Explore PrepIQ",
+    title: "See what's <gold>under the hood</gold>",
+    subtitle: "The forecast engine, the plans it comes in, and the team behind it — three stops, five minutes.",
+    items: [
+      { icon: "brain", title: "How It Works", desc: "Follow a day in a PrepIQ kitchen — from the morning forecast to live service tracking to the nightly learning loop.", cta: "See the system", href: "/how-it-works" },
+      { icon: "pricing", title: "Pricing", desc: "Three plans that scale from a single branch to a global network — each built to recover more margin than it costs.", cta: "Compare plans", href: "/pricing" },
+      { icon: "contact", title: "Contact", desc: "Questions about setup, integrations, or enterprise rollout? Talk directly to the team behind the forecasts.", cta: "Get in touch", href: "/contact" },
+    ],
+  },
+  fr: {
+    badge: "Explorer PrepIQ",
+    title: "Regardez <gold>sous le capot</gold>",
+    subtitle: "Le moteur de prévision, les forfaits disponibles et l'équipe derrière — trois étapes, cinq minutes.",
+    items: [
+      { icon: "brain", title: "Comment ça marche", desc: "Suivez une journée dans une cuisine PrepIQ — de la prévision du matin au suivi en direct jusqu'à la boucle d'apprentissage.", cta: "Voir le système", href: "/how-it-works" },
+      { icon: "pricing", title: "Tarification", desc: "Trois forfaits qui évoluent d'un site unique à un réseau mondial — chacun conçu pour récupérer plus de marge qu'il n'en coûte.", cta: "Comparer les forfaits", href: "/pricing" },
+      { icon: "contact", title: "Contact", desc: "Des questions sur la configuration, les intégrations ou un déploiement entreprise ? Parlez directement à l'équipe.", cta: "Nous écrire", href: "/contact" },
+    ],
+  },
+};
+
+const PAGE_HEADERS = {
+  "how-it-works": {
+    en: {
+      badge: "How It Works",
+      icon: "brain",
+      titleLine1: "From sales signals",
+      titleLine2: "to a precise prep plan.",
+      subtitle: "PrepIQ turns your sales history, weather, events, and chef feedback into a daily prep plan your kitchen can trust — and it learns from every single service.",
+      stats: [
+        { value: "92%", label: "Forecast accuracy" },
+        { value: "8+", label: "Demand signals" },
+        { value: "48h", label: "To go live" },
+      ],
+    },
+    fr: {
+      badge: "Comment ça marche",
+      icon: "brain",
+      titleLine1: "Des signaux de vente",
+      titleLine2: "à un plan de prod précis.",
+      subtitle: "PrepIQ transforme votre historique de ventes, la météo, les événements et les retours des chefs en un plan de production quotidien fiable — qui apprend à chaque service.",
+      stats: [
+        { value: "92%", label: "Précision des prévisions" },
+        { value: "8+", label: "Signaux de demande" },
+        { value: "48h", label: "Mise en service" },
+      ],
+    },
+  },
+  pricing: {
+    en: {
+      badge: "Pricing",
+      icon: "pricing",
+      titleLine1: "Simple plans.",
+      titleLine2: "Priced to pay for themselves.",
+      subtitle: "Start on a single branch and scale when you're ready. Every plan is built around one goal: recovering more margin than it costs.",
+      stats: [],
+    },
+    fr: {
+      badge: "Tarification",
+      icon: "pricing",
+      titleLine1: "Des forfaits simples.",
+      titleLine2: "Conçus pour s'autofinancer.",
+      subtitle: "Commencez sur un seul site et évoluez à votre rythme. Chaque forfait vise un seul objectif : récupérer plus de marge qu'il n'en coûte.",
+      stats: [],
+    },
+  },
+  contact: {
+    en: {
+      badge: "Contact",
+      icon: "contact",
+      titleLine1: "Talk to the team",
+      titleLine2: "behind the forecasts.",
+      subtitle: "Questions about setup, integrations, or an enterprise rollout — send a note and we'll get back to you within one business day.",
+      stats: [],
+    },
+    fr: {
+      badge: "Contact",
+      icon: "contact",
+      titleLine1: "Parlez à l'équipe",
+      titleLine2: "derrière les prévisions.",
+      subtitle: "Des questions sur la configuration, les intégrations ou un déploiement entreprise — écrivez-nous et nous vous répondrons sous un jour ouvré.",
+      stats: [],
+    },
+  },
+};
+
+const META_DESCRIPTIONS: Record<string, { en: string; fr: string }> = {
+  home: {
+    en: "PrepIQ forecasts daily kitchen demand so you prep the right amount — less waste, no stockouts, better margins.",
+    fr: "PrepIQ prévoit la demande quotidienne de votre cuisine pour préparer la juste quantité — moins de gaspillage, zéro rupture, de meilleures marges.",
+  },
+  "how-it-works": {
+    en: "See how PrepIQ turns sales history, weather, events, and chef feedback into a precise daily prep plan for your kitchen.",
+    fr: "Découvrez comment PrepIQ transforme l'historique de ventes, la météo, les événements et les retours des chefs en un plan de production quotidien précis.",
+  },
+  pricing: {
+    en: "Compare PrepIQ plans — Core, Intelligence, and Command — with transparent pricing that scales with your kitchen.",
+    fr: "Comparez les forfaits PrepIQ — Core, Intelligence et Command — avec une tarification transparente qui évolue avec votre cuisine.",
+  },
+  contact: {
+    en: "Get in touch with the PrepIQ team about setup, integrations, or an enterprise rollout.",
+    fr: "Contactez l'équipe PrepIQ pour la configuration, les intégrations ou un déploiement entreprise.",
+  },
+};
+
 function buildContent(loc: any, isFr: boolean) {
   return {
     hero: {
@@ -285,99 +392,144 @@ async function main() {
 
   // Helper to upsert a page and return it
   async function upsertPage(slug: string, titleEn: string, titleFr: string, sortOrder: number) {
+    const meta = META_DESCRIPTIONS[slug];
+    const metaData = meta ? { metaDescriptionEn: meta.en, metaDescriptionFr: meta.fr } : {};
     const existing = await prisma.page.findUnique({ where: { slug } });
     if (existing) {
-      if (existing.titleEn !== titleEn || existing.titleFr !== titleFr || existing.sortOrder !== sortOrder) {
+      if (
+        existing.titleEn !== titleEn ||
+        existing.titleFr !== titleFr ||
+        existing.sortOrder !== sortOrder ||
+        (meta && (existing.metaDescriptionEn !== meta.en || existing.metaDescriptionFr !== meta.fr))
+      ) {
         return await prisma.page.update({
           where: { slug },
-          data: { titleEn, titleFr, sortOrder },
+          data: { titleEn, titleFr, sortOrder, ...metaData },
         });
       }
       return existing;
     } else {
       return await prisma.page.create({
-        data: { slug, titleEn, titleFr, sortOrder, isActive: true },
+        data: { slug, titleEn, titleFr, sortOrder, isActive: true, ...metaData },
       });
     }
   }
 
-  // 1. Create/Update Pages
-  const homePage = await upsertPage("home", "Home", "Accueil", 0);
-  await upsertPage("privacy-policy", "Privacy Policy", "Politique de Confidentialité", 1);
-  await upsertPage("terms-of-service", "Terms of Service", "Conditions d'Utilisation", 2);
-  await upsertPage("security", "Security", "Sécurité", 3);
+  // Section definitions, reused across pages
+  const SECTIONS = {
+    hero: { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: { en: enContent.hero, fr: frContent.hero } },
+    integrations: { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: { en: enContent.integrations, fr: frContent.integrations } },
+    costOfGuessing: { componentType: "CostOfGuessingSection", titleEn: "The Cost of Guessing", titleFr: "Le Coût de l'Incertitude", contentJson: { en: enContent.costOfGuessing, fr: frContent.costOfGuessing } },
+    howItWorks: { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: { en: enContent.howItWorks, fr: frContent.howItWorks } },
+    intelligence: { componentType: "IntelligenceSection", titleEn: "Intelligence & Margin Protection", titleFr: "Intelligence et Protection des Marges", contentJson: { en: enContent.intelligence, fr: frContent.intelligence } },
+    value: { componentType: "ValueSection", titleEn: "Value", titleFr: "Valeur", contentJson: { en: enContent.value, fr: frContent.value } },
+    builtForScale: { componentType: "BuiltForScaleSection", titleEn: "Built for Scale", titleFr: "Conçu pour l'Échelle", contentJson: { en: enContent.builtForScale, fr: frContent.builtForScale } },
+    testimonials: { componentType: "TestimonialsSection", titleEn: "Testimonials", titleFr: "Témoignages", contentJson: { en: enContent.testimonials, fr: frContent.testimonials } },
+    pricing: { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: enContent.pricing, fr: frContent.pricing } },
+    faq: { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: { en: enContent.faq, fr: frContent.faq } },
+    contact: { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: enContent.contact, fr: frContent.contact } },
+    explore: { componentType: "ExploreSection", titleEn: "Explore", titleFr: "Explorer", contentJson: { en: EXPLORE.en, fr: EXPLORE.fr } },
+    finalCTA: { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: enContent.finalCTA, fr: frContent.finalCTA } },
+  };
 
-  // 3. Define Sections for Home Page (12, consolidated from the previous 20)
-  const sections = [
-    { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: { en: enContent.hero, fr: frContent.hero } },
-    { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: { en: enContent.integrations, fr: frContent.integrations } },
-    { componentType: "CostOfGuessingSection", titleEn: "The Cost of Guessing", titleFr: "Le Coût de l'Incertitude", contentJson: { en: enContent.costOfGuessing, fr: frContent.costOfGuessing } },
-    { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: { en: enContent.howItWorks, fr: frContent.howItWorks } },
-    { componentType: "IntelligenceSection", titleEn: "Intelligence & Margin Protection", titleFr: "Intelligence et Protection des Marges", contentJson: { en: enContent.intelligence, fr: frContent.intelligence } },
-    { componentType: "ValueSection", titleEn: "Value", titleFr: "Valeur", contentJson: { en: enContent.value, fr: frContent.value } },
-    { componentType: "BuiltForScaleSection", titleEn: "Built for Scale", titleFr: "Conçu pour l'Échelle", contentJson: { en: enContent.builtForScale, fr: frContent.builtForScale } },
-    { componentType: "TestimonialsSection", titleEn: "Testimonials", titleFr: "Témoignages", contentJson: { en: enContent.testimonials, fr: frContent.testimonials } },
-    { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: enContent.pricing, fr: frContent.pricing } },
-    { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: { en: enContent.faq, fr: frContent.faq } },
-    { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: enContent.contact, fr: frContent.contact } },
-    { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: enContent.finalCTA, fr: frContent.finalCTA } },
-  ];
-
-  // Get current sections to avoid unnecessary updates
-  const currentSections = await prisma.section.findMany({
-    where: { pageId: homePage.id },
-    orderBy: { sortOrder: "asc" },
+  const pageHeader = (key: keyof typeof PAGE_HEADERS, titleEn: string, titleFr: string) => ({
+    componentType: "PageHeaderSection",
+    titleEn,
+    titleFr,
+    contentJson: { en: PAGE_HEADERS[key].en, fr: PAGE_HEADERS[key].fr },
   });
 
-  // Idempotent section updates
-  for (let i = 0; i < sections.length; i++) {
-    const sectionData = {
-      ...sections[i],
-      pageId: homePage.id,
-      sortOrder: i,
-      isActive: true,
-    };
+  // 1. Marketing pages and their sections (split from the previous single home page)
+  const marketingPages = [
+    {
+      slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
+      sections: [SECTIONS.hero, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.explore, SECTIONS.finalCTA],
+    },
+    {
+      slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,
+      sections: [
+        pageHeader("how-it-works", "Page Header", "En-tête de page"),
+        SECTIONS.howItWorks, SECTIONS.intelligence, SECTIONS.integrations, SECTIONS.builtForScale, SECTIONS.finalCTA,
+      ],
+    },
+    {
+      slug: "pricing", titleEn: "Pricing", titleFr: "Tarification", sortOrder: 2,
+      sections: [
+        pageHeader("pricing", "Page Header", "En-tête de page"),
+        SECTIONS.value, SECTIONS.pricing, SECTIONS.faq, SECTIONS.finalCTA,
+      ],
+    },
+    {
+      slug: "contact", titleEn: "Contact", titleFr: "Contact", sortOrder: 3,
+      sections: [
+        pageHeader("contact", "Page Header", "En-tête de page"),
+        SECTIONS.contact,
+      ],
+    },
+  ];
 
-    const existing = currentSections.find(s => s.componentType === sectionData.componentType);
+  // 2. Legal pages (content managed elsewhere; sections untouched)
+  await upsertPage("privacy-policy", "Privacy Policy", "Politique de Confidentialité", 4);
+  await upsertPage("terms-of-service", "Terms of Service", "Conditions d'Utilisation", 5);
+  await upsertPage("security", "Security", "Sécurité", 6);
 
-    if (existing) {
-      // For JSON comparison, we can use stringify or deep equal. Since it's a seed, stringify is usually enough for data from files.
-      const existingContentStr = JSON.stringify(existing.contentJson);
-      const newContentStr = JSON.stringify(sectionData.contentJson);
+  // 3. Seed each marketing page's sections idempotently
+  for (const pageDef of marketingPages) {
+    const page = await upsertPage(pageDef.slug, pageDef.titleEn, pageDef.titleFr, pageDef.sortOrder);
 
-      if (
-        existing.titleEn !== sectionData.titleEn ||
-        existing.titleFr !== sectionData.titleFr ||
-        existingContentStr !== newContentStr ||
-        existing.sortOrder !== sectionData.sortOrder
-      ) {
-        await prisma.section.update({
-          where: { id: existing.id },
+    const currentSections = await prisma.section.findMany({
+      where: { pageId: page.id },
+      orderBy: { sortOrder: "asc" },
+    });
+
+    for (let i = 0; i < pageDef.sections.length; i++) {
+      const sectionData = {
+        ...pageDef.sections[i],
+        pageId: page.id,
+        sortOrder: i,
+        isActive: true,
+      };
+
+      const existing = currentSections.find(s => s.componentType === sectionData.componentType);
+
+      if (existing) {
+        // For JSON comparison, we can use stringify or deep equal. Since it's a seed, stringify is usually enough for data from files.
+        const existingContentStr = JSON.stringify(existing.contentJson);
+        const newContentStr = JSON.stringify(sectionData.contentJson);
+
+        if (
+          existing.titleEn !== sectionData.titleEn ||
+          existing.titleFr !== sectionData.titleFr ||
+          existingContentStr !== newContentStr ||
+          existing.sortOrder !== sectionData.sortOrder
+        ) {
+          await prisma.section.update({
+            where: { id: existing.id },
+            data: sectionData as any,
+          });
+        }
+      } else {
+        await prisma.section.create({
           data: sectionData as any,
         });
       }
-    } else {
-      await prisma.section.create({
-        data: sectionData as any,
+    }
+
+    // Remove sections that are no longer on this page
+    const seedComponentTypes = pageDef.sections.map(s => s.componentType);
+    const sectionsToRemove = currentSections.filter(s => !seedComponentTypes.includes(s.componentType));
+    if (sectionsToRemove.length > 0) {
+      await prisma.section.deleteMany({
+        where: { id: { in: sectionsToRemove.map(s => s.id) } },
       });
     }
-  }
-
-  // Remove sections that are no longer in the seed
-  const seedComponentTypes = sections.map(s => s.componentType);
-  const sectionsToRemove = currentSections.filter(s => !seedComponentTypes.includes(s.componentType));
-  if (sectionsToRemove.length > 0) {
-    await prisma.section.deleteMany({
-      where: { id: { in: sectionsToRemove.map(s => s.id) } },
-    });
   }
 
   // 4. Navigation Links
   const navLinks = [
-    { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "#how-it-works", sortOrder: 0 },
-    { labelEn: en.navbar.intelligence, labelFr: fr.navbar.intelligence, url: "#intelligence", sortOrder: 1 },
-    { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "#pricing", sortOrder: 2 },
-    { labelEn: en.navbar.integrations, labelFr: fr.navbar.integrations, url: "#integrations", sortOrder: 3 },
+    { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", sortOrder: 0 },
+    { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", sortOrder: 1 },
+    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", sortOrder: 2 },
   ];
 
   const currentNavLinks = await prisma.link.findMany({ where: { type: "nav" } });
@@ -400,10 +552,12 @@ async function main() {
 
   // 5. Footer Links
   const footerLinks = [
-    { labelEn: en.footer.links.about, labelFr: fr.footer.links.about, url: "#", category: "product", sortOrder: 0 },
-    { labelEn: en.footer.links.blog, labelFr: fr.footer.links.blog, url: "#", category: "product", sortOrder: 1 },
-    { labelEn: en.footer.links.careers, labelFr: fr.footer.links.careers, url: "#", category: "company", sortOrder: 0 },
-    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "#contact", category: "company", sortOrder: 1 },
+    { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", category: "product", sortOrder: 0 },
+    { labelEn: en.navbar.integrations, labelFr: fr.navbar.integrations, url: "/how-it-works#integrations", category: "product", sortOrder: 1 },
+    { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", category: "product", sortOrder: 2 },
+    { labelEn: en.footer.links.about, labelFr: fr.footer.links.about, url: "#", category: "company", sortOrder: 0 },
+    { labelEn: en.footer.links.careers, labelFr: fr.footer.links.careers, url: "#", category: "company", sortOrder: 1 },
+    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", category: "company", sortOrder: 2 },
     { labelEn: en.footer.links.privacy, labelFr: fr.footer.links.privacy, url: "/privacy-policy", category: "legal", sortOrder: 0 },
     { labelEn: en.footer.links.terms, labelFr: fr.footer.links.terms, url: "/terms-of-service", category: "legal", sortOrder: 1 },
     { labelEn: en.footer.links.security, labelFr: fr.footer.links.security, url: "/security", category: "legal", sortOrder: 2 },
@@ -411,21 +565,22 @@ async function main() {
 
   const currentFooterLinks = await prisma.link.findMany({ where: { type: "footer" } });
   for (const link of footerLinks) {
-    const existing = currentFooterLinks.find(l => l.url === link.url && l.category === link.category);
+    const existing = currentFooterLinks.find(l => l.labelEn === link.labelEn && l.category === link.category);
     const data = { ...link, type: "footer", isActive: true };
     if (existing) {
-      if (existing.labelEn !== link.labelEn || existing.labelFr !== link.labelFr || existing.sortOrder !== link.sortOrder) {
+      if (existing.labelEn !== link.labelEn || existing.labelFr !== link.labelFr || existing.sortOrder !== link.sortOrder || existing.url !== link.url) {
         await prisma.link.update({ where: { id: existing.id }, data });
       }
     } else {
       await prisma.link.create({ data });
     }
   }
-  // Cleanup old footer links
-  const seedFooterUrls = footerLinks.map(l => l.url);
-  await prisma.link.deleteMany({
-    where: { type: "footer", url: { notIn: seedFooterUrls } }
-  });
+  // Cleanup footer links that are no longer in the seed (matched by label+category)
+  const seedFooterKeys = footerLinks.map(l => `${l.labelEn}|${l.category}`);
+  const footerToRemove = currentFooterLinks.filter(l => !seedFooterKeys.includes(`${l.labelEn}|${l.category}`));
+  if (footerToRemove.length > 0) {
+    await prisma.link.deleteMany({ where: { id: { in: footerToRemove.map(l => l.id) } } });
+  }
 
   console.log("Database seeded with pages, sections and links (idempotent).");
 }

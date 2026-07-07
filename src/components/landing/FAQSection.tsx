@@ -1,17 +1,12 @@
+"use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Plus, Minus } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FAQContent, SectionContent } from "@/types/cms";
-import { SeamAccent } from "./motion-primitives";
-import { GoldText } from "./GoldText";
 
 const FALLBACK_ITEMS = {
   en: [
-    {
-      q: "How does PrepIQ help kitchens reduce waste and stockouts?",
-      a: "PrepIQ forecasts daily demand so your kitchen preps the right amount — every day. By eliminating guesswork, kitchens consistently reduce over-prep waste while avoiding the stockouts that cost you revenue and customer trust.",
-    },
     {
       q: "How does PrepIQ generate daily prep forecasts?",
       a: "PrepIQ analyzes your historical sales, day-of-week patterns, weather signals, holidays, and recent kitchen behavior to predict tomorrow's demand. Each day's service improves the system — the more you use PrepIQ, the smarter the forecasts become.",
@@ -33,24 +28,12 @@ const FALLBACK_ITEMS = {
       a: "Yes. PrepIQ is designed to support chefs, not replace them. Your team can adjust any recommended prep quantity, and the system learns from those adjustments to improve future forecasts.",
     },
     {
-      q: "Does PrepIQ help reduce food waste?",
-      a: "Yes. By forecasting demand more accurately, PrepIQ helps kitchens avoid over-prepping while reducing the risk of running out of key items during service. Many kitchens see significant waste reduction within the first few weeks.",
-    },
-    {
       q: "What happens during service if demand is higher than expected?",
       a: "PrepIQ's Live Mode tracks sales during service and alerts you if an item is trending toward a stockout. It can suggest adjustments like preparing an additional batch or slowing production to minimize waste.",
     },
     {
-      q: "Will it work for my type of kitchen?",
-      a: "PrepIQ works for any food operation that prepares food daily — restaurants, cloud kitchens, catering operations, and multi-location brands. If your team preps food before service, PrepIQ can help optimize it.",
-    },
-    {
       q: "How does multi-branch management work?",
       a: "Each branch gets its own localized forecasts based on its unique sales patterns. Managers can monitor all locations from a centralized dashboard and compare forecast accuracy, waste, and performance across the network.",
-    },
-    {
-      q: "What about data security?",
-      a: "All data is encrypted in transit and at rest. Your kitchen data is never shared with other customers, and you retain full ownership of your information at all times.",
     },
     {
       q: "Is there a free trial?",
@@ -59,52 +42,36 @@ const FALLBACK_ITEMS = {
   ],
   fr: [
     {
-      q: "Comment PrepIQ aide-t-il à réduire le gaspillage et les ruptures ?",
-      a: "PrepIQ prévoit la demande quotidienne pour que votre cuisine prépare la juste quantité. En éliminant les devinettes, vous réduisez le gaspillage lié à la sur-préparation tout en évitant les ruptures qui coûtent cher en CA et en confiance client.",
-    },
-    {
       q: "Comment PrepIQ génère-t-il les prévisions quotidiennes ?",
-      a: "PrepIQ analyse vos ventes historiques, les modèles par jour de la semaine, la météo, les jours fériés et le comportement récent de votre cuisine. Chaque service améliore le système : plus vous l'utilisez, plus il devient précis.",
+      a: "PrepIQ analyse vos ventes historiques, les modèles par jour de la semaine, la météo, les jours fériés et le comportement récent de votre cuisine. Chaque service améliore le système.",
     },
     {
       q: "Quel est le niveau de précision des prévisions ?",
-      a: "La précision s'améliore rapidement. La plupart des cuisines obtiennent des prévisions fiables dès la première semaine, et cette précision s'affine continuellement grâce aux données de ventes et aux retours des chefs.",
+      a: "La précision s'améliore rapidement. La plupart des cuisines obtiennent des prévisions fiables dès la première semaine.",
     },
     {
-      q: "Ai-je besoin d'un système POS pour utiliser PrepIQ ?",
-      a: "Non. Bien que l'intégration POS offre les meilleures données en temps réel, vous pouvez aussi importer vos ventes via CSV ou les saisir manuellement. PrepIQ est conçu pour s'adapter à vos outils actuels.",
+      q: "Ai-je besoin d'un système POS ?",
+      a: "Non. Vous pouvez aussi importer vos ventes via CSV ou les saisir manuellement.",
     },
     {
       q: "Combien de temps prend la configuration ?",
-      a: "La plupart des cuisines sont opérationnelles en moins de 48 heures. Il suffit de connecter vos données de ventes et de configurer vos produits pour que PrepIQ commence à apprendre.",
+      a: "La plupart des cuisines sont opérationnelles en moins de 48 heures.",
     },
     {
-      q: "Les chefs peuvent-ils modifier les suggestions de l'IA ?",
-      a: "Oui. PrepIQ est un outil d'aide à la décision, pas un remplaçant. Votre équipe peut ajuster n'importe quelle quantité, et le système apprend de ces corrections pour s'améliorer.",
+      q: "Les chefs peuvent-ils modifier les suggestions ?",
+      a: "Oui. Votre équipe peut ajuster n'importe quelle quantité, et le système apprend de ces corrections.",
     },
     {
-      q: "PrepIQ aide-t-il vraiment à réduire le gaspillage alimentaire ?",
-      a: "Oui. En prévoyant mieux la demande, PrepIQ évite la sur-préparation tout en sécurisant la disponibilité des plats clés. La réduction de la freinte est souvent visible dès les premières semaines.",
-    },
-    {
-      q: "Que se passe-t-il si la demande est plus forte que prévu pendant le service ?",
-      a: "Le Mode Live de PrepIQ suit les ventes en direct et vous alerte si un produit risque la rupture. Il suggère alors des ajustements, comme lancer une nouvelle fournée ou ralentir la cadence.",
-    },
-    {
-      q: "Cela fonctionne-t-il pour mon type de cuisine ?",
-      a: "PrepIQ fonctionne pour tout établissement préparant des produits frais quotidiennement : restaurants traditionnels, dark kitchens, traiteurs et chaînes multi-sites.",
+      q: "Que se passe-t-il si la demande dépasse les prévisions ?",
+      a: "Le Mode Live suit les ventes en direct et vous alerte si un produit risque la rupture.",
     },
     {
       q: "Comment fonctionne la gestion multi-sites ?",
-      a: "Chaque établissement dispose de ses propres prévisions localisées. Les managers peuvent piloter tout le réseau depuis un tableau de bord centralisé et comparer les performances entre sites.",
-    },
-    {
-      q: "Qu'en est-il de la sécurité des données ?",
-      a: "Toutes les données sont chiffrées en transit et au repos. Vos données de cuisine ne sont jamais partagées avec d'autres clients, et vous en restez le seul propriétaire.",
+      a: "Chaque établissement dispose de ses propres prévisions localisées. Les managers peuvent piloter tout le réseau depuis un tableau de bord centralisé.",
     },
     {
       q: "Existe-t-il un essai gratuit ?",
-      a: "Oui. Vous pouvez commencer avec un essai pour un site et tester les capacités de prévision de PrepIQ. Vous pourrez évoluer ensuite vers des fonctions avancées ou multi-sites.",
+      a: "Oui. Vous pouvez commencer avec un essai pour un site et tester les capacités de prévision de PrepIQ.",
     },
   ],
 };
@@ -119,26 +86,27 @@ const FAQItem = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.03 }}
-    >
+    <div>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-4 sm:py-6 text-left group"
+        className="flex items-center justify-between w-full py-6 text-left group"
       >
-        <span className="text-[13px] sm:text-sm md:text-[15px] font-medium text-foreground pr-6 sm:pr-8 group-hover:text-primary transition-colors duration-200 leading-snug">
+        <span
+          className={`text-base font-medium pr-8 leading-snug transition-colors duration-200 ${
+            open ? "text-primary" : "text-foreground"
+          }`}
+        >
           {faq.q}
         </span>
         <div
-          className={`flex h-6 w-6 items-center justify-center rounded-full shrink-0 transition-colors duration-200 ${open ? "bg-primary/15" : "bg-accent group-hover:bg-primary/10"}`}
+          className={`flex h-[26px] w-[26px] items-center justify-center rounded-full shrink-0 transition-colors duration-200 ${
+            open ? "bg-primary/15" : "bg-accent"
+          }`}
         >
           {open ? (
             <Minus className="h-3 w-3 text-primary" />
           ) : (
-            <Plus className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
+            <Plus className="h-3 w-3 text-muted-foreground" />
           )}
         </div>
       </button>
@@ -151,14 +119,14 @@ const FAQItem = ({
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-xs sm:text-sm text-muted-foreground leading-[1.7] pb-4 sm:pb-6 pr-8 sm:pr-12">
+            <p className="text-sm text-muted-foreground leading-[1.7] pb-6 pr-14">
               {faq.a}
             </p>
           </motion.div>
         )}
       </AnimatePresence>
       <div className="h-px bg-border" />
-    </motion.div>
+    </div>
   );
 };
 
@@ -171,63 +139,52 @@ const FAQSection = ({
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
   const content: FAQContent = dbContent?.[currentLang] || {
-    badge: t("faq.badge"),
-    title: t("faq.title"),
-    subtitle: t("faq.subtitle"),
-    footer: t("faq.footer").replace(/<\/?contact>/g, ""),
+    badge: t("faq.badge", "Q&A"),
+    title: t("faq.title", "Everything kitchens ask us."),
+    subtitle: t(
+      "faq.subtitle",
+      "From setup to daily operations. Still unsure about something?"
+    ),
+    footer: t("faq.footer", "Talk to our team"),
     items: FALLBACK_ITEMS[currentLang] || FALLBACK_ITEMS.en,
   };
 
   const items = Array.isArray(content.items) ? content.items : [];
-  const leftFaqs = items.slice(0, 6);
-  const rightFaqs = items.slice(6);
 
   return (
-    <section className="relative py-20 md:py-32 border-t border-border/50 section-band">
-      <SeamAccent />
-      <div className="section-container">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12 md:mb-20 px-2"
-        >
-          <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-            {content.badge}
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-            <GoldText text={content.title} />
-          </h2>
-          <p className="text-sm sm:text-[15px] text-muted-foreground max-w-md mx-auto leading-relaxed">
-            {content.subtitle}
-          </p>
-        </motion.div>
-
-        <div className="max-w-5xl mx-auto grid gap-x-8 lg:gap-x-16 grid-cols-1 lg:grid-cols-2">
-          <div>
-            {leftFaqs.map((faq, i) => (
-              <FAQItem key={i} faq={faq} index={i} />
-            ))}
-          </div>
-          <div>
-            {rightFaqs.map((faq, i) => (
-              <FAQItem key={i + 6} faq={faq} index={i + 6} />
-            ))}
-          </div>
-        </div>
-
-        <div className="text-center mt-10 md:mt-14">
-          <p className="text-sm text-muted-foreground">
-            {content.footer}{" "}
+    <section className="relative py-24 md:py-32 border-t border-border/50 section-band">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-24 items-start">
+          {/* Left: Sticky heading */}
+          <div className="lg:sticky lg:top-[120px]">
+            <div className="flex items-center gap-3.5 mb-6">
+              <div className="w-10 h-px bg-primary" />
+              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                {content.badge}
+              </span>
+            </div>
+            <h2 className="font-display text-4xl md:text-[48px] font-semibold text-foreground leading-[1.08] tracking-[-0.02em] mb-5 text-balance">
+              {content.title}
+            </h2>
+            <p className="text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-[320px]">
+              {content.subtitle}
+            </p>
             <a
               href="#contact"
-              className="text-primary font-medium hover:underline underline-offset-4"
+              className="text-sm text-primary font-medium hover:underline underline-offset-4"
             >
               {currentLang === "fr"
                 ? "Parler à l'équipe →"
                 : "Talk to our team →"}
             </a>
-          </p>
+          </div>
+
+          {/* Right: FAQ items */}
+          <div>
+            {items.map((faq, i) => (
+              <FAQItem key={i} faq={faq} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,9 +1,8 @@
+"use client";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FinalCTAContent, SectionContent } from "@/types/cms";
-import { SeamAccent } from "./motion-primitives";
 import { GoldText } from "./GoldText";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
@@ -29,79 +28,94 @@ const FinalCTASection = ({
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
   const content: FinalCTAContent = dbContent?.[currentLang] || {
-    badge: t("finalCTA.badge"),
-    title: t("finalCTA.title"),
-    subtitle: t("finalCTA.subtitle"),
-    ctaStart: t("finalCTA.ctaStart"),
-    ctaDemo: t("finalCTA.ctaDemo"),
+    badge: t("finalCTA.badge", "Trusted by kitchens reducing waste daily"),
+    title: t("finalCTA.title", "Tomorrow's prep list is *already waiting*."),
+    subtitle: t(
+      "finalCTA.subtitle",
+      "Stop guessing. Start every morning with a clear, data-backed prep plan that protects your margins."
+    ),
+    ctaStart: t("finalCTA.ctaStart", "Start Free Pilot"),
+    ctaDemo: t("finalCTA.ctaDemo", "Book a 10-min Demo"),
     proofs: FALLBACK_PROOFS[currentLang] || FALLBACK_PROOFS.en,
   };
 
   const proofs = Array.isArray(content.proofs) ? content.proofs : [];
 
   return (
-    <section className="relative py-20 sm:py-28 md:py-36 border-t border-border/50 overflow-hidden">
-      <SeamAccent />
-      <div className="absolute inset-0 wash-gold-bottom pointer-events-none" />
-      <div className="section-container relative text-center">
+    <section
+      id="contact"
+      className="relative py-40 overflow-hidden"
+    >
+      {/* Background photo */}
+      <div className="absolute inset-0">
+        <img
+          src="/images/restaurant-interior.jpg"
+          alt="Warm restaurant interior"
+          className="w-full h-full object-cover"
+          style={{ filter: "saturate(0.92) brightness(0.96)" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, hsl(240 7% 8%) 0%, hsl(240 7% 8% / 0.78) 35%, hsl(240 7% 8% / 0.78) 65%, hsl(240 7% 8%) 100%)",
+          }}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="relative max-w-[1440px] mx-auto px-8 lg:px-16 text-center">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="max-w-2xl mx-auto px-2"
+          className="max-w-[720px] mx-auto"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/[0.06] px-3 sm:px-4 py-1.5 mb-6 sm:mb-8">
-            <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))]" />
-            <span className="text-[11px] sm:text-xs font-medium text-primary">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/60 backdrop-blur-sm px-4 py-1.5 mb-8">
+            <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse-dot" />
+            <span className="text-xs font-medium text-primary">
               {content.badge}
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground leading-tight lg:leading-[1.15] mb-4 sm:mb-6">
+          {/* Headline */}
+          <h2 className="font-display text-4xl sm:text-5xl md:text-[64px] font-semibold text-foreground leading-[1.04] tracking-[-0.025em] mb-6 text-balance">
             <GoldText text={content.title} />
           </h2>
 
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed mb-8 sm:mb-10">
+          {/* Subtitle */}
+          <p className="text-lg text-foreground/82 max-w-[512px] mx-auto leading-relaxed mb-10">
             {content.subtitle}
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-            <Button
-              asChild
-              variant="hero"
-              size="xl"
-              className="group w-full sm:w-auto"
+          {/* CTAs */}
+          <div className="flex justify-center gap-4 mb-10">
+            <a
+              href={APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-base px-10 h-14 rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              <a
-                href={APP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                {content.ctaStart}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-              </a>
-            </Button>
-            <Button
-              asChild
-              variant="hero-outline"
-              size="xl"
-              className="w-full sm:w-auto"
+              {content.ctaStart}
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-base font-medium text-foreground border border-foreground/30 bg-background/40 backdrop-blur-sm px-10 h-14 rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
-              <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer">
-                {content.ctaDemo}
-              </a>
-            </Button>
+              {content.ctaDemo}
+            </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-x-6 gap-y-2 items-center">
+          {/* Proof points */}
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 items-center">
             {proofs.map((p) => (
               <div key={p} className="flex items-center gap-2">
                 <CheckCircle className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
-                <span className="text-xs sm:text-sm text-muted-foreground">
-                  {p}
-                </span>
+                <span className="text-sm text-foreground/82">{p}</span>
               </div>
             ))}
           </div>

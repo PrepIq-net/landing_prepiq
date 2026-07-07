@@ -187,26 +187,32 @@ const ValueSection = ({
   return (
     <section
       id="value"
-      className="relative py-20 md:py-24 border-t border-border/50 section-band"
+      className="relative py-24 md:py-32 border-t border-border/50 section-band"
     >
-      <SeamAccent />
-      <div className="section-container px-4 sm:px-6">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10 md:mb-16 px-2"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-3 sm:mb-4 leading-tight lg:leading-[1.15]">
+          <div className="inline-flex items-center gap-3.5 mb-6">
+            <div className="w-10 h-px bg-primary" />
+            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+              The Payoff
+            </span>
+            <div className="w-10 h-px bg-primary" />
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
             {content.title}
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-[520px] mx-auto leading-relaxed">
             {content.subtitle}
           </p>
         </motion.div>
 
         {/* Metric cards */}
-        <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 md:grid-cols-3 mb-12 md:mb-20">
+        <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 mb-12 md:mb-16">
           {metrics.map((m, i) => (
             <motion.div
               key={m.label}
@@ -215,29 +221,19 @@ const ValueSection = ({
               viewport={{ once: true }}
               whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
               transition={{ delay: i * 0.1 }}
-              className={`relative rounded-xl border ${m.border} bg-card p-5 sm:p-8 space-y-3 sm:space-y-4 group hover:border-primary/30 hover:shadow-l3 transition-[border-color,box-shadow] duration-300`}
+              className={`rounded-2xl border ${m.border} bg-card p-8 flex flex-col gap-3 hover:border-primary/35 hover:shadow-l2 transition-all duration-300`}
             >
-              <div
-                className={`inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg ${m.iconBg}`}
+              <p
+                className={`font-display text-[56px] font-semibold ${m.color} tracking-[-0.03em]`}
               >
-                <m.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${m.color}`} />
-              </div>
-              <div>
-                <p
-                  className={`text-3xl sm:text-4xl md:text-5xl font-display font-semibold ${m.color} tracking-tight`}
-                >
-                  {m.value}
-                </p>
-                <p className="text-xs sm:text-sm font-medium text-foreground mt-1.5 sm:mt-2">
-                  {m.label}
-                </p>
-              </div>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {m.value}
+              </p>
+              <p className="text-[15px] font-semibold text-foreground">
+                {m.label}
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {m.desc}
               </p>
-              <div
-                className={`absolute top-0 right-0 h-16 w-16 rounded-tr-xl rounded-bl-[40px] ${m.iconBg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-              />
             </motion.div>
           ))}
         </div>
@@ -247,7 +243,7 @@ const ValueSection = ({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto rounded-xl sm:rounded-2xl border border-primary/20 bg-card overflow-hidden"
+          className="max-w-[960px] mx-auto rounded-2xl border border-primary/20 bg-card overflow-hidden shadow-l2"
         >
           {/* Header */}
           <div className="px-5 sm:px-8 py-4 sm:py-5 border-b border-border flex items-center gap-3">
