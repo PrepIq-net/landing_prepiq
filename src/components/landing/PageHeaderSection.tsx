@@ -25,14 +25,22 @@ const wordUp = {
 const WordReveal = ({ text }: { text: string }) => (
   <>
     {text.split(" ").map((word, i) => (
-      <motion.span key={`${word}-${i}`} variants={wordUp} className="inline-block whitespace-pre">
+      <motion.span
+        key={`${word}-${i}`}
+        variants={wordUp}
+        className="inline-block whitespace-pre"
+      >
         {word}{" "}
       </motion.span>
     ))}
   </>
 );
 
-const PageHeaderSection = ({ dbContent }: { dbContent?: SectionContent<PageHeaderContent> }) => {
+const PageHeaderSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<PageHeaderContent>;
+}) => {
   const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
@@ -70,7 +78,10 @@ const PageHeaderSection = ({ dbContent }: { dbContent?: SectionContent<PageHeade
             {content.titleLine2 && (
               <>
                 <br />
-                <motion.span variants={wordUp} className="text-gradient-gold inline-block">
+                <motion.span
+                  variants={wordUp}
+                  className="text-gradient-gold inline-block"
+                >
                   {content.titleLine2}
                 </motion.span>
               </>
@@ -85,7 +96,10 @@ const PageHeaderSection = ({ dbContent }: { dbContent?: SectionContent<PageHeade
           </motion.p>
 
           {content.stats && content.stats.length > 0 && (
-            <motion.div variants={fadeUp} className="mt-9 flex justify-center gap-10 sm:gap-16">
+            <motion.div
+              variants={fadeUp}
+              className="mt-9 flex justify-center gap-10 sm:gap-16"
+            >
               {content.stats.map((stat, i) => (
                 <div key={stat.label} className="space-y-1 text-center">
                   <p

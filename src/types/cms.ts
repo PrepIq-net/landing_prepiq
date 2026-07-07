@@ -291,7 +291,15 @@ export interface PageHeaderContent {
   titleLine1: string;
   titleLine2: string;
   subtitle: string;
+  icon?: string;
   stats?: { value: string; label: string }[];
+}
+
+export interface ExploreContent {
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: { icon: string; title: string; desc: string; cta: string; href: string }[];
 }
 
 export interface FinalCTAContent {
