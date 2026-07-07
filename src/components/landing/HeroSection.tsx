@@ -72,7 +72,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
       </div>
 
       {/* Content */}
-      <div className="relative w-full max-w-[1440px] mx-auto px-8 lg:px-16 pt-40 flex flex-col justify-end">
+      <div className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-28 sm:pt-32 md:pt-40 flex flex-col justify-end">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -81,9 +81,9 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           className="max-w-[860px]"
         >
           {/* Badge line */}
-          <motion.div variants={fadeUp} className="flex items-center gap-3.5 mb-7">
-            <div className="w-10 h-px bg-primary" />
-            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+          <motion.div variants={fadeUp} className="flex items-center gap-3 sm:gap-3.5 mb-5 sm:mb-7">
+            <div className="w-8 sm:w-10 h-px bg-primary shrink-0" />
+            <span className="text-[11px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary font-medium">
               {content.badge}
             </span>
           </motion.div>
@@ -91,7 +91,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           {/* Headline */}
           <motion.h1
             variants={fadeUp}
-            className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[82px] font-semibold leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
+            className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-[82px] font-semibold leading-[1.05] sm:leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
           >
             {content.titleLine1}
             <br />
@@ -109,12 +109,12 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           )}
 
           {/* CTAs */}
-          <motion.div variants={fadeUp} className="mt-9 flex flex-wrap gap-4 items-center">
+          <motion.div variants={fadeUp} className="mt-7 sm:mt-9 flex flex-wrap gap-3 sm:gap-4 items-center">
             <a
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-base px-8 h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
+              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
             >
               {content.ctaStart}
               <ArrowRight className="h-[18px] w-[18px]" />
@@ -123,7 +123,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-8 h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex items-center text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>
@@ -136,15 +136,14 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="grid grid-cols-3 gap-20 justify-start mt-[72px] py-8 border-t border-foreground/[0.12]"
-          style={{ maxWidth: "fit-content" }}
+          className="grid grid-cols-3 gap-6 sm:gap-10 md:gap-20 justify-start mt-12 sm:mt-16 md:mt-[72px] py-6 sm:py-8 border-t border-foreground/[0.12] w-full md:w-fit"
         >
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1">
-              <p className={`font-display text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}>
+            <div key={stat.label} className="flex flex-col gap-1 min-w-0">
+              <p className={`font-display text-2xl sm:text-3xl md:text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}>
                 <CountUp value={stat.value} />
               </p>
-              <p className="text-xs uppercase tracking-[0.15em] text-foreground/55">
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-foreground/55 truncate">
                 {stat.label}
               </p>
             </div>
