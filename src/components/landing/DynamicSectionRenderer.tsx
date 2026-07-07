@@ -13,6 +13,7 @@ const SectionFallback = () => (
 const COMPONENTS: Record<string, any> = {
   HeroSection: dynamic(() => import("./HeroSection")),
   PageHeaderSection: dynamic(() => import("./PageHeaderSection")),
+  ExploreSection: dynamic(() => import("./ExploreSection")),
   IntegrationsSection: dynamic(() => import("./IntegrationsSection")),
   CostOfGuessingSection: dynamic(() => import("./CostOfGuessingSection")),
   HowItWorksSection: dynamic(() => import("./HowItWorksSection")),

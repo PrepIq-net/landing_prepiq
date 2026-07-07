@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import { X, Linkedin, Github } from "iconoir-react";
 
 interface FooterLink {
   id: string;
@@ -66,8 +67,9 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
                   <li key={link.id}>
                     <a
                       href={link.url}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                      className="group inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
                     >
+                      <span className="h-px w-0 bg-primary mr-0 group-hover:w-3 group-hover:mr-2 transition-all duration-200" />
                       {currentLang === "fr" ? link.labelFr : link.labelEn}
                     </a>
                   </li>
@@ -83,14 +85,19 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} PrepIQ. {t("footer.rights")}
           </p>
-          <div className="flex items-center gap-5">
-            {["Twitter", "LinkedIn", "GitHub"].map((social) => (
+          <div className="flex items-center gap-2">
+            {[
+              { name: "X", Icon: X },
+              { name: "LinkedIn", Icon: Linkedin },
+              { name: "GitHub", Icon: Github },
+            ].map(({ name, Icon }) => (
               <a
-                key={social}
+                key={name}
                 href="#"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+                aria-label={name}
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-200"
               >
-                {social}
+                <Icon className="h-3.5 w-3.5" />
               </a>
             ))}
           </div>

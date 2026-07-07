@@ -80,10 +80,34 @@ const FAQ_ITEMS = {
   ],
 };
 
+const EXPLORE = {
+  en: {
+    badge: "Explore PrepIQ",
+    title: "See what's <gold>under the hood</gold>",
+    subtitle: "The forecast engine, the plans it comes in, and the team behind it — three stops, five minutes.",
+    items: [
+      { icon: "brain", title: "How It Works", desc: "Follow a day in a PrepIQ kitchen — from the morning forecast to live service tracking to the nightly learning loop.", cta: "See the system", href: "/how-it-works" },
+      { icon: "pricing", title: "Pricing", desc: "Three plans that scale from a single branch to a global network — each built to recover more margin than it costs.", cta: "Compare plans", href: "/pricing" },
+      { icon: "contact", title: "Contact", desc: "Questions about setup, integrations, or enterprise rollout? Talk directly to the team behind the forecasts.", cta: "Get in touch", href: "/contact" },
+    ],
+  },
+  fr: {
+    badge: "Explorer PrepIQ",
+    title: "Regardez <gold>sous le capot</gold>",
+    subtitle: "Le moteur de prévision, les forfaits disponibles et l'équipe derrière — trois étapes, cinq minutes.",
+    items: [
+      { icon: "brain", title: "Comment ça marche", desc: "Suivez une journée dans une cuisine PrepIQ — de la prévision du matin au suivi en direct jusqu'à la boucle d'apprentissage.", cta: "Voir le système", href: "/how-it-works" },
+      { icon: "pricing", title: "Tarification", desc: "Trois forfaits qui évoluent d'un site unique à un réseau mondial — chacun conçu pour récupérer plus de marge qu'il n'en coûte.", cta: "Comparer les forfaits", href: "/pricing" },
+      { icon: "contact", title: "Contact", desc: "Des questions sur la configuration, les intégrations ou un déploiement entreprise ? Parlez directement à l'équipe.", cta: "Nous écrire", href: "/contact" },
+    ],
+  },
+};
+
 const PAGE_HEADERS = {
   "how-it-works": {
     en: {
       badge: "How It Works",
+      icon: "brain",
       titleLine1: "From sales signals",
       titleLine2: "to a precise prep plan.",
       subtitle: "PrepIQ turns your sales history, weather, events, and chef feedback into a daily prep plan your kitchen can trust — and it learns from every single service.",
@@ -95,6 +119,7 @@ const PAGE_HEADERS = {
     },
     fr: {
       badge: "Comment ça marche",
+      icon: "brain",
       titleLine1: "Des signaux de vente",
       titleLine2: "à un plan de prod précis.",
       subtitle: "PrepIQ transforme votre historique de ventes, la météo, les événements et les retours des chefs en un plan de production quotidien fiable — qui apprend à chaque service.",
@@ -108,6 +133,7 @@ const PAGE_HEADERS = {
   pricing: {
     en: {
       badge: "Pricing",
+      icon: "pricing",
       titleLine1: "Simple plans.",
       titleLine2: "Priced to pay for themselves.",
       subtitle: "Start on a single branch and scale when you're ready. Every plan is built around one goal: recovering more margin than it costs.",
@@ -115,6 +141,7 @@ const PAGE_HEADERS = {
     },
     fr: {
       badge: "Tarification",
+      icon: "pricing",
       titleLine1: "Des forfaits simples.",
       titleLine2: "Conçus pour s'autofinancer.",
       subtitle: "Commencez sur un seul site et évoluez à votre rythme. Chaque forfait vise un seul objectif : récupérer plus de marge qu'il n'en coûte.",
@@ -124,6 +151,7 @@ const PAGE_HEADERS = {
   contact: {
     en: {
       badge: "Contact",
+      icon: "contact",
       titleLine1: "Talk to the team",
       titleLine2: "behind the forecasts.",
       subtitle: "Questions about setup, integrations, or an enterprise rollout — send a note and we'll get back to you within one business day.",
@@ -131,6 +159,7 @@ const PAGE_HEADERS = {
     },
     fr: {
       badge: "Contact",
+      icon: "contact",
       titleLine1: "Parlez à l'équipe",
       titleLine2: "derrière les prévisions.",
       subtitle: "Des questions sur la configuration, les intégrations ou un déploiement entreprise — écrivez-nous et nous vous répondrons sous un jour ouvré.",
@@ -399,6 +428,7 @@ async function main() {
     pricing: { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: enContent.pricing, fr: frContent.pricing } },
     faq: { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: { en: enContent.faq, fr: frContent.faq } },
     contact: { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: enContent.contact, fr: frContent.contact } },
+    explore: { componentType: "ExploreSection", titleEn: "Explore", titleFr: "Explorer", contentJson: { en: EXPLORE.en, fr: EXPLORE.fr } },
     finalCTA: { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: enContent.finalCTA, fr: frContent.finalCTA } },
   };
 
@@ -413,7 +443,7 @@ async function main() {
   const marketingPages = [
     {
       slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
-      sections: [SECTIONS.hero, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.finalCTA],
+      sections: [SECTIONS.hero, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.explore, SECTIONS.finalCTA],
     },
     {
       slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,
