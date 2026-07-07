@@ -39,10 +39,10 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out backdrop-blur-md ${
         scrolled
           ? "h-14 border-b border-primary/15 bg-background/85 backdrop-blur-2xl shadow-[0_1px_20px_hsl(40_70%_39%/0.06)]"
-          : "h-16 border-b border-transparent bg-transparent backdrop-blur-none"
+          : "h-16 border-b border-transparent bg-background/10"
       }`}
     >
       <motion.div
