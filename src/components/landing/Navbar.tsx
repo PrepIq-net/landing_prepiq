@@ -84,6 +84,16 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
+          <a
+            href="/"
+            className={`relative text-sm transition-colors duration-200 hover:text-foreground after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full ${
+              pathname === "/"
+                ? "text-foreground after:w-full"
+                : "text-muted-foreground after:w-0"
+            }`}
+          >
+            {currentLang === "fr" ? "Accueil" : "Home"}
+          </a>
           {links.map((link) => (
             <a
               key={link.id}
@@ -152,13 +162,27 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
           >
             <div className="flex flex-col h-full p-6">
               <div className="space-y-2">
+                <motion.a
+                  href="/"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0 }}
+                  className={`block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border active:bg-accent/70 hover:border-primary/25 ${
+                    pathname === "/"
+                      ? "border-primary/40 bg-primary/10"
+                      : "border-border/60 bg-accent/40"
+                  }`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {currentLang === "fr" ? "Accueil" : "Home"}
+                </motion.a>
                 {links.map((link, i) => (
                   <motion.a
                     key={link.id}
                     href={link.url}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 }}
+                    transition={{ delay: (i + 1) * 0.06 }}
                     className={`block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border active:bg-accent/70 hover:border-primary/25 ${
                       isActive(link.url)
                         ? "border-primary/40 bg-primary/10"

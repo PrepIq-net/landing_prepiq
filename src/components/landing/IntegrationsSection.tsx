@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { IntegrationsContent, SectionContent } from "@/types/cms";
-import { SeamAccent } from "./motion-primitives";
 
 const POS_META = [
   { initial: "L", color: "hsl(40 70% 39%)" },
@@ -11,6 +10,7 @@ const POS_META = [
 ];
 
 const TICKER_LOGOS = [
+  "CSV Import",
   "Loyverse",
   "Square",
   "Toast",
@@ -53,10 +53,9 @@ const IntegrationsSection = ({
   return (
     <section
       id="integrations"
-      className="relative py-20 md:py-28 border-t border-border/50 scroll-mt-20"
+      className="relative py-24 md:py-32 border-t border-border/50 scroll-mt-20"
     >
-      <SeamAccent />
-      <div className="section-container">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -64,10 +63,13 @@ const IntegrationsSection = ({
             viewport={{ once: true }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-              {content.badge}
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-[2.5rem] font-semibold text-foreground leading-tight mb-5">
+            <div className="flex items-center gap-3.5 mb-6">
+              <div className="w-10 h-px bg-primary" />
+              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                {content.badge}
+              </span>
+            </div>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-5">
               {content.titleLine1}
               <br />
               <span className="text-primary">{content.titleLine2}</span>
@@ -142,7 +144,7 @@ const IntegrationsSection = ({
         </div>
 
         {/* Ticker */}
-        <div className="relative mt-16 sm:mt-20 -mx-6 md:-mx-8 lg:-mx-16 pt-10 sm:pt-14 border-t border-border/30 overflow-hidden">
+        <div className="relative mt-16 sm:mt-20 -mx-8 lg:-mx-16 pt-10 sm:pt-14 border-t border-border/30 overflow-hidden">
           <p className="text-center text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary/60 font-medium mb-8 px-6">
             {content.tickerLabel}
           </p>
@@ -153,7 +155,7 @@ const IntegrationsSection = ({
             style={{ gap: "3rem" }}
           >
             {tripledLogos.map((name, i) => {
-              const isLive = name === "Loyverse";
+              const isLive = name === "Loyverse" || name === "CSV Import";
               return (
                 <div
                   key={`${name}-${i}`}
