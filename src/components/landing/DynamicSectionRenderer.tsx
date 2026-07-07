@@ -12,6 +12,7 @@ const SectionFallback = () => (
 // Map of components that need ssr: false
 const COMPONENTS: Record<string, any> = {
   HeroSection: dynamic(() => import("./HeroSection")),
+  PageHeaderSection: dynamic(() => import("./PageHeaderSection")),
   IntegrationsSection: dynamic(() => import("./IntegrationsSection")),
   CostOfGuessingSection: dynamic(() => import("./CostOfGuessingSection")),
   HowItWorksSection: dynamic(() => import("./HowItWorksSection")),
