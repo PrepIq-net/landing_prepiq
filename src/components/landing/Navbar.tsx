@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, Xmark } from "iconoir-react";
 import {
@@ -28,6 +29,9 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY, scrollYProgress } = useScroll();
+  const pathname = usePathname();
+
+  const isActive = (url: string) => url.split("#")[0] === pathname;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 20);
@@ -84,7 +88,11 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             <a
               key={link.id}
               href={link.url}
-              className="relative text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+              className={`relative text-sm transition-colors duration-200 hover:text-foreground after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full ${
+                isActive(link.url)
+                  ? "text-foreground after:w-full"
+                  : "text-muted-foreground after:w-0"
+              }`}
             >
               {currentLang === "fr" ? link.labelFr : link.labelEn}
             </a>
@@ -151,7 +159,11 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    className="block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border border-border/60 bg-accent/40 active:bg-accent/70 hover:border-primary/25"
+                    className={`block text-sm font-medium text-foreground transition-colors rounded-xl px-4 py-3.5 border active:bg-accent/70 hover:border-primary/25 ${
+                      isActive(link.url)
+                        ? "border-primary/40 bg-primary/10"
+                        : "border-border/60 bg-accent/40"
+                    }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {currentLang === "fr" ? link.labelFr : link.labelEn}

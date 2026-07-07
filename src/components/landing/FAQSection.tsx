@@ -220,7 +220,7 @@ const FAQSection = ({
           <p className="text-sm text-muted-foreground">
             {content.footer}{" "}
             <a
-              href="#contact"
+              href="/contact"
               className="text-primary font-medium hover:underline underline-offset-4"
             >
               {currentLang === "fr"

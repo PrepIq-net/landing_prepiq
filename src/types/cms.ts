@@ -286,6 +286,14 @@ export interface ContactContent {
   noSpam: string;
 }
 
+export interface PageHeaderContent {
+  badge: string;
+  titleLine1: string;
+  titleLine2: string;
+  subtitle: string;
+  stats?: { value: string; label: string }[];
+}
+
 export interface FinalCTAContent {
   badge: string;
   title: string;

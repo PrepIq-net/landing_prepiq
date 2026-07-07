@@ -5,8 +5,19 @@ import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer"
 import ScrollToTop from "@/components/ScrollToTop";
 import CookieConsent from "@/components/CookieConsent";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 const Footer = lazy(() => import("@/components/landing/Footer"));
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const page = await getPageWithSections(slug);
+  if (!page) return {};
+  return {
+    title: `${page.titleEn} — PrepIQ`,
+    description: page.metaDescriptionEn || undefined,
+  };
+}
 
 const SectionFallback = () => (
   <div className="py-20 flex items-center justify-center">

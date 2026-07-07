@@ -445,7 +445,7 @@ const PricingSection = ({
                   >
                     {plan.key === "command" ? (
                       <a
-                        href="#contact"
+                        href="/contact"
                         className="flex items-center justify-center gap-2"
                       >
                         {plan.cta}
@@ -523,7 +523,7 @@ const PricingSection = ({
           {footerBefore}
           {footerLink && (
             <a
-              href="#contact"
+              href="/contact"
               className="text-primary font-medium hover:underline underline-offset-4"
             >
               {footerLink}
