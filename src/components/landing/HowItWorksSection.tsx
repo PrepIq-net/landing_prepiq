@@ -222,29 +222,33 @@ const HowItWorksSection = ({
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="relative py-20 md:py-28 border-t border-border/50 scroll-mt-20"
+      className="relative py-24 md:py-32 border-t border-border/50 section-band scroll-mt-20"
     >
-      <SeamAccent />
-      <div className="section-container">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12 md:mb-20 px-2"
+          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-10 mb-12 md:mb-16"
         >
-          <p className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-4">
-            {content.badge}
-          </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
-            <GoldText text={content.title} />
-          </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+          <div className="max-w-[640px]">
+            <div className="flex items-center gap-3.5 mb-6">
+              <div className="w-10 h-px bg-primary" />
+              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                {content.badge}
+              </span>
+            </div>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] text-balance">
+              <GoldText text={content.title} />
+            </h2>
+          </div>
+          <p className="text-base text-muted-foreground max-w-[380px] leading-relaxed lg:mb-2">
             {content.subtitle}
           </p>
         </motion.div>
 
-        {/* Phase selector */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-10 md:mb-16 max-w-3xl mx-auto">
+        {/* Phase selector tabs */}
+        <div className="grid grid-cols-3 gap-4 mb-12 md:mb-14">
           {phases.map((p) => {
             const active = activePhase === p.id;
             const phaseContent = content.phases[p.id];
@@ -255,60 +259,63 @@ const HowItWorksSection = ({
                   setActivePhase(p.id);
                   setAutoRotate(false);
                 }}
-                className={`group relative rounded-xl sm:rounded-2xl px-3 py-3 sm:px-6 sm:py-5 text-left transition-colors duration-200 border ${
+                className={`group relative rounded-2xl overflow-hidden text-left border transition-colors duration-200 bg-card ${
                   active
-                    ? "border-border bg-card"
-                    : "border-transparent hover:bg-card/50 hover:border-border/50"
+                    ? "border-primary/45"
+                    : "border-border hover:border-primary/40"
                 }`}
               >
-                <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
-                  <div
-                    className={`h-7 w-7 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center transition-colors duration-200 ${active ? p.bg : "bg-accent"}`}
-                  >
-                    <span
-                      className={`text-[10px] sm:text-xs font-bold transition-colors ${active ? p.color : "text-muted-foreground"}`}
-                    >
-                      {p.step}
-                    </span>
-                  </div>
-                  <div>
-                    <p
-                      className={`text-xs sm:text-sm font-semibold transition-colors ${active ? "text-foreground" : "text-muted-foreground"}`}
-                    >
-                      {phaseContent.label}
-                    </p>
-                    <p className="text-[10px] sm:text-[11px] text-muted-foreground/60">
-                      {phaseContent.time}
-                    </p>
-                  </div>
-                </div>
-                <p
-                  className={`text-[10px] sm:text-xs transition-colors hidden sm:block ${active ? "text-muted-foreground" : "text-muted-foreground/50"}`}
-                >
-                  {phaseContent.desc}
-                </p>
-                {active && (
-                  <motion.div
-                    layoutId="phase-indicator"
-                    className={`absolute bottom-0 left-6 right-6 h-[2px] rounded-full overflow-hidden ${
-                      autoRotate ? "bg-border" : p.dot
+                <div className="h-[110px] overflow-hidden relative">
+                  <img
+                    src={`/images/phase-${p.id}.jpg`}
+                    alt={phaseContent.label}
+                    className={`w-full h-full object-cover transition-all duration-300 ${
+                      active ? "opacity-100" : "opacity-45 grayscale-[0.6]"
                     }`}
-                    transition={transition}
+                    style={{ filter: "saturate(0.92) brightness(0.96)" }}
+                  />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, hsl(var(--card)))" }} />
+                  <span
+                    className={`absolute top-3 left-4 text-[13px] font-semibold tracking-[0.1em] uppercase rounded-full px-3 py-1 backdrop-blur-sm ${
+                      active ? p.color : "text-muted-foreground"
+                    }`}
+                    style={{ background: "hsl(240 7% 8% / 0.7)" }}
                   >
-                    {autoRotate && inView && (
-                      <motion.div
-                        key={activePhase}
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{
-                          duration: AUTO_ADVANCE_MS / 1000,
-                          ease: "linear",
-                        }}
-                        className={`h-full w-full origin-left rounded-full ${p.dot}`}
-                      />
-                    )}
-                  </motion.div>
-                )}
+                    {phaseContent.time}
+                  </span>
+                </div>
+                <div className="px-5 py-4">
+                  <p
+                    className={`font-display text-[17px] font-semibold mb-1 transition-colors ${
+                      active ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    0{p.step} — {phaseContent.label}
+                  </p>
+                  <p className="text-[13px] text-muted-foreground">
+                    {phaseContent.desc}
+                  </p>
+                </div>
+                <div
+                  className={`absolute bottom-0 left-0 right-0 h-[2px] overflow-hidden ${
+                    active ? "" : "bg-transparent"
+                  }`}
+                >
+                  {active && autoRotate && inView ? (
+                    <motion.div
+                      key={activePhase}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{
+                        duration: AUTO_ADVANCE_MS / 1000,
+                        ease: "linear",
+                      }}
+                      className={`h-full w-full origin-left ${p.dot}`}
+                    />
+                  ) : active ? (
+                    <div className={`h-full w-full ${p.dot}`} />
+                  ) : null}
+                </div>
               </button>
             );
           })}
