@@ -84,10 +84,12 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "kenburns": "kenburns 24s ease-out infinite alternate",
+        "pulse-dot": "pulse 2s infinite",
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"],
-        display: ["Satoshi", "ui-sans-serif", "system-ui"],
+        display: ["'Hanken Grotesk'", "ui-sans-serif", "system-ui"],
       },
     },
   },

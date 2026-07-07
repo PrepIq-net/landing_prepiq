@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { PricingContent, SectionContent } from "@/types/cms";
-import { SeamAccent } from "./motion-primitives";
 import { GoldText } from "./GoldText";
 import { APP_URL } from "@/lib/constants";
 
@@ -270,23 +269,26 @@ const PricingSection = ({
   return (
     <section
       id="pricing"
-      className="relative py-20 md:py-32 border-t border-border/50 scroll-mt-20"
+      className="relative py-24 md:py-32 border-t border-border/50 scroll-mt-20"
     >
-      <SeamAccent />
-      <div className="section-container">
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10 md:mb-16 px-2"
+          className="text-center mb-12"
         >
-          <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-            {content.badge}
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
+          <div className="inline-flex items-center gap-3.5 mb-6">
+            <div className="w-10 h-px bg-primary" />
+            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+              {content.badge}
+            </span>
+            <div className="w-10 h-px bg-primary" />
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
             <GoldText text={content.title} />
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
+          <p className="text-base text-muted-foreground max-w-[512px] mx-auto leading-relaxed">
             {content.subtitle}
           </p>
         </motion.div>
@@ -445,7 +447,7 @@ const PricingSection = ({
                   >
                     {plan.key === "command" ? (
                       <a
-                        href="#contact"
+                        href="/contact"
                         className="flex items-center justify-center gap-2"
                       >
                         {plan.cta}
@@ -471,7 +473,7 @@ const PricingSection = ({
 
         {/* Add-ons */}
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <p className="text-xs uppercase tracking-[0.2em] text-primary/60 font-medium mb-3">
               {content.addOns.title}
             </p>
@@ -480,40 +482,23 @@ const PricingSection = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex flex-wrap justify-center gap-3">
             {addOns.map((addon) => (
               <div
                 key={addon.name}
-                className="rounded-2xl border border-border bg-card/80 p-5 sm:p-6 flex flex-col hover:border-primary/25 hover:bg-card transition-colors duration-200"
+                className="flex items-center gap-3 rounded-full border border-border bg-card/80 px-5 py-2.5 hover:border-primary/30 transition-colors duration-200"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <p className="text-sm font-semibold text-foreground">
-                    {addon.name}
-                  </p>
-                  <div className="text-right shrink-0 ml-4">
-                    <span className="text-base font-semibold text-foreground">
-                      {currentLang === "fr"
-                        ? `${addon.price} €`
-                        : `$${addon.price}`}
-                    </span>
-                    <span className="text-xs text-muted-foreground/40">
-                      {content.perMonth}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed flex-1 mb-4">
-                  {addon.desc}
-                </p>
-                <div className="flex items-center gap-1.5">
-                  {addon.plans.map((p) => (
-                    <span
-                      key={p}
-                      className="text-[10px] font-medium text-muted-foreground/50 bg-accent/60 border border-border/30 rounded-md px-2 py-0.5"
-                    >
-                      {p}
-                    </span>
-                  ))}
-                </div>
+                <span className="text-sm font-medium text-foreground">
+                  {addon.name}
+                </span>
+                <span className="text-sm font-semibold text-primary">
+                  {currentLang === "fr"
+                    ? `${addon.price} €`
+                    : `$${addon.price}`}
+                  <span className="text-xs font-normal text-muted-foreground/50">
+                    {content.perMonth}
+                  </span>
+                </span>
               </div>
             ))}
           </div>
@@ -523,7 +508,7 @@ const PricingSection = ({
           {footerBefore}
           {footerLink && (
             <a
-              href="#contact"
+              href="/contact"
               className="text-primary font-medium hover:underline underline-offset-4"
             >
               {footerLink}
