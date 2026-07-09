@@ -1,5 +1,6 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -11,16 +12,23 @@ export default function Page() {
       {/* Header */}
       <header className="border-b border-border/50">
         <div className="section-container flex items-center justify-between py-5">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="font-display text-sm font-bold text-primary-foreground">
-                P
+          <div>
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="transition-all duration-300 h-10 w-10">
+                <Image
+                  src="/logo/golden-main-transparent.png"
+                  alt="PrepIQ Logo"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <span className="font-display text-lg font-semibold text-foreground">
+                PrepIQ
               </span>
-            </div>
-            <span className="font-display text-lg font-semibold text-foreground">
-              PrepIQ
-            </span>
-          </Link>
+            </Link>
+          </div>
+
           <Link
             href="/"
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -208,10 +216,10 @@ export default function Page() {
                 <p>
                   Pour toute question, contactez-nous à{" "}
                   <a
-                    href="mailto:legal@prepiq.com"
+                    href="mailto:customer@prepiq.com"
                     className="text-primary hover:underline"
                   >
-                    legal@prepiq.com
+                    customer@prepiq.com
                   </a>
                   .
                 </p>
@@ -414,10 +422,10 @@ export default function Page() {
                   If you have any questions about these Terms, please contact us
                   at{" "}
                   <a
-                    href="mailto:legal@prepiq.com"
+                    href="mailto:customer@prepiq.com"
                     className="text-primary hover:underline"
                   >
-                    legal@prepiq.com
+                    customer@prepiq.com
                   </a>{" "}
                   or by mail at PrepIQ, Kampala, UG.
                 </p>
