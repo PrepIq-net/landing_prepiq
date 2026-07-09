@@ -261,7 +261,9 @@ const PricingSection = ({
   }, [content]);
 
   const [footerBefore, footerLink, footerAfter] = useMemo(() => {
-    const match = content.footer?.match(/^(.*)<primary>\s*(.*?)\s*<\/primary>(.*)$/s);
+    const match = content.footer?.match(
+      /^(.*)<primary>\s*(.*?)\s*<\/primary>(.*)$/s,
+    );
     if (!match) return [content.footer, null, ""];
     return [match[1], match[2], match[3]];
   }, [content.footer]);
@@ -280,15 +282,15 @@ const PricingSection = ({
         >
           <div className="inline-flex items-center gap-3.5 mb-6">
             <div className="w-10 h-px bg-primary" />
-            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
               {content.badge}
             </span>
             <div className="w-10 h-px bg-primary" />
           </div>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
             <GoldText text={content.title} />
           </h2>
-          <p className="text-base text-muted-foreground max-w-[512px] mx-auto leading-relaxed">
+          <p className="text-sm md:text-lg text-base text-muted-foreground max-w-[512px] mx-auto leading-relaxed">
             {content.subtitle}
           </p>
         </motion.div>
@@ -350,7 +352,7 @@ const PricingSection = ({
               >
                 {plan.popular && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                    <span className="text-[10px] uppercase tracking-[0.15em] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded-full">
+                    <span className="text-[.6rem] md:text-xs uppercase tracking-[0.15em] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded-full">
                       {content.mostPopular}
                     </span>
                   </div>

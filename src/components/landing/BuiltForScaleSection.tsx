@@ -47,7 +47,7 @@ const BuiltForScaleSection = ({
     title: t("builtForScale.title", "Built for the whole pass."),
     subtitle: t(
       "builtForScale.subtitle",
-      "From the chef calling the prep to the manager watching the margin — everyone works from the same numbers."
+      "From the chef calling the prep to the manager watching the margin — everyone works from the same numbers.",
     ),
     personas: fallbackPersonas,
     networkTitle: "",
@@ -100,21 +100,21 @@ const BuiltForScaleSection = ({
           <div>
             <div className="flex items-center gap-3.5 mb-6">
               <div className="w-10 h-px bg-primary" />
-              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+              <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
                 {content.badge}
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
+            <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
               {content.title}
             </h2>
           </div>
-          <p className="text-base text-muted-foreground max-w-[380px] leading-relaxed lg:mb-2">
+          <p className="text-base text-sm md:text-lg text-muted-foreground max-w-[380px] leading-relaxed lg:mb-2">
             {content.subtitle}
           </p>
         </motion.div>
 
         {/* Photo cards grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {personas.map((p, i) => (
             <motion.div
               key={p.title}
@@ -160,7 +160,7 @@ const BuiltForScaleSection = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-3 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border mt-12"
+          className="grid md:grid-cols-3 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border mt-12"
         >
           {networkStats.map((s) => (
             <div
