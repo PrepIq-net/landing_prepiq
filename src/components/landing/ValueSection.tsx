@@ -198,15 +198,15 @@ const ValueSection = ({
         >
           <div className="inline-flex items-center gap-3.5 mb-6">
             <div className="w-10 h-px bg-primary" />
-            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
               The Payoff
             </span>
             <div className="w-10 h-px bg-primary" />
           </div>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-4">
             {content.title}
           </h2>
-          <p className="text-base text-muted-foreground max-w-[520px] mx-auto leading-relaxed">
+          <p className="text-base text-sm md:text-lg text-muted-foreground max-w-[520px] mx-auto leading-relaxed">
             {content.subtitle}
           </p>
         </motion.div>
@@ -224,7 +224,7 @@ const ValueSection = ({
               className={`rounded-2xl border ${m.border} bg-card p-8 flex flex-col gap-3 hover:border-primary/35 hover:shadow-l2 transition-all duration-300`}
             >
               <p
-                className={`font-display text-[56px] font-semibold ${m.color} tracking-[-0.03em]`}
+                className={`font-display text-3xl md:text-[56px] font-semibold ${m.color} tracking-[-0.03em]`}
               >
                 {m.value}
               </p>
