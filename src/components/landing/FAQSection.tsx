@@ -92,7 +92,7 @@ const FAQItem = ({
         className="flex items-center justify-between w-full py-6 text-left group"
       >
         <span
-          className={`text-base font-medium pr-8 leading-snug transition-colors duration-200 ${
+          className={`text-md md:text-lg text-base font-medium pr-8 leading-snug transition-colors duration-200 ${
             open ? "text-primary" : "text-foreground"
           }`}
         >
