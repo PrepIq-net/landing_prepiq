@@ -31,6 +31,17 @@ PrepIQ is an AI-powered demand forecasting and prep planning platform for commer
 npm install
 ```
 
+### Database Setup
+
+1. Ensure PostgreSQL is running.
+2. Create a `.env` file with your `DATABASE_URL` and `ADMIN_PASSWORD`.
+3. Synchronize the database schema and seed the initial data:
+   ```bash
+   npx prisma db push
+   npm run db:seed
+   ```
+   *See [docs/PRISMA.md](docs/PRISMA.md) for more details.*
+
 ### Development
 
 ```bash
