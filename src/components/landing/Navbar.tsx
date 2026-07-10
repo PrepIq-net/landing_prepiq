@@ -158,7 +158,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
-            className="fixed top-14 right-0 bottom-0 w-[280px] bg-background border-l border-border/50 z-50 md:hidden shadow-[-8px_0_30px_rgba(0,0,0,0.5)]"
+            className="fixed top-14 right-0 bottom-0 w-[280px] bg-background/85 backdrop-blur-2xl border-l border-border/50 z-50 md:hidden shadow-[-8px_0_30px_rgba(0,0,0,0.5)]"
           >
             <div className="flex flex-col h-full p-6">
               <div className="space-y-2">
