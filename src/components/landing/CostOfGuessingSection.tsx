@@ -88,7 +88,7 @@ const CostOfGuessingSection = ({
                   background: "linear-gradient(180deg, transparent 50%, hsl(240 7% 8% / 0.75) 100%)",
                 }}
               />
-              <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl backdrop-blur-md bg-background/30 px-4 py-3 w-fit max-w-full">
+              <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl backdrop-blur-2xl bg-background/40 border border-white/10 px-4 py-3 w-fit max-w-full">
                 <span className="font-display text-[40px] sm:text-[52px] font-semibold text-foreground tracking-[-0.02em]">
                   {problems[0]?.impact || "$2,400"}
                 </span>
