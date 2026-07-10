@@ -69,7 +69,7 @@ const FinalCTASection = ({
           className="max-w-[720px] mx-auto"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/60 backdrop-blur-sm px-3 sm:px-4 py-1.5 mb-6 sm:mb-8 max-w-full">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/40 backdrop-blur-2xl px-3 sm:px-4 py-1.5 mb-6 sm:mb-8 max-w-full">
             <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse-dot" />
             <span className="text-[0.6rem] md:text-xs font-medium text-primary">
               {content.badge}
@@ -101,7 +101,7 @@ const FinalCTASection = ({
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto justify-center items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex w-full sm:w-auto justify-center items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-white/15 bg-background/40 backdrop-blur-2xl px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>
