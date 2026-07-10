@@ -134,7 +134,7 @@ const HeroSection = ({
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto justify-center items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex w-full sm:w-auto justify-center items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-white/15 bg-background/40 backdrop-blur-2xl px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>

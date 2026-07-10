@@ -282,7 +282,7 @@ const HowItWorksSection = ({
                     }}
                   />
                   <span
-                    className={`absolute top-3 left-4 text-[13px] font-semibold tracking-[0.1em] uppercase rounded-full px-3 py-1 backdrop-blur-sm ${
+                    className={`absolute top-3 left-4 text-[13px] font-semibold tracking-[0.1em] uppercase rounded-full px-3 py-1 backdrop-blur-2xl bg-background/40 border border-white/10 ${
                       active ? p.color : "text-muted-foreground"
                     }`}
                     style={{ background: "hsl(240 7% 8% / 0.7)" }}
