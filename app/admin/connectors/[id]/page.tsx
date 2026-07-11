@@ -18,6 +18,7 @@ import {
   revokeConnectorTokens,
   retryReconciliation,
   requestRequeueDead,
+  requestResync,
   deleteConnector,
   markSalesReconciled,
 } from "@/lib/actions/connector-actions";
@@ -413,7 +414,44 @@ export default async function ConnectorDetailPage({
               </Button>
             </form>
           )}
+
+          <span className="mx-1 w-px self-stretch bg-[#2A2A2E]" aria-hidden />
+
+          {(
+            [
+              ["sales", "Pull Sales"],
+              ["products", "Pull Products"],
+              ["inventory", "Pull Inventory"],
+              [null, "Pull Everything"],
+            ] as const
+          ).map(([dataType, label]) => (
+            <form
+              key={label}
+              action={async () => {
+                "use server";
+                await requestResync(
+                  id,
+                  dataType ? [dataType] : ["sales", "products", "inventory"],
+                );
+              }}
+            >
+              <Button
+                type="submit"
+                variant="outline"
+                size="sm"
+                className="border-[#2A2A2E] hover:bg-accent"
+              >
+                {label}
+              </Button>
+            </form>
+          ))}
         </div>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          Pull re-reads that data from the POS from the beginning and flushes
+          the agent&apos;s offline queue immediately. Already-delivered records
+          are deduplicated server-side. Picked up on the next heartbeat
+          (&le;60s).
+        </p>
       </div>
 
       {/* Tabs */}
