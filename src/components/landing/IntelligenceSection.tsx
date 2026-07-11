@@ -56,38 +56,68 @@ const IntelligenceSection = ({
 
   const fallbackContent: IntelligenceContent = {
     badge: t("intelligence.badge", "Intelligence Layer"),
-    title: t("intelligence.title", "Six signals. One number your chef can trust."),
+    title: t(
+      "intelligence.title",
+      "Six signals. One number your chef can trust.",
+    ),
     subtitle: t(
       "intelligence.subtitle",
-      "PrepIQ tracks what no team could follow manually — and folds it into one reliable forecast, every morning."
+      "PrepIQ tracks what no team could follow manually — and folds it into one reliable forecast, every morning.",
     ),
     signals: [
       {
         label: t("intelligence.signals.sales.label", "Last 30 days of sales"),
-        desc: t("intelligence.signals.sales.desc", "Every transaction teaches the forecast engine what your kitchen actually sells."),
+        desc: t(
+          "intelligence.signals.sales.desc",
+          "Every transaction teaches the forecast engine what your kitchen actually sells.",
+        ),
       },
       {
-        label: t("intelligence.signals.patterns.label", "Day-of-week demand patterns"),
-        desc: t("intelligence.signals.patterns.desc", "Tuesday lunch ≠ Saturday dinner. PrepIQ knows the difference."),
+        label: t(
+          "intelligence.signals.patterns.label",
+          "Day-of-week demand patterns",
+        ),
+        desc: t(
+          "intelligence.signals.patterns.desc",
+          "Tuesday lunch ≠ Saturday dinner. PrepIQ knows the difference.",
+        ),
       },
       {
         label: t("intelligence.signals.weather.label", "Weather shifts"),
-        desc: t("intelligence.signals.weather.desc", "Rain at 2 PM? Soup demand historically rises 18% on wet days."),
+        desc: t(
+          "intelligence.signals.weather.desc",
+          "Rain at 2 PM? Soup demand historically rises 18% on wet days.",
+        ),
       },
       {
-        label: t("intelligence.signals.events.label", "Local events & holidays"),
-        desc: t("intelligence.signals.events.desc", "A nearby football match tonight means chicken demand spikes."),
+        label: t(
+          "intelligence.signals.events.label",
+          "Local events & holidays",
+        ),
+        desc: t(
+          "intelligence.signals.events.desc",
+          "A nearby football match tonight means chicken demand spikes.",
+        ),
       },
       {
         label: t("intelligence.signals.stockouts.label", "Recent stockouts"),
-        desc: t("intelligence.signals.stockouts.desc", "Yesterday's salmon stockout? PrepIQ auto-adjusts so it doesn't repeat."),
+        desc: t(
+          "intelligence.signals.stockouts.desc",
+          "Yesterday's salmon stockout? PrepIQ auto-adjusts so it doesn't repeat.",
+        ),
       },
       {
         label: t("intelligence.signals.chef.label", "Chef adjustments"),
-        desc: t("intelligence.signals.chef.desc", "Every override a chef makes trains the model to be smarter next time."),
+        desc: t(
+          "intelligence.signals.chef.desc",
+          "Every override a chef makes trains the model to be smarter next time.",
+        ),
       },
     ],
-    footer: t("intelligence.footer", "Signal weights are dynamic — they shift as PrepIQ learns your kitchen's unique patterns."),
+    footer: t(
+      "intelligence.footer",
+      "Signal weights are dynamic — they shift as PrepIQ learns your kitchen's unique patterns.",
+    ),
     pipelineTitle: "",
     pipelineSteps: [],
     alerts: [],
@@ -123,19 +153,22 @@ const IntelligenceSection = ({
           <div className="lg:sticky lg:top-[120px]">
             <div className="flex items-center gap-3.5 mb-6">
               <div className="w-10 h-px bg-primary" />
-              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+              <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
                 {content.badge}
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-[52px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-5 text-balance">
+            <h2 className="font-display text-3xl md:text-5xl lg:text-[52px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-5 text-balance">
               {content.title}
             </h2>
-            <p className="text-base text-muted-foreground leading-relaxed mb-10 max-w-[400px]">
+            <p className="text-base text-sm md:text-lg text-muted-foreground leading-relaxed mb-10 max-w-[400px]">
               {content.subtitle}
             </p>
 
             {/* Photo card */}
-            <div className="rounded-2xl overflow-hidden relative shadow-l2" style={{ aspectRatio: "16/10" }}>
+            <div
+              className="rounded-2xl overflow-hidden relative shadow-l2"
+              style={{ aspectRatio: "16/10" }}
+            >
               <img
                 src="/images/analytics-dashboard.jpg"
                 alt="Analytics dashboard"
@@ -145,7 +178,8 @@ const IntelligenceSection = ({
               <div
                 className="absolute inset-0"
                 style={{
-                  background: "linear-gradient(180deg, hsl(240 7% 8% / 0.2), hsl(240 7% 8% / 0.7))",
+                  background:
+                    "linear-gradient(180deg, hsl(240 7% 8% / 0.2), hsl(240 7% 8% / 0.7))",
                 }}
               />
               <div className="absolute bottom-5 left-5">

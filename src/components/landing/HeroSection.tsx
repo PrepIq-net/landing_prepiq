@@ -15,7 +15,11 @@ const fadeUp = {
   },
 };
 
-const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> }) => {
+const HeroSection = ({
+  dbContent,
+}: {
+  dbContent?: SectionContent<HeroContent>;
+}) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
@@ -51,7 +55,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
         <img
           src="/images/hero-kitchen.jpg"
           alt="Chef at work in a commercial kitchen"
-          className="w-full h-full object-cover animate-kenburns"
+          className="w-full h-[60%] md:h-full object-cover object-center object-top scale-110 translate-110 animate-kenburns"
           style={{ filter: "saturate(0.92) brightness(0.96)" }}
         />
         {/* Vertical gradient overlay */}
@@ -66,7 +70,8 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(90deg, hsl(240 7% 8% / 0.75) 0%, transparent 60%)",
+            background:
+              "linear-gradient(90deg, hsl(240 7% 8% / 0.75) 0%, transparent 60%)",
           }}
         />
       </div>
@@ -81,9 +86,12 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           className="max-w-[860px]"
         >
           {/* Badge line */}
-          <motion.div variants={fadeUp} className="flex items-center gap-3 sm:gap-3.5 mb-5 sm:mb-7">
+          <motion.div
+            variants={fadeUp}
+            className="flex items-center gap-3 sm:gap-3.5 mb-5 sm:mb-7"
+          >
             <div className="w-8 sm:w-10 h-px bg-primary shrink-0" />
-            <span className="text-[11px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary font-medium">
+            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary font-medium">
               {content.badge}
             </span>
           </motion.div>
@@ -91,7 +99,7 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           {/* Headline */}
           <motion.h1
             variants={fadeUp}
-            className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-[82px] font-semibold leading-[1.05] sm:leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
+            className="font-display text-3xl md:text-7xl lg:text-[82px] font-semibold leading-[1.05] sm:leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
           >
             {content.titleLine1}
             <br />
@@ -102,28 +110,31 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
           {content.subtitle && (
             <motion.p
               variants={fadeUp}
-              className="max-w-[560px] mt-7 text-lg leading-relaxed text-foreground/80"
+              className="max-w-[560px] mt-7 text-sm md:text-lg leading-relaxed text-foreground/80"
             >
               {content.subtitle}
             </motion.p>
           )}
 
           {/* CTAs */}
-          <motion.div variants={fadeUp} className="mt-7 sm:mt-9 flex flex-wrap gap-3 sm:gap-4 items-center">
+          <motion.div
+            variants={fadeUp}
+            className="mt-7 sm:mt-9 flex flex gap-3 sm:gap-4 items-center"
+          >
             <a
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
+              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-xs md:text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
             >
               {content.ctaStart}
-              <ArrowRight className="h-[18px] w-[18px]" />
+              <ArrowRight className="h-4 w-4 hidden md:inline-block" />
             </a>
             <a
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>
@@ -140,7 +151,9 @@ const HeroSection = ({ dbContent }: { dbContent?: SectionContent<HeroContent> })
         >
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col gap-1 min-w-0">
-              <p className={`font-display text-2xl sm:text-3xl md:text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}>
+              <p
+                className={`font-display text-2xl sm:text-3xl md:text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}
+              >
                 <CountUp value={stat.value} />
               </p>
               <p className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-foreground/55 truncate">

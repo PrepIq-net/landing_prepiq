@@ -248,7 +248,7 @@ const HowItWorksSection = ({
         </motion.div>
 
         {/* Phase selector tabs */}
-        <div className="grid grid-cols-3 gap-4 mb-12 md:mb-14">
+        <div className="grid md:grid-cols-3 gap-4 mb-12 md:mb-14">
           {phases.map((p) => {
             const active = activePhase === p.id;
             const phaseContent = content.phases[p.id];
@@ -274,7 +274,13 @@ const HowItWorksSection = ({
                     }`}
                     style={{ filter: "saturate(0.92) brightness(0.96)" }}
                   />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, hsl(var(--card)))" }} />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent, hsl(var(--card)))",
+                    }}
+                  />
                   <span
                     className={`absolute top-3 left-4 text-[13px] font-semibold tracking-[0.1em] uppercase rounded-full px-3 py-1 backdrop-blur-sm ${
                       active ? p.color : "text-muted-foreground"
