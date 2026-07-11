@@ -45,6 +45,18 @@ export async function requestSyncNow(connectorId: string) {
   revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
+export async function requestResync(
+  connectorId: string,
+  dataTypes: Array<'sales' | 'products' | 'inventory'>,
+) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(`/api/mgmt/connectors/${connectorId}/request-resync/`, email, {
+    method: 'POST',
+    body: JSON.stringify({ data_types: dataTypes }),
+  });
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
 export async function requestRequeueDead(connectorId: string) {
   const email = await requireAdminEmail();
   await djangoAdminFetch(`/api/mgmt/connectors/${connectorId}/request-requeue-dead/`, email, {
