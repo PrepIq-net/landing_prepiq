@@ -19,6 +19,7 @@ import {
   retryReconciliation,
   requestRequeueDead,
   requestResync,
+  requestSyncNow,
   deleteConnector,
   markSalesReconciled,
 } from "@/lib/actions/connector-actions";
@@ -365,6 +366,17 @@ export default async function ConnectorDetailPage({
           <form
             action={async () => {
               "use server";
+              await requestSyncNow(id);
+            }}
+          >
+            <Button type="submit" size="sm">
+              Sync Now
+            </Button>
+          </form>
+
+          <form
+            action={async () => {
+              "use server";
               await toggleConnectorActive(id, !connector.is_active);
             }}
           >
@@ -447,9 +459,12 @@ export default async function ConnectorDetailPage({
           ))}
         </div>
         <p className="mt-3 text-[11px] text-muted-foreground">
-          Pull re-reads that data from the POS from the beginning and flushes
-          the agent&apos;s offline queue immediately. Already-delivered records
-          are deduplicated server-side. Picked up on the next heartbeat
+          Sync Now runs a normal incremental sync (new rows since the last
+          checkpoint) — the same sync that runs automatically every few minutes
+          and after mapping confirmation. Pull is the recovery tool: it
+          re-reads that data from the POS from the beginning and flushes the
+          agent&apos;s offline queue immediately; already-delivered records are
+          deduplicated server-side. Both are picked up on the next heartbeat
           (&le;60s).
         </p>
       </div>
