@@ -103,12 +103,12 @@ const TestimonialsSection = ({
         >
           <div className="inline-flex items-center gap-3.5 mb-6">
             <div className="w-10 h-px bg-primary" />
-            <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
               {content.badge}
             </span>
             <div className="w-10 h-px bg-primary" />
           </div>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
             {content.title}
           </h2>
         </motion.div>
@@ -126,7 +126,7 @@ const TestimonialsSection = ({
               className="rounded-2xl border border-border bg-card p-8 flex flex-col hover:border-primary/30 hover:shadow-l2 transition-all duration-300"
             >
               {/* Metric lead */}
-              <p className="font-display text-[44px] font-semibold text-primary tracking-[-0.02em] leading-none mb-4">
+              <p className="font-display text-md md:text-[44px] font-semibold text-primary tracking-[-0.02em] leading-none mb-4">
                 {item.metric}
               </p>
 

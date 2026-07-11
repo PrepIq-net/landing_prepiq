@@ -32,7 +32,7 @@ const FinalCTASection = ({
     title: t("finalCTA.title", "Tomorrow's prep list is *already waiting*."),
     subtitle: t(
       "finalCTA.subtitle",
-      "Stop guessing. Start every morning with a clear, data-backed prep plan that protects your margins."
+      "Stop guessing. Start every morning with a clear, data-backed prep plan that protects your margins.",
     ),
     ctaStart: t("finalCTA.ctaStart", "Start Free Pilot"),
     ctaDemo: t("finalCTA.ctaDemo", "Book a 10-min Demo"),
@@ -42,10 +42,7 @@ const FinalCTASection = ({
   const proofs = Array.isArray(content.proofs) ? content.proofs : [];
 
   return (
-    <section
-      id="contact"
-      className="relative py-40 overflow-hidden"
-    >
+    <section id="contact" className="relative py-40 overflow-hidden">
       {/* Background photo */}
       <div className="absolute inset-0">
         <img
@@ -74,41 +71,41 @@ const FinalCTASection = ({
           {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/60 backdrop-blur-sm px-4 py-1.5 mb-8">
             <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse-dot" />
-            <span className="text-xs font-medium text-primary">
+            <span className="text-[0.6rem] md:text-xs font-medium text-primary">
               {content.badge}
             </span>
           </div>
 
           {/* Headline */}
-          <h2 className="font-display text-4xl sm:text-5xl md:text-[64px] font-semibold text-foreground leading-[1.04] tracking-[-0.025em] mb-6 text-balance">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[64px] font-semibold text-foreground leading-[1.04] tracking-[-0.025em] mb-6 text-balance">
             <GoldText text={content.title} />
           </h2>
 
           {/* Subtitle */}
-          <p className="text-lg text-foreground/82 max-w-[512px] mx-auto leading-relaxed mb-10">
+          <p className="text-sm md:text-lg text-foreground/82 max-w-[512px] mx-auto leading-relaxed mb-10">
             {content.subtitle}
           </p>
 
           {/* CTAs */}
-          <div className="flex justify-center gap-4 mb-10">
+          <motion.div className="mt-7 sm:mt-9 justify-center flex flex gap-3 items-center md:gap-4 mb-10">
             <a
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-base px-10 h-14 rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
+              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-xs md:text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
             >
               {content.ctaStart}
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 hidden md:inline-block" />
             </a>
             <a
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-base font-medium text-foreground border border-foreground/30 bg-background/40 backdrop-blur-sm px-10 h-14 rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>
-          </div>
+          </motion.div>
 
           {/* Proof points */}
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 items-center">

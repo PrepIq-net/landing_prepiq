@@ -92,7 +92,7 @@ const FAQItem = ({
         className="flex items-center justify-between w-full py-6 text-left group"
       >
         <span
-          className={`text-base font-medium pr-8 leading-snug transition-colors duration-200 ${
+          className={`text-md md:text-lg text-base font-medium pr-8 leading-snug transition-colors duration-200 ${
             open ? "text-primary" : "text-foreground"
           }`}
         >
@@ -143,7 +143,7 @@ const FAQSection = ({
     title: t("faq.title", "Everything kitchens ask us."),
     subtitle: t(
       "faq.subtitle",
-      "From setup to daily operations. Still unsure about something?"
+      "From setup to daily operations. Still unsure about something?",
     ),
     footer: t("faq.footer", "Talk to our team"),
     items: FALLBACK_ITEMS[currentLang] || FALLBACK_ITEMS.en,
@@ -159,14 +159,14 @@ const FAQSection = ({
           <div className="lg:sticky lg:top-[120px]">
             <div className="flex items-center gap-3.5 mb-6">
               <div className="w-10 h-px bg-primary" />
-              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium">
+              <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
                 {content.badge}
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-[48px] font-semibold text-foreground leading-[1.08] tracking-[-0.02em] mb-5 text-balance">
+            <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.08] tracking-[-0.02em] mb-5 text-balance">
               {content.title}
             </h2>
-            <p className="text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-[320px]">
+            <p className="text-sm md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-[320px]">
               {content.subtitle}
             </p>
             <a
