@@ -88,8 +88,8 @@ const BuiltForScaleSection = ({
   ];
 
   return (
-    <section className="relative py-24 md:py-36 border-t border-border/50">
-      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+    <section className="relative py-20 sm:py-24 md:py-36 border-t border-border/50">
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -104,17 +104,17 @@ const BuiltForScaleSection = ({
                 {content.badge}
               </span>
             </div>
-            <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] text-balance">
               {content.title}
             </h2>
           </div>
-          <p className="text-base text-sm md:text-lg text-muted-foreground max-w-[380px] leading-relaxed lg:mb-2">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-[440px] leading-relaxed lg:mb-2">
             {content.subtitle}
           </p>
         </motion.div>
 
         {/* Photo cards grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {personas.map((p, i) => (
             <motion.div
               key={p.title}
@@ -139,14 +139,14 @@ const BuiltForScaleSection = ({
                     "linear-gradient(180deg, hsl(240 7% 8% / 0.1) 30%, hsl(240 7% 8% / 0.92) 100%)",
                 }}
               />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
                 <p className="text-[11px] uppercase tracking-[0.2em] text-primary font-semibold mb-2">
                   {p.stat}
                 </p>
-                <p className="font-display text-xl font-semibold text-foreground mb-2">
+                <p className="font-display text-lg sm:text-xl font-semibold text-foreground mb-2">
                   {p.title}
                 </p>
-                <p className="text-[13px] text-foreground/65 leading-[1.55]">
+                <p className="text-[13px] text-foreground/65 leading-[1.55] max-w-[28ch]">
                   {p.desc}
                 </p>
               </div>
@@ -160,17 +160,17 @@ const BuiltForScaleSection = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="grid md:grid-cols-3 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border mt-12"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/40 rounded-2xl overflow-hidden border border-border mt-12"
         >
           {networkStats.map((s) => (
             <div
               key={s.label}
-              className="bg-card px-7 py-7 text-center hover:bg-accent/40 transition-colors"
+              className="bg-card px-6 sm:px-7 py-6 sm:py-7 text-center hover:bg-accent/40 transition-colors"
             >
-              <p className="font-display text-[32px] font-semibold text-primary tracking-[-0.02em] mb-1">
+              <p className="font-display text-[28px] sm:text-[32px] font-semibold text-primary tracking-[-0.02em] mb-1">
                 <CountUp value={s.value} />
               </p>
-              <p className="text-[13px] font-medium text-muted-foreground">
+              <p className="text-[13px] font-medium text-muted-foreground max-w-[18ch] mx-auto">
                 {s.label}
               </p>
             </div>
