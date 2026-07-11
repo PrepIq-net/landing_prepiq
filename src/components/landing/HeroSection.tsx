@@ -49,7 +49,7 @@ const HeroSection = ({
   ];
 
   return (
-    <section className="relative min-h-[92vh] flex items-end overflow-hidden">
+    <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-end overflow-hidden">
       {/* Background photo with ken burns */}
       <div className="absolute inset-0 overflow-hidden">
         <img
@@ -77,7 +77,7 @@ const HeroSection = ({
       </div>
 
       {/* Content */}
-      <div className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-28 sm:pt-32 md:pt-40 flex flex-col justify-end">
+      <div className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-20 sm:pt-28 md:pt-40 pb-8 sm:pb-0 flex flex-col justify-end">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -99,7 +99,7 @@ const HeroSection = ({
           {/* Headline */}
           <motion.h1
             variants={fadeUp}
-            className="font-display text-3xl md:text-7xl lg:text-[82px] font-semibold leading-[1.05] sm:leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
+            className="font-display text-[clamp(2.25rem,10vw,5.125rem)] md:text-7xl lg:text-[82px] font-semibold leading-[1.05] sm:leading-[1.02] tracking-[-0.03em] text-foreground text-balance"
           >
             {content.titleLine1}
             <br />
@@ -119,13 +119,13 @@ const HeroSection = ({
           {/* CTAs */}
           <motion.div
             variants={fadeUp}
-            className="mt-7 sm:mt-9 flex flex gap-3 sm:gap-4 items-center"
+            className="mt-7 sm:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center"
           >
             <a
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-xs md:text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
+              className="inline-flex w-full sm:w-auto justify-center items-center gap-2.5 bg-primary text-primary-foreground font-semibold text-xs md:text-sm sm:text-base px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] shadow-l2 hover:bg-[hsl(40_70%_46%)] hover:-translate-y-0.5 transition-all duration-200"
             >
               {content.ctaStart}
               <ArrowRight className="h-4 w-4 hidden md:inline-block" />
@@ -134,7 +134,7 @@ const HeroSection = ({
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
+              className="inline-flex w-full sm:w-auto justify-center items-center text-xs md:text-sm sm:text-base font-medium text-foreground border border-foreground/25 bg-background/30 backdrop-blur-sm px-6 sm:px-8 h-12 sm:h-[52px] rounded-[10px] hover:border-primary/60 hover:text-primary transition-all duration-200"
             >
               {content.ctaDemo}
             </a>
@@ -147,10 +147,10 @@ const HeroSection = ({
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="grid grid-cols-3 gap-6 sm:gap-10 md:gap-20 justify-start mt-12 sm:mt-16 md:mt-[72px] py-6 sm:py-8 border-t border-foreground/[0.12] w-full md:w-fit"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-10 md:gap-20 justify-start mt-12 sm:mt-16 md:mt-[72px] py-6 sm:py-8 border-t border-foreground/[0.12] w-full md:w-fit"
         >
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1 min-w-0">
+            <div key={stat.label} className="flex flex-col gap-1 min-w-0 text-center sm:text-left">
               <p
                 className={`font-display text-2xl sm:text-3xl md:text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}
               >

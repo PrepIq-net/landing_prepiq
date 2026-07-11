@@ -222,9 +222,9 @@ const HowItWorksSection = ({
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="relative py-24 md:py-32 border-t border-border/50 section-band scroll-mt-20"
+      className="relative py-20 sm:py-24 md:py-32 border-t border-border/50 section-band scroll-mt-20"
     >
-      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -238,11 +238,11 @@ const HowItWorksSection = ({
                 {content.badge}
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] text-balance">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] text-balance">
               <GoldText text={content.title} />
             </h2>
           </div>
-          <p className="text-base text-muted-foreground max-w-[380px] leading-relaxed lg:mb-2">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-[420px] leading-relaxed lg:mb-2">
             {content.subtitle}
           </p>
         </motion.div>
@@ -265,7 +265,7 @@ const HowItWorksSection = ({
                     : "border-border hover:border-primary/40"
                 }`}
               >
-                <div className="h-[110px] overflow-hidden relative">
+                <div className="h-[clamp(108px,32vw,132px)] overflow-hidden relative">
                   <img
                     src={`/images/phase-${p.id}.jpg`}
                     alt={phaseContent.label}
@@ -290,15 +290,15 @@ const HowItWorksSection = ({
                     {phaseContent.time}
                   </span>
                 </div>
-                <div className="px-5 py-4">
+                <div className="px-4 sm:px-5 py-3.5 sm:py-4">
                   <p
-                    className={`font-display text-[17px] font-semibold mb-1 transition-colors ${
+                    className={`font-display text-[15px] sm:text-[17px] font-semibold mb-1 transition-colors ${
                       active ? "text-foreground" : "text-muted-foreground"
                     }`}
                   >
                     0{p.step} — {phaseContent.label}
                   </p>
-                  <p className="text-[13px] text-muted-foreground">
+                  <p className="text-[12px] sm:text-[13px] text-muted-foreground">
                     {phaseContent.desc}
                   </p>
                 </div>
@@ -349,7 +349,7 @@ const PreviewCard = ({
   children: React.ReactNode;
 }) => (
   <div className="rounded-xl sm:rounded-2xl border border-border bg-card overflow-hidden shadow-l2">
-    <div className="flex items-center justify-between bg-accent/60 px-4 sm:px-6 py-3 sm:py-3.5 border-b border-border/50">
+    <div className="flex flex-wrap items-center justify-between gap-2 bg-accent/60 px-4 sm:px-6 py-3 sm:py-3.5 border-b border-border/50">
       {topBar}
     </div>
     <div className="p-4 sm:p-6 md:p-7 space-y-4 sm:space-y-5">{children}</div>
@@ -419,7 +419,7 @@ const PlanPhase = ({
               {confidence}% {isFr ? "confiance" : "confidence"}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
             {dataSignals.map((s, i) => (
               <button
                 key={s.label}
@@ -788,8 +788,8 @@ const ReviewPhase = ({ content }: { content: HowItWorksContent }) => {
           <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground/50 font-medium mb-3">
             {content.comparison.badge}
           </p>
-          <div className="grid grid-cols-2 divide-x divide-border">
-            <div className="pr-4 space-y-1.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border">
+            <div className="pb-4 sm:pb-0 sm:pr-4 space-y-1.5">
               <p className="text-xs text-muted-foreground">
                 {content.comparison.withoutLabel}
               </p>
@@ -798,7 +798,7 @@ const ReviewPhase = ({ content }: { content: HowItWorksContent }) => {
                 {content.comparison.dailyMarginLost}
               </p>
             </div>
-            <div className="pl-4 space-y-1.5">
+            <div className="pt-4 sm:pt-0 sm:pl-4 space-y-1.5">
               <p className="text-xs text-muted-foreground">
                 {content.comparison.withLabel}
               </p>
@@ -847,7 +847,7 @@ const ReviewPhase = ({ content }: { content: HowItWorksContent }) => {
           </>
         }
       >
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {[
             {
               label: t("howItWorks.previews.stats.wasteSaved"),
