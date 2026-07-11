@@ -1,6 +1,6 @@
   "use client";
 
-  import { useState } from "react";
+  import { useState, useEffect } from "react";
   import Image from "next/image";
   import { usePathname } from "next/navigation";
   import { Button } from "@/components/ui/button";
@@ -22,7 +22,10 @@
     url: string;
   }
 
-  const Navbar = ({ links }: { links: NavLink[] }) => {
+  // 1. We create a constant for the noise SVG so it's clean and reusable
+const NOISE_SVG_URL = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
+
+const Navbar = ({ links }: { links: NavLink[] }) => {
     const { t, i18n } = useTranslation();
     const currentLang = i18n.resolvedLanguage as "en" | "fr";
 
@@ -31,6 +34,17 @@
     const { scrollY, scrollYProgress } = useScroll();
     const pathname = usePathname();
 
+    // Scroll locking
+    useEffect(() => {
+      if (mobileOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "unset";
+      }
+      return () => {
+        document.body.style.overflow = "unset";
+      };
+    }, [mobileOpen]);
     const isActive = (url: string) => url.split("#")[0] === pathname;
 
     useMotionValueEvent(scrollY, "change", (latest) => {
@@ -147,20 +161,27 @@
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 bottom-0 top-16 z-[100] md:hidden flex flex-col p-8 h-[calc(100vh-4rem)] overflow-y-auto"
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed top-20 left-4 right-4 z-[100] md:hidden flex flex-col p-6 rounded-2xl overflow-y-auto max-h-[80vh]"
               style={{
-                backgroundColor: "rgba(10, 10, 12, 0.5)",
-                backdropFilter: "blur(32px) saturate(150%)",
-                WebkitBackdropFilter: "blur(32px) saturate(150%)",
-                borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-                boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.36)",
+                backgroundColor: "rgba(10, 10, 12, 0.85)",
+                backdropFilter: "blur(40px)",
+                WebkitBackdropFilter: "blur(40px)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                boxShadow: "0 20px 50px -12px rgba(0, 0, 0, 0.5)",
               }}
             >
-              <div className="flex flex-col h-full justify-between max-w-sm mx-auto w-full">
+              {/* --- PREMIUM NOISE LAYER FOR MOBILE MENU --- */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.04] z-0 rounded-2xl"
+                style={{ backgroundImage: NOISE_SVG_URL }}
+              />
+
+              <div className="relative z-10 flex flex-col h-full justify-between w-full">
                 <div className="flex flex-col gap-3 mt-4">
                   <motion.a
                     href="/"
@@ -220,6 +241,7 @@
               </div>
             </motion.div>
           )}
+
         </AnimatePresence>
       </nav>
     );
