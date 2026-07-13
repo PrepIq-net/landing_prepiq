@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,9 +18,9 @@ const NotFound = () => {
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">{i18n.resolvedLanguage === 'fr' ? 'Oups ! Page non trouvée' : 'Oops! Page not found'}</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
+        <Link href="/" className="text-primary underline hover:text-primary/90">
           {t("common.backToHome")}
-        </a>
+        </Link>
       </div>
     </div>
   );
