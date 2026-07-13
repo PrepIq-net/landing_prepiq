@@ -32,6 +32,7 @@ enum EntityType {
   USER
   MESSAGE
   MEETING
+  LEGAL_DOC
 }
 
 model User {
@@ -86,6 +87,40 @@ model Section {
   sortOrder     Int     @default(0)
 
   @@index([pageId, isActive, sortOrder])
+}
+
+model LegalDocument {
+  id            String                 @id @default(cuid())
+  slug          String                 @unique // "privacy-policy" | "terms-of-service" | "security"
+  titleEn       String
+  titleFr       String
+  bodyEn        String // markdown
+  bodyFr        String // markdown
+  version       Int                    @default(1)
+  effectiveDate DateTime               @default(now())
+  isPublished   Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  versions      LegalDocumentVersion[]
+
+  @@index([slug, isPublished])
+}
+
+// Immutable snapshot written on every publish — compliance/audit trail.
+model LegalDocumentVersion {
+  id            String        @id @default(cuid())
+  documentId    String
+  document      LegalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  version       Int
+  titleEn       String
+  titleFr       String
+  bodyEn        String
+  bodyFr        String
+  effectiveDate DateTime
+  publishedAt   DateTime      @default(now())
+  publishedBy   String? // admin email
+
+  @@unique([documentId, version])
 }
 
 model Link {

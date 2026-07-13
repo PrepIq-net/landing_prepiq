@@ -37,6 +37,59 @@ export const getActiveFooterLinks = unstable_cache(
   { tags: ["links"] }
 );
 
+// Dates are returned as ISO strings (not Date objects) because unstable_cache
+// JSON-serializes cached values — Dates would silently become strings on
+// cache hits anyway.
+export const getPublishedLegalDocument = unstable_cache(
+  async (slug: string) => {
+    const doc = await prisma.legalDocument.findFirst({
+      where: { slug, isPublished: true },
+      select: {
+        slug: true,
+        titleEn: true,
+        titleFr: true,
+        bodyEn: true,
+        bodyFr: true,
+        version: true,
+        effectiveDate: true,
+        updatedAt: true,
+      },
+    });
+    if (!doc) return null;
+    return {
+      ...doc,
+      effectiveDate: doc.effectiveDate.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    };
+  },
+  ["legal-doc"],
+  { tags: ["legal"] }
+);
+
+export const getPublishedLegalDocuments = unstable_cache(
+  async () => {
+    const docs = await prisma.legalDocument.findMany({
+      where: { isPublished: true },
+      select: {
+        slug: true,
+        titleEn: true,
+        titleFr: true,
+        version: true,
+        effectiveDate: true,
+        updatedAt: true,
+      },
+      orderBy: { slug: "asc" },
+    });
+    return docs.map((d) => ({
+      ...d,
+      effectiveDate: d.effectiveDate.toISOString(),
+      updatedAt: d.updatedAt.toISOString(),
+    }));
+  },
+  ["legal-docs-index"],
+  { tags: ["legal"] }
+);
+
 export const getPageWithSections = unstable_cache(
   async (slug: string) => {
     return prisma.page.findUnique({
