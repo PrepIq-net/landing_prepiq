@@ -32,6 +32,8 @@ enum EntityType {
   USER
   MESSAGE
   MEETING
+  LEGAL_DOC
+  SUPPORT_REQUEST
 }
 
 model User {
@@ -88,6 +90,40 @@ model Section {
   @@index([pageId, isActive, sortOrder])
 }
 
+model LegalDocument {
+  id            String                 @id @default(cuid())
+  slug          String                 @unique // "privacy-policy" | "terms-of-service" | "security"
+  titleEn       String
+  titleFr       String
+  bodyEn        String // markdown
+  bodyFr        String // markdown
+  version       Int                    @default(1)
+  effectiveDate DateTime               @default(now())
+  isPublished   Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  versions      LegalDocumentVersion[]
+
+  @@index([slug, isPublished])
+}
+
+// Immutable snapshot written on every publish — compliance/audit trail.
+model LegalDocumentVersion {
+  id            String        @id @default(cuid())
+  documentId    String
+  document      LegalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  version       Int
+  titleEn       String
+  titleFr       String
+  bodyEn        String
+  bodyFr        String
+  effectiveDate DateTime
+  publishedAt   DateTime      @default(now())
+  publishedBy   String? // admin email
+
+  @@unique([documentId, version])
+}
+
 model Link {
   id        String  @id @default(cuid())
   labelEn   String
@@ -106,6 +142,104 @@ model ContactMessage {
   message   String
   createdAt DateTime @default(now())
   status    String   @default("unread") // "unread", "read", "archived"
+}
+
+enum SupportRequestType {
+  BUG
+  FEATURE_REQUEST
+  INQUIRY
+  FEEDBACK
+}
+
+enum SupportRequestStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum SupportPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model SupportRequest {
+  id    String @id @default(cuid())
+  refNo Int    @unique @default(autoincrement()) // displayed as "PIQ-{refNo}"
+
+  type     SupportRequestType
+  status   SupportRequestStatus @default(NEW)
+  priority SupportPriority      @default(MEDIUM)
+
+  subject String
+  message String
+
+  // Where the reporter wants the reply. Null = they opted out of a reply;
+  // full reporter context below is still captured either way.
+  contactEmail String?
+
+  // Reporter identity, verified server-side by the submitting app.
+  reporterEmail    String
+  reporterName     String?
+  reporterUserId   String?
+  reporterRole     String?
+  organizationId   String?
+  organizationName String?
+  branchId         String?
+  branchName       String?
+
+  // Environment context, auto-captured (mostly useful for bugs).
+  sourceApp  String  @default("web_dashboard")
+  appVersion String?
+  currentUrl String?
+  userAgent  String?
+  locale     String?
+
+  adminNotes String?
+
+  // Feature requests only: whether this appears on the in-app voting board.
+  isPublic Boolean @default(false)
+
+  attachments SupportAttachment[]
+  votes       SupportVote[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  resolvedAt DateTime?
+
+  @@index([type, status])
+  @@index([createdAt])
+}
+
+model SupportAttachment {
+  id        String         @id @default(cuid())
+  requestId String
+  request   SupportRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  // Cloudinary identifiers — publicId + resourceType are required to destroy
+  // the cloud asset when an admin deletes the attachment or its request.
+  publicId     String @unique
+  resourceType String @default("image") // "image" | "raw" | "video"
+  url          String
+  filename     String
+  format       String?
+  bytes        Int     @default(0)
+
+  createdAt DateTime @default(now())
+}
+
+model SupportVote {
+  id        String         @id @default(cuid())
+  requestId String
+  request   SupportRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  voterEmail String
+  voterName  String?
+  createdAt  DateTime @default(now())
+
+  @@unique([requestId, voterEmail])
 }
 
 enum MeetingStatus {
