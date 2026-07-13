@@ -14,6 +14,7 @@ import {
   Key,
   User,
   Clock,
+  Shield,
 } from "iconoir-react";
 
 interface NavItem {
@@ -36,6 +37,7 @@ const CONTENT_SECTIONS: NavSection[] = [
     items: [
       { href: "/admin", label: "Dashboard", icon: ViewGrid, exact: true },
       { href: "/admin/pages", label: "Pages", icon: Page },
+      { href: "/admin/legal", label: "Legal", icon: Shield },
       { href: "/admin/links", label: "Links", icon: LinkIcon },
       { href: "/admin/messages", label: "Communications", icon: Mail },
       { href: "/admin/meetings", label: "Meetings", icon: Calendar },
