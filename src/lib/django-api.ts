@@ -21,7 +21,7 @@ export async function djangoAdminFetch<T = unknown>(
       'Content-Type': 'application/json',
       'X-Admin-Service-Key': serviceKey,
       'X-Admin-Email': callerEmail,
-      ...(init?.headers as Record<string, string> | undefined),
+      ...(init?.headers as Record<string, string>),
     },
   });
 
