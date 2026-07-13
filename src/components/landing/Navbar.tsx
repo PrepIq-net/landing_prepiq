@@ -36,13 +36,14 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
     // Scroll locking
     useEffect(() => {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
       if (mobileOpen) {
         document.body.style.overflow = "hidden";
       } else {
-        document.body.style.overflow = "unset";
+        document.body.style.overflow = originalStyle;
       }
       return () => {
-        document.body.style.overflow = "unset";
+        document.body.style.overflow = originalStyle;
       };
     }, [mobileOpen]);
     const isActive = (url: string) => url.split("#")[0] === pathname;
