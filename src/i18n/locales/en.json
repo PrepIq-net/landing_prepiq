@@ -8,10 +8,10 @@
     "startFree": "Start Free"
   },
   "hero": {
-    "badge": "Precision prep planning, powered by AI",
-    "titleLine1": "Prep with confidence.",
-    "titleLine2": "Know exactly what — and how much — to cook.",
-    "subtitle": "Every morning, PrepIQ gives your team a precise prep plan — built from your sales history, demand signals, and real kitchen patterns. No guesswork. No waste.",
+    "badge": "Kitchen intelligence, end to end",
+    "titleLine1": "Plan the day. Run the line.",
+    "titleLine2": "Improve every service.",
+    "subtitle": "PrepIQ turns demand into a daily plan — prep, ingredients, and staffing — coordinates the line as service runs, and learns from every shift. One system for how your kitchen actually operates.",
     "proof": {
       "lessWaste": "Less waste",
       "noStockouts": "No stockouts",
@@ -21,8 +21,8 @@
     "ctaDemo": "Book a 10-min Demo",
     "stats": {
       "accuracy": "Forecast accuracy",
-      "waste": "Food waste",
-      "stockouts": "Stockouts avg/week"
+      "waste": "Less food waste",
+      "stockouts": "Stockouts a week"
     }
   },
   "footer": {
@@ -55,9 +55,21 @@
       "api": "REST API"
     },
     "steps": [
-      { "num": "01", "title": "Create organization", "desc": "Set up your kitchen in under 2 minutes." },
-      { "num": "02", "title": "Connect POS or upload sales", "desc": "We support major POS systems and CSV uploads." },
-      { "num": "03", "title": "Get today's forecast", "desc": "Start seeing intelligent prep suggestions immediately." }
+      {
+        "num": "01",
+        "title": "Create organization",
+        "desc": "Set up your kitchen in under 2 minutes."
+      },
+      {
+        "num": "02",
+        "title": "Connect POS or upload sales",
+        "desc": "We support major POS systems and CSV uploads."
+      },
+      {
+        "num": "03",
+        "title": "Get today's forecast",
+        "desc": "Start seeing intelligent prep suggestions immediately."
+      }
     ]
   },
   "contact": {
@@ -169,16 +181,40 @@
     "monthlyLosses": "That's ~{{amount}}/month in losses",
     "timeline": {
       "without": [
-        { "label": "Chef guesses prep quantities based on gut feel", "detail": "No data, no forecast" },
-        { "label": "Salmon selling fast — no one notices", "detail": "No alerts or tracking" },
-        { "label": "Soup sold out — customers walk away", "detail": "Lost revenue: ~{{amount}}" },
-        { "label": "5 kg produce wasted, thrown in the bin", "detail": "Waste cost: {{amount}}" }
+        {
+          "label": "Chef guesses prep quantities based on gut feel",
+          "detail": "No data, no forecast"
+        },
+        {
+          "label": "Salmon selling fast — no one notices",
+          "detail": "No alerts or tracking"
+        },
+        {
+          "label": "Soup sold out — customers walk away",
+          "detail": "Lost revenue: ~{{amount}}"
+        },
+        {
+          "label": "5 kg produce wasted, thrown in the bin",
+          "detail": "Waste cost: {{amount}}"
+        }
       ],
       "with": [
-        { "label": "AI forecast generated from 8 data signals", "detail": "Confidence: 96%" },
-        { "label": "Live alert: salmon trending above forecast", "detail": "Auto-notification sent" },
-        { "label": "Prep adjusted early — zero stockouts today", "detail": "All items available" },
-        { "label": "Only 0.8 kg waste — forecast was 96% accurate", "detail": "Model updated for tomorrow" }
+        {
+          "label": "AI forecast generated from 8 data signals",
+          "detail": "Confidence: 96%"
+        },
+        {
+          "label": "Live alert: salmon trending above forecast",
+          "detail": "Auto-notification sent"
+        },
+        {
+          "label": "Prep adjusted early — zero stockouts today",
+          "detail": "All items available"
+        },
+        {
+          "label": "Only 0.8 kg waste — forecast was 96% accurate",
+          "detail": "Model updated for tomorrow"
+        }
       ]
     },
     "stats": {
@@ -220,13 +256,34 @@
       }
     },
     "signals": {
-      "day": { "label": "Tuesday Pattern", "detail": "Historically 6% lower foot traffic" },
-      "weather": { "label": "Rain at 2 PM", "detail": "+18% soup demand on rainy days" },
-      "trend": { "label": "Chicken Trending", "detail": "+7% demand over last 7 days" },
-      "event": { "label": "Local Match Tonight", "detail": "Evening rush expected +22%" },
-      "stockout": { "label": "Vegetable Stockout Yesterday", "detail": "Under-prep flagged, 14 orders missed" },
-      "chef": { "label": "Chef Override History", "detail": "Chef increased vegetables 80% of Tuesdays" },
-      "network": { "label": "Branch Network Intelligence", "detail": "London branch wasted 6kg chicken on rainy Tuesdays" }
+      "day": {
+        "label": "Tuesday Pattern",
+        "detail": "Historically 6% lower foot traffic"
+      },
+      "weather": {
+        "label": "Rain at 2 PM",
+        "detail": "+18% soup demand on rainy days"
+      },
+      "trend": {
+        "label": "Chicken Trending",
+        "detail": "+7% demand over last 7 days"
+      },
+      "event": {
+        "label": "Local Match Tonight",
+        "detail": "Evening rush expected +22%"
+      },
+      "stockout": {
+        "label": "Vegetable Stockout Yesterday",
+        "detail": "Under-prep flagged, 14 orders missed"
+      },
+      "chef": {
+        "label": "Chef Override History",
+        "detail": "Chef increased vegetables 80% of Tuesdays"
+      },
+      "network": {
+        "label": "Branch Network Intelligence",
+        "detail": "London branch wasted 6kg chicken on rainy Tuesdays"
+      }
     },
     "reasons": {
       "lowerTraffic": "Lower weekday traffic",
@@ -257,12 +314,28 @@
     "badge": "The Reality",
     "title": "Instinct Can't Keep Up Anymore",
     "subtitle": "Kitchens are more volatile than ever. The variables your team juggles every morning are compounding — and spreadsheets aren't learning from yesterday.",
-    "cta": "PrepIQ turns these variables into <gold>daily signals</gold>",
+    "cta": "PrepIQ replaces the guesswork with a plan your whole kitchen runs on.",
     "items": {
-      "foodCosts": { "title": "Rising Food Costs", "desc": "Every wasted kilogram hits harder than it did last year.", "label": "avg. cost increase" },
-      "weather": { "title": "Weather Shifts Traffic", "desc": "A rainy Tuesday behaves nothing like a sunny one.", "label": "demand swing" },
-      "events": { "title": "Event-Driven Surges", "desc": "Holidays and local events spike demand unpredictably.", "label": "peak multiplier" },
-      "delivery": { "title": "Delivery Demand Spikes", "desc": "Online orders add volatility your gut can't track.", "label": "YoY growth" }
+      "foodCosts": {
+        "title": "Rising Food Costs",
+        "desc": "Every wasted kilogram hits harder than it did last year.",
+        "label": "avg. cost increase"
+      },
+      "weather": {
+        "title": "Weather Shifts Traffic",
+        "desc": "A rainy Tuesday behaves nothing like a sunny one.",
+        "label": "demand swing"
+      },
+      "events": {
+        "title": "Event-Driven Surges",
+        "desc": "Holidays and local events spike demand unpredictably.",
+        "label": "peak multiplier"
+      },
+      "delivery": {
+        "title": "Delivery Demand Spikes",
+        "desc": "Online orders add volatility your gut can't track.",
+        "label": "YoY growth"
+      }
     }
   },
   "whyPrepIQ": {
@@ -270,20 +343,47 @@
     "title": "Why We Built PrepIQ",
     "footer": "PrepIQ exists because kitchens deserve the same intelligence the world's best supply chains already use.",
     "points": [
-      { "highlight": "Restaurants lose thousands every month", "body": "from over-prep waste and stockouts — problems hiding in plain sight." },
-      { "highlight": "Most kitchens still rely on intuition", "body": "or spreadsheets that never learn from yesterday's mistakes." },
-      { "highlight": "PrepIQ brings forecasting intelligence", "body": "used by airlines and retailers — adapted for real kitchen operations." }
+      {
+        "highlight": "Restaurants lose thousands every month",
+        "body": "from over-prep waste and stockouts — problems hiding in plain sight."
+      },
+      {
+        "highlight": "Most kitchens still rely on intuition",
+        "body": "or spreadsheets that never learn from yesterday's mistakes."
+      },
+      {
+        "highlight": "PrepIQ brings forecasting intelligence",
+        "body": "used by airlines and retailers — adapted for real kitchen operations."
+      }
     ]
   },
   "howItWorks": {
     "badge": "The Intelligence Loop",
     "title": "How PrepIQ Works <gold>Every Day</gold>",
-    "subtitle": "Three phases. One learning loop. Every day your kitchen gets smarter, wastes less, and earns more.",
+    "subtitle": "Three phases, one continuous loop. Plan the day, coordinate the line, and learn from every service — so your kitchen runs a little tighter each day.",
     "walkthrough": "60-second walkthrough",
     "phases": {
-      "plan": { "label": "Plan", "time": "Morning", "desc": "AI forecasts your prep", "title": "AI-Powered Prep Forecast", "body": "Before your kitchen opens, PrepIQ analyses data from your POS system to predict exactly how much of each item to prepare. No more gut feelings — just data-driven quantities with confidence scores." },
-      "live": { "label": "Monitor", "time": "Service", "desc": "Track sales in real-time", "title": "Real-Time Monitoring", "body": "Once service begins, PrepIQ tracks sales via your POS integration. See what's selling fast, what's lagging, and where risk is building — all in real time." },
-      "review": { "label": "Learn", "time": "Close", "desc": "Review & improve", "title": "Learn & Improve", "body": "After service, PrepIQ generates a full performance review: what was wasted, what stocked out, how accurate the forecast was, and what the chef overrides actually cost. Every data point sharpens tomorrow's predictions." }
+      "plan": {
+        "label": "Plan",
+        "time": "Morning",
+        "desc": "Build the day's plan",
+        "title": "The morning plan",
+        "body": "Before your kitchen opens, PrepIQ forecasts demand and turns it into a plan your team can act on — prep quantities with confidence scores, the ingredients to buy, and a staff schedule that matches the day."
+      },
+      "live": {
+        "label": "Coordinate",
+        "time": "Service",
+        "desc": "Run the line, live",
+        "title": "Coordinate the line",
+        "body": "When the plan is locked, PrepIQ turns it into assigned tasks on a live board, tracks sales as service runs, and flags anything trending toward a stockout — so the team stays ahead of the rush."
+      },
+      "review": {
+        "label": "Improve",
+        "time": "Close",
+        "desc": "Reconcile & learn",
+        "title": "Improve every service",
+        "body": "After service, PrepIQ reviews what actually happened — what missed forecast and why, separating demand surprises from operational causes. Every override and outcome sharpens tomorrow's plan."
+      }
     },
     "signalsTitle": "Signals We Analyze",
     "signals": {
@@ -351,32 +451,72 @@
       }
     },
     "liveFeatures": [
-      { "title": "Live depletion tracking", "desc": "See remaining stock update in real-time as orders come in." },
-      { "title": "Stockout prediction", "desc": "AI predicts when you'll run out based on current sell-through rate." },
-      { "title": "Smart alerts", "desc": "Get notified before a stockout happens — not after." },
-      { "title": "Pace analysis", "desc": "Compare today's pace vs forecast to spot deviations early." }
+      {
+        "title": "Live depletion tracking",
+        "desc": "See remaining stock update in real-time as orders come in."
+      },
+      {
+        "title": "Stockout prediction",
+        "desc": "AI predicts when you'll run out based on current sell-through rate."
+      },
+      {
+        "title": "Smart alerts",
+        "desc": "Get notified before a stockout happens — not after."
+      },
+      {
+        "title": "Pace analysis",
+        "desc": "Compare today's pace vs forecast to spot deviations early."
+      }
     ],
     "reviewFeatures": [
-      { "title": "Waste analysis", "desc": "See exactly what was over-prepped and the financial impact." },
-      { "title": "Forecast vs actual", "desc": "Item-by-item accuracy breakdown with trend over time." },
-      { "title": "Override scoring", "desc": "Track how often chef overrides outperform the AI — and vice versa." },
-      { "title": "AI model update", "desc": "Today's data is fed back to improve tomorrow's forecast automatically." }
+      {
+        "title": "Waste analysis",
+        "desc": "See exactly what was over-prepped and the financial impact."
+      },
+      {
+        "title": "Forecast vs actual",
+        "desc": "Item-by-item accuracy breakdown with trend over time."
+      },
+      {
+        "title": "Override scoring",
+        "desc": "Track how often chef overrides outperform the AI — and vice versa."
+      },
+      {
+        "title": "AI model update",
+        "desc": "Today's data is fed back to improve tomorrow's forecast automatically."
+      }
     ]
   },
   "marginGuard": {
     "badge": "Margin Guard",
     "title": "AI That Protects Your Profit",
     "subtitle": "PrepIQ doesn't just forecast — it watches every prep decision and catches margin leaks before they cost you money.",
-    "steps": ["Predict", "Detect", "Correct"],
+    "steps": [
+      "Predict",
+      "Detect",
+      "Correct"
+    ],
     "atRisk": "{{amount}} at risk",
     "suggested": "Suggested: {{action}}",
     "monthlyProtection": "Monthly Margin Protection",
     "totalProtection": "Total Monthly Protection",
     "roiNote": "PrepIQ pays for itself in the first 48 hours.",
     "alerts": {
-      "waste": { "type": "Waste Risk", "detail": "Demand trending 12% lower than forecast. Next batch likely to produce 4kg excess.", "action": "Delay next batch 45 minutes." },
-      "stockout": { "type": "Stockout Risk", "detail": "Trending 18% above forecast. Sellout expected at 7:20 PM.", "action": "Prepare +12 pieces now." },
-      "leak": { "type": "Margin Leak", "detail": "Waste has occurred 4 days in a row. Pattern detected.", "action": "Reduce base prep by 1.5kg." }
+      "waste": {
+        "type": "Waste Risk",
+        "detail": "Demand trending 12% lower than forecast. Next batch likely to produce 4kg excess.",
+        "action": "Delay next batch 45 minutes."
+      },
+      "stockout": {
+        "type": "Stockout Risk",
+        "detail": "Trending 18% above forecast. Sellout expected at 7:20 PM.",
+        "action": "Prepare +12 pieces now."
+      },
+      "leak": {
+        "type": "Margin Leak",
+        "detail": "Waste has occurred 4 days in a row. Pattern detected.",
+        "action": "Reduce base prep by 1.5kg."
+      }
     },
     "leakTypes": {
       "overprep": "Overprep Waste",
@@ -389,9 +529,18 @@
     "title": "What Better Prep Means",
     "subtitle": "Real savings from day one. Not projections — results kitchens using PrepIQ actually see.",
     "metrics": {
-      "waste": { "label": "Waste Reduction", "desc": "Less food thrown away. Every day." },
-      "revenue": { "label": "Revenue Recovery", "desc": "From stockouts you didn't know you had." },
-      "saved": { "label": "Saved Daily", "desc": "No more spreadsheets. No more guessing." }
+      "waste": {
+        "label": "Waste Reduction",
+        "desc": "Less food thrown away. Every day."
+      },
+      "revenue": {
+        "label": "Revenue Recovery",
+        "desc": "From stockouts you didn't know you had."
+      },
+      "saved": {
+        "label": "Saved Daily",
+        "desc": "No more spreadsheets. No more guessing."
+      }
     },
     "calculator": {
       "title": "Savings Calculator",
@@ -414,10 +563,26 @@
     "title": "Who It's For",
     "subtitle": "Built for teams who take food operations seriously — from single kitchens to global networks.",
     "personas": {
-      "multiBranch": { "title": "Multi-Branch Restaurants", "desc": "Centralize prep intelligence across all locations. One dashboard, every kitchen aligned.", "stat": "6+ locations managed" },
-      "brands": { "title": "Growing Food Brands", "desc": "Scale production without scaling waste. Let data drive your daily output.", "stat": "2× faster scaling" },
-      "chefs": { "title": "Data-Aware Chefs", "desc": "Make prep decisions backed by real data, not memory. Stay in control, always.", "stat": "92% accuracy avg." },
-      "ops": { "title": "Operations Managers", "desc": "See cost impact and forecast accuracy daily. Know exactly where margin leaks.", "stat": "Real-time visibility" }
+      "multiBranch": {
+        "title": "Multi-Branch Restaurants",
+        "desc": "Centralize prep intelligence across all locations. One dashboard, every kitchen aligned.",
+        "stat": "6+ locations managed"
+      },
+      "brands": {
+        "title": "Growing Food Brands",
+        "desc": "Scale production without scaling waste. Let data drive your daily output.",
+        "stat": "2× faster scaling"
+      },
+      "chefs": {
+        "title": "Data-Aware Chefs",
+        "desc": "Make prep decisions backed by real data, not memory. Stay in control, always.",
+        "stat": "92% accuracy avg."
+      },
+      "ops": {
+        "title": "Operations Managers",
+        "desc": "See cost impact and forecast accuracy daily. Know exactly where margin leaks.",
+        "stat": "Real-time visibility"
+      }
     }
   },
   "interactiveDemo": {
@@ -425,10 +590,22 @@
     "title": "Walk Through a Day With PrepIQ",
     "subtitle": "From morning forecast to end-of-day results — interact with each step and see the impact.",
     "steps": {
-      "forecast": { "label": "Forecast Ready", "desc": "PrepIQ analyzes 8 signal layers and generates your prep list." },
-      "adjust": { "label": "Chef Reviews", "desc": "Your team reviews, adjusts, and commits the prep plan." },
-      "live": { "label": "Live Service", "desc": "Real-time tracking alerts you before stockouts happen." },
-      "result": { "label": "Day Closes", "desc": "See exactly what you saved — the model learns for tomorrow." }
+      "forecast": {
+        "label": "Forecast Ready",
+        "desc": "PrepIQ analyzes 8 signal layers and generates your prep list."
+      },
+      "adjust": {
+        "label": "Chef Reviews",
+        "desc": "Your team reviews, adjusts, and commits the prep plan."
+      },
+      "live": {
+        "label": "Live Service",
+        "desc": "Real-time tracking alerts you before stockouts happen."
+      },
+      "result": {
+        "label": "Day Closes",
+        "desc": "See exactly what you saved — the model learns for tomorrow."
+      }
     },
     "forecast": {
       "prepList": "Prep List — {{count}} items",
@@ -504,9 +681,20 @@
     "titleLine2": "Every Kitchen <gold>Teaches.</gold>",
     "subtitle": "When one branch makes a mistake, every other branch is protected. PrepIQ's AI learns from each location and automatically prevents the same issue across your entire network.",
     "steps": {
-      "one": { "title": "Step 1 · Problem Detected", "desc": "One branch hits an issue", "body": "Waste, stockout, or demand shift detected at any location" },
-      "two": { "title": "Step 2 · Auto-Protected", "desc": "AI learns the pattern", "body": "Machine learning identifies the root cause and builds a prevention model" },
-      "three": { "desc": "All branches protected", "body": "The fix is automatically applied everywhere — before the problem repeats" }
+      "one": {
+        "title": "Step 1 · Problem Detected",
+        "desc": "One branch hits an issue",
+        "body": "Waste, stockout, or demand shift detected at any location"
+      },
+      "two": {
+        "title": "Step 2 · Auto-Protected",
+        "desc": "AI learns the pattern",
+        "body": "Machine learning identifies the root cause and builds a prevention model"
+      },
+      "three": {
+        "desc": "All branches protected",
+        "body": "The fix is automatically applied everywhere — before the problem repeats"
+      }
     },
     "aiLearning": "AI Learning",
     "networkImpact": "Network Impact",
@@ -514,9 +702,27 @@
     "flywheelTitle": "How it gets smarter over time",
     "flywheelFooter": "The more branches you add, the faster every kitchen learns. A true network-effect intelligence system.",
     "scenarios": {
-      "waste": { "tag": "Waste Prevention", "problem": "Over-prepped avocados on Mondays — 8kg wasted weekly", "aiLearning": "AI detects pattern: Monday avocado demand is 35% lower than forecast", "prevention": "Monday avocado prep reduced automatically", "saved": "$2,100/mo saved across network" },
-      "stockout": { "tag": "Stockout Prevention", "problem": "Ran out of chicken during Friday dinner rush — lost $1,200 in sales", "aiLearning": "AI detects pattern: Friday chicken demand spikes 40% after 6 PM", "prevention": "Friday chicken prep increased proactively", "saved": "$4,800/mo revenue protected" },
-      "seasonal": { "tag": "Seasonal Intelligence", "problem": "Soup sales dropped 60% as temperatures rose — excess inventory spoiled", "aiLearning": "AI detects pattern: Soup demand inversely correlates with temperature above 28°C", "prevention": "Soup prep auto-scales with weather forecast", "saved": "$1,600/mo saved across network" }
+      "waste": {
+        "tag": "Waste Prevention",
+        "problem": "Over-prepped avocados on Mondays — 8kg wasted weekly",
+        "aiLearning": "AI detects pattern: Monday avocado demand is 35% lower than forecast",
+        "prevention": "Monday avocado prep reduced automatically",
+        "saved": "$2,100/mo saved across network"
+      },
+      "stockout": {
+        "tag": "Stockout Prevention",
+        "problem": "Ran out of chicken during Friday dinner rush — lost $1,200 in sales",
+        "aiLearning": "AI detects pattern: Friday chicken demand spikes 40% after 6 PM",
+        "prevention": "Friday chicken prep increased proactively",
+        "saved": "$4,800/mo revenue protected"
+      },
+      "seasonal": {
+        "tag": "Seasonal Intelligence",
+        "problem": "Soup sales dropped 60% as temperatures rose — excess inventory spoiled",
+        "aiLearning": "AI detects pattern: Soup demand inversely correlates with temperature above 28°C",
+        "prevention": "Soup prep auto-scales with weather forecast",
+        "saved": "$1,600/mo saved across network"
+      }
     }
   },
   "globalReady": {
@@ -524,10 +730,22 @@
     "title": "Built for Global Kitchens",
     "subtitle": "PrepIQ adapts to your region, your currency, and your kitchen's rhythm.",
     "features": {
-      "currency": { "label": "Multi-currency", "desc": "Supports USD, EUR, GBP, AED, NGN and more. Costs stay local." },
-      "timezone": { "label": "Timezone aware", "desc": "Forecasts align to your kitchen's operating hours, wherever you are." },
-      "localized": { "label": "Localized forecasts", "desc": "Regional holidays, local events, and cultural patterns built in." },
-      "support": { "label": "Multi-branch support", "desc": "Roll up or drill down. Compare performance across your network." }
+      "currency": {
+        "label": "Multi-currency",
+        "desc": "Supports USD, EUR, GBP, AED, NGN and more. Costs stay local."
+      },
+      "timezone": {
+        "label": "Timezone aware",
+        "desc": "Forecasts align to your kitchen's operating hours, wherever you are."
+      },
+      "localized": {
+        "label": "Localized forecasts",
+        "desc": "Regional holidays, local events, and cultural patterns built in."
+      },
+      "support": {
+        "label": "Multi-branch support",
+        "desc": "Roll up or drill down. Compare performance across your network."
+      }
     },
     "regions": {
       "na": "North America",
@@ -569,9 +787,21 @@
     },
     "footer": "All plans include encrypted data, SOC 2 practices, and dedicated onboarding. Enterprise deployments with 10+ locations get custom pricing — <primary>talk to sales</primary>.",
     "plans": {
-      "core": { "name": "Core", "tagline": "Daily Operational Visibility", "cta": "Start Free Pilot" },
-      "intelligence": { "name": "Intelligence", "tagline": "Margin Protection Intelligence", "cta": "Get Started" },
-      "command": { "name": "Command", "tagline": "Multi-Branch Command Center", "cta": "Talk to Sales" }
+      "core": {
+        "name": "Core",
+        "tagline": "Daily Operational Visibility",
+        "cta": "Start Free Pilot"
+      },
+      "intelligence": {
+        "name": "Intelligence",
+        "tagline": "Margin Protection Intelligence",
+        "cta": "Get Started"
+      },
+      "command": {
+        "name": "Command",
+        "tagline": "Multi-Branch Command Center",
+        "cta": "Talk to Sales"
+      }
     }
   },
   "faq": {
@@ -581,9 +811,9 @@
     "footer": "Still have questions? <contact>Talk to our team →</contact>"
   },
   "finalCTA": {
-    "badge": "Trusted by kitchens reducing waste daily",
-    "title": "See Your Kitchen's <gold>Intelligence</gold> Today.",
-    "subtitle": "Stop guessing. Start every morning with a clear, data-backed prep plan that protects your margins.",
+    "badge": "One system for how your kitchen runs",
+    "title": "Run tomorrow on a <gold>plan</gold>, not a guess.",
+    "subtitle": "Plan the prep, staff the line, and let every service make the next one sharper. See PrepIQ on your own kitchen's numbers.",
     "ctaStart": "Start Free Pilot",
     "ctaDemo": "Book a 10-min Demo"
   },
@@ -621,5 +851,46 @@
   "security": {
     "title": "Security at PrepIQ",
     "subtitle": "Your kitchen data is the backbone of your operations. We treat it with the same care you put into every plate — protected at every layer, audited regularly, and never sold to third parties."
+  },
+  "operations": {
+    "badge": "What PrepIQ does",
+    "title": "The operating system for your kitchen's day.",
+    "subtitle": "Not another forecast tool. PrepIQ runs the whole cycle — it plans the day, coordinates the line through service, and gets sharper every time you cook.",
+    "footer": "One loop. Every day your kitchen runs tighter than the last.",
+    "pillars": {
+      "plan": {
+        "phase": "Before open",
+        "title": "Plan the day",
+        "body": "Every morning, PrepIQ turns demand into a plan your team can act on — how much to prep, what to buy, and who's on the line.",
+        "features": [
+          "Demand forecast from sales, weather, events & local signals",
+          "Prep quantities with confidence scores — chefs stay in control",
+          "Ingredient requirements & purchasing, calculated automatically",
+          "Labor schedules built to match the day's demand"
+        ]
+      },
+      "coordinate": {
+        "phase": "During service",
+        "title": "Coordinate the line",
+        "body": "Once the plan is locked, PrepIQ turns it into assigned work and watches service live — so nothing slips and everyone knows what's next.",
+        "features": [
+          "AI turns the plan into tasks, assigned to staff on shift",
+          "A live board tracks what's to do, doing, and done",
+          "Live alerts when an item is trending toward a stockout",
+          "One place for the team to coordinate — web and mobile"
+        ]
+      },
+      "improve": {
+        "phase": "After close, every night",
+        "title": "Improve every service",
+        "body": "After service, PrepIQ reconciles the plan against what actually happened and learns — so tomorrow starts sharper than today.",
+        "features": [
+          "End-of-day variance review — what missed, and why",
+          "Separates demand surprises from operational causes",
+          "Every override and outcome feeds the next forecast",
+          "Waste, accuracy & margin, tracked over time"
+        ]
+      }
+    }
   }
 }

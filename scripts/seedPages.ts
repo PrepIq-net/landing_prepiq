@@ -84,21 +84,21 @@ const EXPLORE = {
   en: {
     badge: "Explore PrepIQ",
     title: "See what's <gold>under the hood</gold>",
-    subtitle: "The forecast engine, the plans it comes in, and the team behind it — three stops, five minutes.",
+    subtitle: "The system, the plans it comes in, and the team behind it — three stops, five minutes.",
     items: [
-      { icon: "brain", title: "How It Works", desc: "Follow a day in a PrepIQ kitchen — from the morning forecast to live service tracking to the nightly learning loop.", cta: "See the system", href: "/how-it-works" },
+      { icon: "brain", title: "How It Works", desc: "Follow a day in a PrepIQ kitchen — from the morning plan to live service coordination to the nightly learning loop.", cta: "See the system", href: "/how-it-works" },
       { icon: "pricing", title: "Pricing", desc: "Three plans that scale from a single branch to a global network — each built to recover more margin than it costs.", cta: "Compare plans", href: "/pricing" },
-      { icon: "contact", title: "Contact", desc: "Questions about setup, integrations, or enterprise rollout? Talk directly to the team behind the forecasts.", cta: "Get in touch", href: "/contact" },
+      { icon: "contact", title: "Contact", desc: "Questions about setup, integrations, or enterprise rollout? Talk directly to the team behind PrepIQ.", cta: "Get in touch", href: "/contact" },
     ],
   },
   fr: {
     badge: "Explorer PrepIQ",
     title: "Regardez <gold>sous le capot</gold>",
-    subtitle: "Le moteur de prévision, les forfaits disponibles et l'équipe derrière — trois étapes, cinq minutes.",
+    subtitle: "Le système, les forfaits disponibles et l'équipe derrière — trois étapes, cinq minutes.",
     items: [
-      { icon: "brain", title: "Comment ça marche", desc: "Suivez une journée dans une cuisine PrepIQ — de la prévision du matin au suivi en direct jusqu'à la boucle d'apprentissage.", cta: "Voir le système", href: "/how-it-works" },
+      { icon: "brain", title: "Comment ça marche", desc: "Suivez une journée dans une cuisine PrepIQ — du plan du matin à la coordination en direct jusqu'à la boucle d'apprentissage.", cta: "Voir le système", href: "/how-it-works" },
       { icon: "pricing", title: "Tarification", desc: "Trois forfaits qui évoluent d'un site unique à un réseau mondial — chacun conçu pour récupérer plus de marge qu'il n'en coûte.", cta: "Comparer les forfaits", href: "/pricing" },
-      { icon: "contact", title: "Contact", desc: "Des questions sur la configuration, les intégrations ou un déploiement entreprise ? Parlez directement à l'équipe.", cta: "Nous écrire", href: "/contact" },
+      { icon: "contact", title: "Contact", desc: "Des questions sur la configuration, les intégrations ou un déploiement entreprise ? Parlez directement à l'équipe PrepIQ.", cta: "Nous écrire", href: "/contact" },
     ],
   },
 };
@@ -170,8 +170,8 @@ const PAGE_HEADERS = {
 
 const META_DESCRIPTIONS: Record<string, { en: string; fr: string }> = {
   home: {
-    en: "PrepIQ forecasts daily kitchen demand so you prep the right amount — less waste, no stockouts, better margins.",
-    fr: "PrepIQ prévoit la demande quotidienne de votre cuisine pour préparer la juste quantité — moins de gaspillage, zéro rupture, de meilleures marges.",
+    en: "PrepIQ is kitchen intelligence, end to end — it plans the day's prep, ingredients and staffing, coordinates the line through service, and learns from every shift.",
+    fr: "PrepIQ, c'est l'intelligence cuisine de bout en bout — elle planifie la mise en place, les ingrédients et le personnel, coordonne le service et apprend de chaque shift.",
   },
   "how-it-works": {
     en: "See how PrepIQ turns sales history, weather, events, and chef feedback into a precise daily prep plan for your kitchen.",
@@ -198,6 +198,19 @@ function buildContent(loc: any, isFr: boolean) {
       ctaStart: loc.hero.ctaStart,
       ctaDemo: loc.hero.ctaDemo,
       stats: loc.hero.stats,
+    },
+    operations: {
+      badge: loc.operations.badge,
+      title: loc.operations.title,
+      subtitle: loc.operations.subtitle,
+      footer: loc.operations.footer,
+      pillars: ["plan", "coordinate", "improve"].map((k) => ({
+        icon: k,
+        phase: loc.operations.pillars[k].phase,
+        title: loc.operations.pillars[k].title,
+        body: loc.operations.pillars[k].body,
+        features: loc.operations.pillars[k].features,
+      })),
     },
     integrations: {
       badge: loc.integrations.badge,
@@ -418,6 +431,7 @@ async function main() {
   // Section definitions, reused across pages
   const SECTIONS = {
     hero: { componentType: "HeroSection", titleEn: "Hero", titleFr: "Héros", contentJson: { en: enContent.hero, fr: frContent.hero } },
+    operations: { componentType: "OperationsSection", titleEn: "What PrepIQ Does", titleFr: "Ce que fait PrepIQ", contentJson: { en: enContent.operations, fr: frContent.operations } },
     integrations: { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: { en: enContent.integrations, fr: frContent.integrations } },
     costOfGuessing: { componentType: "CostOfGuessingSection", titleEn: "The Cost of Guessing", titleFr: "Le Coût de l'Incertitude", contentJson: { en: enContent.costOfGuessing, fr: frContent.costOfGuessing } },
     howItWorks: { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: { en: enContent.howItWorks, fr: frContent.howItWorks } },
@@ -443,7 +457,7 @@ async function main() {
   const marketingPages = [
     {
       slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
-      sections: [SECTIONS.hero, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.explore, SECTIONS.finalCTA],
+      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.explore, SECTIONS.finalCTA],
     },
     {
       slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,
