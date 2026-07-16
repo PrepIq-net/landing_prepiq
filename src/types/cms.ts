@@ -310,3 +310,19 @@ export interface FinalCTAContent {
   ctaDemo: string;
   proofs: string[];
 }
+
+export interface OperationsPillar {
+  icon: string;
+  phase: string;
+  title: string;
+  body: string;
+  features: string[];
+}
+
+export interface OperationsContent {
+  badge: string;
+  title: string;
+  subtitle: string;
+  pillars: OperationsPillar[];
+  footer: string;
+}
