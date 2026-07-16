@@ -22,9 +22,6 @@
     url: string;
   }
 
-  // 1. We create a constant for the noise SVG so it's clean and reusable
-const NOISE_SVG_URL = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
-
 const Navbar = ({ links }: { links: NavLink[] }) => {
     const { t, i18n } = useTranslation();
     const currentLang = i18n.resolvedLanguage as "en" | "fr";
@@ -160,88 +157,69 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
 
         <AnimatePresence>
           {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed top-20 left-4 right-4 z-[100] md:hidden flex flex-col p-6 rounded-2xl overflow-y-auto max-h-[80vh]"
-              style={{
-                backgroundColor: "rgba(10, 10, 12, 0.85)",
-                backdropFilter: "blur(40px)",
-                WebkitBackdropFilter: "blur(40px)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                boxShadow: "0 20px 50px -12px rgba(0, 0, 0, 0.5)",
-              }}
-            >
-              {/* --- PREMIUM NOISE LAYER FOR MOBILE MENU --- */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 opacity-[0.04] z-0 rounded-2xl"
-                style={{ backgroundImage: NOISE_SVG_URL }}
+            <>
+              {/* Scrim below the bar to focus the menu and close on tap */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="fixed inset-x-0 bottom-0 z-40 bg-background/70 md:hidden"
+                style={{ top: scrolled ? "3.5rem" : "4rem" }}
+                onClick={() => setMobileOpen(false)}
               />
 
-              <div className="relative z-10 flex flex-col h-full justify-between w-full">
-                <div className="flex flex-col gap-3 mt-4">
-                  <motion.a
-                    href="/"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className={`flex items-center text-xl font-semibold text-foreground transition-all rounded-xl px-5 py-4 border ${
-                      pathname === "/"
-                        ? "border-primary/40 bg-primary/10 text-primary"
-                        : "border-transparent bg-white/5 hover:bg-white/10"
-                    }`}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {currentLang === "fr" ? "Accueil" : "Home"}
-                  </motion.a>
-                  {links.map((link, i) => (
-                    <motion.a
-                      key={link.id}
-                      href={link.url}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (i + 2) * 0.05 }}
-                      className={`flex items-center text-xl font-semibold text-foreground transition-all rounded-xl px-5 py-4 border ${
-                        isActive(link.url)
-                          ? "border-primary/40 bg-primary/10 text-primary"
-                          : "border-transparent bg-white/5 hover:bg-white/10"
-                      }`}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {currentLang === "fr" ? link.labelFr : link.labelEn}
-                    </motion.a>
-                  ))}
-                </div>
-                <div className="flex flex-col gap-4 pt-8 mt-auto border-t border-white/10 pb-4">
-                  <Button 
-                    asChild 
-                    variant="ghost" 
-                    size="lg" 
-                    className="w-full justify-center text-base font-medium bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-                  >
-                    <a href={APP_URL} target="_blank" rel="noopener noreferrer">
-                      {t("navbar.logIn")}
-                    </a>
-                  </Button>
-                  <Button 
-                    asChild 
-                    variant="hero" 
-                    size="lg" 
-                    className="w-full justify-center text-base font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all duration-300"
-                  >
-                    <a href={APP_URL} target="_blank" rel="noopener noreferrer">
-                      {t("navbar.startFree")}
-                    </a>
-                  </Button>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="fixed inset-x-0 z-50 md:hidden border-b border-border bg-card"
+                style={{ top: scrolled ? "3.5rem" : "4rem" }}
+              >
+                <div className="section-container px-4 sm:px-6 py-4 flex flex-col">
+                  <nav className="flex flex-col">
+                    {[{ id: "home", url: "/", label: currentLang === "fr" ? "Accueil" : "Home" }, ...links.map((link) => ({ id: link.id, url: link.url, label: currentLang === "fr" ? link.labelFr : link.labelEn }))].map((item, i) => {
+                      const active = item.id === "home" ? pathname === "/" : isActive(item.url);
+                      return (
+                        <motion.a
+                          key={item.id}
+                          href={item.url}
+                          initial={{ opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.03, duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                          className={`flex items-center justify-between rounded-lg px-4 py-3.5 text-base font-medium transition-colors ${
+                            active
+                              ? "text-primary"
+                              : "text-foreground/90 hover:bg-accent hover:text-foreground"
+                          }`}
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          {item.label}
+                          {active && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          )}
+                        </motion.a>
+                      );
+                    })}
+                  </nav>
 
-              </div>
-            </motion.div>
+                  <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3">
+                    <Button asChild variant="outline" size="lg" className="w-full justify-center">
+                      <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                        {t("navbar.logIn")}
+                      </a>
+                    </Button>
+                    <Button asChild variant="hero" size="lg" className="w-full justify-center">
+                      <a href={APP_URL} target="_blank" rel="noopener noreferrer">
+                        {t("navbar.startFree")}
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            </>
           )}
-
         </AnimatePresence>
       </nav>
     );
