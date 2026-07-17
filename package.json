@@ -12,7 +12,8 @@
     "db:seed:admin": "tsx scripts/seedAdmin.ts",
     "db:seed:pages": "tsx scripts/seedPages.ts",
     "db:seed:legal": "tsx scripts/seedLegal.ts",
-    "db:seed": "npm run db:seed:admin && npm run db:seed:pages && npm run db:seed:legal",
+    "db:seed:careers": "tsx scripts/seedCareers.ts",
+    "db:seed": "npm run db:seed:admin && npm run db:seed:pages && npm run db:seed:legal && npm run db:seed:careers",
     "postinstall": "prisma generate"
   },
   "dependencies": {

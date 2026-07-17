@@ -33,6 +33,8 @@ enum EntityType {
   MEETING
   LEGAL_DOC
   SUPPORT_REQUEST
+  JOB_ROLE
+  JOB_APPLICATION
 }
 
 model User {
@@ -239,6 +241,68 @@ model SupportVote {
   createdAt  DateTime @default(now())
 
   @@unique([requestId, voterEmail])
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum ApplicationStatus {
+  NEW
+  REVIEWING
+  INTERVIEWING
+  OFFER
+  HIRED
+  REJECTED
+}
+
+model JobRole {
+  id             String         @id @default(cuid())
+  slug           String         @unique
+  titleEn        String
+  titleFr        String
+  department     String // e.g. "Engineering", "Design", "Sales"
+  location       String // e.g. "Remote", "Kampala, Uganda"
+  employmentType EmploymentType @default(FULL_TIME)
+  // Short one-line summary shown on cards / listings.
+  summaryEn      String
+  summaryFr      String
+  // Full role description — Markdown, rendered on the detail page.
+  bodyEn         String
+  bodyFr         String
+  isPublished    Boolean        @default(false)
+  sortOrder      Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  applications   JobApplication[]
+
+  @@index([isPublished, sortOrder])
+}
+
+model JobApplication {
+  id          String            @id @default(cuid())
+  refNo       Int               @unique @default(autoincrement()) // displayed as "APP-{refNo}"
+  roleId      String
+  role        JobRole           @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  name        String
+  email       String
+  // Resume/portfolio are captured as links — no file uploads by design.
+  resumeUrl   String
+  linkedinUrl String?
+  coverNote   String?
+
+  status      ApplicationStatus @default(NEW)
+  adminNotes  String?
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([roleId, status])
+  @@index([createdAt])
 }
 
 enum MeetingStatus {
