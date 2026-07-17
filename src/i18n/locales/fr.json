@@ -898,7 +898,7 @@
     },
     "hero": {
       "badge": "À propos de PrepIQ",
-      "headline": "Construire la couche d'intelligence opérationnelle des cuisines professionnelles.",
+      "headline": "Construire la <gold>couche d'intelligence opérationnelle</gold> des cuisines professionnelles.",
       "copy": "PrepIQ aide les restaurants et les hôtels à prendre de meilleures décisions quotidiennes grâce aux prévisions, à la planification de la production, à l'intelligence des stocks et aux informations opérationnelles en temps réel.",
       "missionLabel": "Notre mission est simple",
       "mission": "Aider chaque cuisine à gaspiller moins, préparer plus intelligemment et devenir plus prévisible chaque jour.",
@@ -907,7 +907,7 @@
     },
     "story": {
       "eyebrow": "Notre histoire",
-      "heading": "Pourquoi PrepIQ existe",
+      "heading": "Pourquoi <gold>PrepIQ</gold> existe",
       "p1": "Les restaurants prennent des centaines de décisions opérationnelles chaque jour, pourtant beaucoup s'appuient encore sur des tableurs, l'intuition et des systèmes déconnectés.",
       "p2": "Nous avons créé PrepIQ pour combler ce fossé. Plutôt que de remplacer les chefs ou les systèmes de caisse existants, PrepIQ agit comme une couche d'intelligence — apprenant des opérations de cuisine, prévoyant la demande, réduisant le gaspillage et aidant les équipes à prendre de meilleures décisions avant que les problèmes ne surviennent.",
       "p3": "Chaque jour où une cuisine utilise PrepIQ, elle devient un peu plus intelligente.",
@@ -918,6 +918,33 @@
         "Apprentissage automatique",
         "Pilote",
         "PrepIQ"
+      ],
+      "journeyHeading": "Comment nous en sommes arrivés là",
+      "journey": [
+        {
+          "title": "Problème",
+          "desc": "Les cuisines fonctionnaient avec des tableurs, de l'intuition et des outils déconnectés."
+        },
+        {
+          "title": "Recherche",
+          "desc": "Des mois dans de vraies cuisines, à comprendre comment se prennent les décisions de préparation."
+        },
+        {
+          "title": "Prototype",
+          "desc": "Les premières prévisions, construites main dans la main avec les chefs et les opérateurs."
+        },
+        {
+          "title": "Apprentissage automatique",
+          "desc": "Des modèles qui apprennent la demande à partir de la météo, des événements, de la saisonnalité et de l'historique."
+        },
+        {
+          "title": "Pilote",
+          "desc": "En production dans de vrais restaurants — mesuré face au gaspillage et au service réels."
+        },
+        {
+          "title": "PrepIQ",
+          "desc": "Une couche d'intelligence qui devient un peu plus fine à chaque service."
+        }
       ]
     },
     "principles": {
@@ -970,7 +997,7 @@
     },
     "future": {
       "eyebrow": "L'avenir",
-      "heading": "Où nous allons",
+      "heading": "Où nous <gold>allons</gold>",
       "p1": "Aujourd'hui, PrepIQ aide les restaurants à prévoir la demande et à réduire le gaspillage.",
       "p2": "Demain, nous construisons une plateforme qui relie prévisions, planification, stocks, main-d'œuvre, achats et intelligence opérationnelle en un seul système qui aide les cuisines à s'améliorer en continu.",
       "ambitionLabel": "Notre ambition est simple",
@@ -982,6 +1009,33 @@
         "Production",
         "Apprentissage",
         "Un lendemain plus intelligent"
+      ],
+      "pipelineHeading": "Le système d'exploitation, couche après couche",
+      "pipeline": [
+        {
+          "title": "Prévision",
+          "desc": "Prédire ce que chaque menu vendra, jour après jour."
+        },
+        {
+          "title": "Planification",
+          "desc": "Transformer les prévisions en plans de préparation, de production et d'équipes."
+        },
+        {
+          "title": "Stocks",
+          "desc": "Garder les stocks alignés sur ce qui arrive vraiment."
+        },
+        {
+          "title": "Production",
+          "desc": "Guider ce qui est préparé — et en quelle quantité exacte."
+        },
+        {
+          "title": "Apprentissage",
+          "desc": "Chaque résultat nourrit et affine la décision suivante."
+        },
+        {
+          "title": "Un avenir plus intelligent",
+          "desc": "Le système d'exploitation des cuisines modernes."
+        }
       ]
     },
     "builtIn": "Conçu en Ouganda. Pensé pour les cuisines du monde entier."

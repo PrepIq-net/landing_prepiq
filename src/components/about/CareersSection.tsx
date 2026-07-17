@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, MapPin, Building, Mail } from "iconoir-react";
 import { Button } from "@/components/ui/button";
+import SectionHeading from "./SectionHeading";
 import type { PublicJobRole } from "@/types/careers";
 
 const CAREERS_EMAIL = "careers@prepiq.net";
@@ -22,17 +23,12 @@ const CareersSection = ({ roles }: { roles: PublicJobRole[] }) => {
       className="scroll-mt-24 border-t border-border/50 py-20 sm:py-28"
     >
       <div className="section-container">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-            {t("about.careers.eyebrow")}
-          </p>
-          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            {t("about.careers.heading")}
-          </h2>
-          <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-            {t("about.careers.intro")}
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow={t("about.careers.eyebrow")}
+          title={t("about.careers.heading")}
+          subtitle={t("about.careers.intro")}
+          align="left"
+        />
 
         {/* Current openings */}
         <div className="mt-12">
