@@ -118,3 +118,48 @@ export const getPageWithSections = unstable_cache(
   ["page-content"],
   { tags: ["pages", "sections"] }
 );
+
+// Published job roles for the public /about careers section, ordered for display.
+export const getPublishedJobRoles = unstable_cache(
+  async () => {
+    return prisma.jobRole.findMany({
+      where: { isPublished: true },
+      select: {
+        slug: true,
+        titleEn: true,
+        titleFr: true,
+        department: true,
+        location: true,
+        employmentType: true,
+        summaryEn: true,
+        summaryFr: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    });
+  },
+  ["job-roles"],
+  { tags: ["careers"] }
+);
+
+export const getPublishedJobRole = unstable_cache(
+  async (slug: string) => {
+    return prisma.jobRole.findFirst({
+      where: { slug, isPublished: true },
+      select: {
+        id: true,
+        slug: true,
+        titleEn: true,
+        titleFr: true,
+        department: true,
+        location: true,
+        employmentType: true,
+        summaryEn: true,
+        summaryFr: true,
+        bodyEn: true,
+        bodyFr: true,
+      },
+    });
+  },
+  ["job-role"],
+  { tags: ["careers"] }
+);
