@@ -901,7 +901,7 @@
     },
     "hero": {
       "badge": "About PrepIQ",
-      "headline": "Building the operational intelligence layer for professional kitchens.",
+      "headline": "Building the <gold>operational intelligence layer</gold> for professional kitchens.",
       "copy": "PrepIQ helps restaurants and hotels make better daily decisions through forecasting, production planning, inventory intelligence, and real-time operational insights.",
       "missionLabel": "Our mission is simple",
       "mission": "Help every kitchen waste less, prepare smarter, and become more predictable every single day.",
@@ -910,7 +910,7 @@
     },
     "story": {
       "eyebrow": "Our Story",
-      "heading": "Why PrepIQ exists",
+      "heading": "Why <gold>PrepIQ</gold> exists",
       "p1": "Restaurants make hundreds of operational decisions every day, yet many still rely on spreadsheets, intuition, and disconnected systems.",
       "p2": "We built PrepIQ to bridge that gap. Rather than replacing chefs or existing POS systems, PrepIQ acts as an intelligence layer — learning from kitchen operations, forecasting demand, reducing waste, and helping teams make better decisions before problems happen.",
       "p3": "Every day a kitchen uses PrepIQ, it becomes a little smarter.",
@@ -921,6 +921,33 @@
         "Machine Learning",
         "Pilot",
         "PrepIQ"
+      ],
+      "journeyHeading": "How we got here",
+      "journey": [
+        {
+          "title": "Problem",
+          "desc": "Kitchens ran on spreadsheets, intuition and disconnected tools."
+        },
+        {
+          "title": "Research",
+          "desc": "Months inside real kitchens, learning how prep decisions are actually made."
+        },
+        {
+          "title": "Prototype",
+          "desc": "The first forecasts, built hand-in-hand with chefs and operators."
+        },
+        {
+          "title": "Machine Learning",
+          "desc": "Models that learn demand from weather, events, seasonality and history."
+        },
+        {
+          "title": "Pilot",
+          "desc": "Live in real restaurants — measured against real waste and real service."
+        },
+        {
+          "title": "PrepIQ",
+          "desc": "One intelligence layer that gets a little smarter every service."
+        }
       ]
     },
     "principles": {
@@ -973,7 +1000,7 @@
     },
     "future": {
       "eyebrow": "The Future",
-      "heading": "Where we're going",
+      "heading": "Where we're <gold>going</gold>",
       "p1": "Today PrepIQ helps restaurants forecast demand and reduce waste.",
       "p2": "Tomorrow we're building a platform that connects forecasting, planning, inventory, labor, purchasing, and operational intelligence into a single system that helps kitchens continuously improve.",
       "ambitionLabel": "Our ambition is simple",
@@ -985,6 +1012,33 @@
         "Production",
         "Learning",
         "Smarter Tomorrow"
+      ],
+      "pipelineHeading": "The operating system, one layer at a time",
+      "pipeline": [
+        {
+          "title": "Forecasting",
+          "desc": "Predict what each menu will sell, day by day."
+        },
+        {
+          "title": "Planning",
+          "desc": "Turn forecasts into prep, production and staffing plans."
+        },
+        {
+          "title": "Inventory",
+          "desc": "Keep stock aligned with what's actually coming."
+        },
+        {
+          "title": "Production",
+          "desc": "Guide what gets made — and exactly how much."
+        },
+        {
+          "title": "Learning",
+          "desc": "Every result feeds back and sharpens the next call."
+        },
+        {
+          "title": "Smarter Tomorrow",
+          "desc": "The operating system for modern kitchens."
+        }
       ]
     },
     "builtIn": "Built in Uganda. Designed for kitchens everywhere."

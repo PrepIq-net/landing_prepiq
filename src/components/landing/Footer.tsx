@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { X, Linkedin, Github } from "iconoir-react";
+import { X, Linkedin, Github, MapPin } from "iconoir-react";
 
 interface FooterLink {
   id: string;
@@ -82,12 +82,13 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
 
       <div className="border-t border-border/50 relative">
         <div className="section-container flex flex-col items-center gap-4 py-6 md:flex-row md:justify-between">
-          <div className="flex flex-col items-center gap-1 md:items-start">
+          <div className="flex flex-col items-center gap-1.5 text-center md:items-start md:text-left">
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} PrepIQ. {t("footer.rights")}
             </p>
-            <p className="text-xs text-muted-foreground/70">
-              {t("footer.builtIn")}
+            <p className="inline-flex flex-wrap items-center justify-center gap-1.5 text-xs text-muted-foreground/70">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/70" />
+              <span className="text-balance">{t("footer.builtIn")}</span>
             </p>
           </div>
           <div className="flex items-center gap-2">

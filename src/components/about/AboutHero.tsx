@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "iconoir-react";
 import { Button } from "@/components/ui/button";
+import { GoldText } from "@/components/landing/GoldText";
 
 const AboutHero = () => {
   const { t } = useTranslation();
@@ -27,12 +28,15 @@ const AboutHero = () => {
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="max-w-3xl"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-primary">
-            {t("about.hero.badge")}
-          </span>
+          <div className="mb-6 flex items-center gap-3 sm:gap-3.5">
+            <span className="h-px w-8 bg-primary sm:w-10" />
+            <span className="text-[0.6rem] font-medium uppercase tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.3em]">
+              {t("about.hero.badge")}
+            </span>
+          </div>
 
-          <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            {t("about.hero.headline")}
+          <h1 className="font-display text-[clamp(2rem,8vw,3.75rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground text-balance sm:text-5xl md:text-6xl">
+            <GoldText text={t("about.hero.headline")} />
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
