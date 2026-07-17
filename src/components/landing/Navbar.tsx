@@ -158,26 +158,15 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
         <AnimatePresence>
           {mobileOpen && (
             <>
-              {/* Scrim below the bar to focus the menu and close on tap */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="fixed inset-x-0 bottom-0 z-40 bg-background/70 md:hidden"
-                style={{ top: scrolled ? "3.5rem" : "4rem" }}
-                onClick={() => setMobileOpen(false)}
-              />
-
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="fixed inset-x-0 z-50 md:hidden border-b border-border bg-card"
+                className="fixed inset-x-0 bottom-0 z-50 overflow-y-auto bg-card md:hidden"
                 style={{ top: scrolled ? "3.5rem" : "4rem" }}
               >
-                <div className="section-container px-4 sm:px-6 py-4 flex flex-col">
+                <div className="section-container flex min-h-full flex-col px-4 sm:px-6 py-4">
                   <nav className="flex flex-col">
                     {[{ id: "home", url: "/", label: currentLang === "fr" ? "Accueil" : "Home" }, ...links.map((link) => ({ id: link.id, url: link.url, label: currentLang === "fr" ? link.labelFr : link.labelEn }))].map((item, i) => {
                       const active = item.id === "home" ? pathname === "/" : isActive(item.url);
@@ -204,7 +193,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                     })}
                   </nav>
 
-                  <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3">
+                  <div className="mt-auto pt-6 border-t border-border flex flex-col gap-3">
                     <Button asChild variant="outline" size="lg" className="w-full justify-center">
                       <a href={APP_URL} target="_blank" rel="noopener noreferrer">
                         {t("navbar.logIn")}

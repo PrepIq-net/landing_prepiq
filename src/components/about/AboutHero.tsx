@@ -6,55 +6,72 @@ import { ArrowRight } from "iconoir-react";
 import { Button } from "@/components/ui/button";
 import { GoldText } from "@/components/landing/GoldText";
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 const AboutHero = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
-      {/* Ambient brand glow */}
+    <section className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20">
+      {/* Brand page-header backdrop (matches how-it-works / pricing / contact) */}
+      <div className="pattern-grid pointer-events-none absolute inset-0 opacity-[0.1]" />
+      <div className="wash-gold-top pointer-events-none absolute inset-0" />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(60% 50% at 50% 0%, hsl(40 70% 39% / 0.12) 0%, transparent 70%)",
-        }}
+        className="absolute bottom-0 left-1/2 h-px w-[min(640px,80vw)] -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/30 to-transparent"
       />
 
       <div className="section-container relative">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="max-w-3xl"
+          initial="hidden"
+          animate="visible"
+          transition={{ staggerChildren: 0.06 }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="mb-6 flex items-center gap-3 sm:gap-3.5">
-            <span className="h-px w-8 bg-primary sm:w-10" />
-            <span className="text-[0.6rem] font-medium uppercase tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.3em]">
-              {t("about.hero.badge")}
-            </span>
-          </div>
+          <motion.span
+            variants={fadeUp}
+            className="mb-5 block text-xs font-medium uppercase tracking-[0.25em] text-primary/80"
+          >
+            {t("about.hero.badge")}
+          </motion.span>
 
-          <h1 className="font-display text-[clamp(2rem,8vw,3.75rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-foreground text-balance sm:text-5xl md:text-6xl">
+          <motion.h1
+            variants={fadeUp}
+            className="font-display text-[2rem] font-semibold leading-[1.12] tracking-[-0.02em] text-foreground text-balance sm:text-[2.6rem] md:text-[3.1rem]"
+          >
             <GoldText text={t("about.hero.headline")} />
-          </h1>
+          </motion.h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <motion.p
+            variants={fadeUp}
+            className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base"
+          >
             {t("about.hero.copy")}
-          </p>
+          </motion.p>
 
-          <div className="mt-8 rounded-xl border border-border/60 bg-card/40 p-5">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              {t("about.hero.missionLabel")}
-            </p>
-            <p className="mt-2 text-base font-medium text-foreground sm:text-lg">
-              {t("about.hero.mission")}
-            </p>
-          </div>
+          <motion.p
+            variants={fadeUp}
+            className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base"
+          >
+            <span className="font-medium text-primary">
+              {t("about.hero.missionLabel")}:{" "}
+            </span>
+            {t("about.hero.mission")}
+          </motion.p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <motion.div
+            variants={fadeUp}
+            className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          >
             <Button asChild variant="hero" size="lg">
-              <a href="/#contact">
+              <a href="/contact">
                 {t("about.hero.contact")}
                 <ArrowRight className="ml-1 h-4 w-4" />
               </a>
@@ -62,7 +79,7 @@ const AboutHero = () => {
             <Button asChild variant="outline" size="lg">
               <a href="#careers">{t("about.hero.careers")}</a>
             </Button>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
