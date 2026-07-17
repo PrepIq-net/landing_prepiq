@@ -49,6 +49,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
     });
 
     return (
+      <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
           scrolled
@@ -154,6 +155,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             </button>
           </div>
         </div>
+      </nav>
 
         <AnimatePresence>
           {mobileOpen && (
@@ -210,7 +212,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             </>
           )}
         </AnimatePresence>
-      </nav>
+      </>
     );
   };
 
