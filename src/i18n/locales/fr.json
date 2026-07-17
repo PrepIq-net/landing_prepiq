@@ -42,7 +42,8 @@
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d'utilisation",
       "security": "Sécurité"
-    }
+    },
+    "builtIn": "Conçu en Ouganda. Pensé pour les cuisines du monde entier."
   },
   "integrations": {
     "badge": "Intégrations",
@@ -888,6 +889,135 @@
           "Gaspillage, précision et marge suivis dans le temps"
         ]
       }
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "À propos de PrepIQ — L'intelligence opérationnelle pour les cuisines professionnelles",
+      "description": "PrepIQ est la couche d'intelligence opérationnelle des restaurants et hôtels — prévisions, planification de la production, intelligence des stocks et informations en temps réel pour gaspiller moins et préparer plus intelligemment."
+    },
+    "hero": {
+      "badge": "À propos de PrepIQ",
+      "headline": "Construire la couche d'intelligence opérationnelle des cuisines professionnelles.",
+      "copy": "PrepIQ aide les restaurants et les hôtels à prendre de meilleures décisions quotidiennes grâce aux prévisions, à la planification de la production, à l'intelligence des stocks et aux informations opérationnelles en temps réel.",
+      "missionLabel": "Notre mission est simple",
+      "mission": "Aider chaque cuisine à gaspiller moins, préparer plus intelligemment et devenir plus prévisible chaque jour.",
+      "contact": "Nous contacter",
+      "careers": "Voir les postes"
+    },
+    "story": {
+      "eyebrow": "Notre histoire",
+      "heading": "Pourquoi PrepIQ existe",
+      "p1": "Les restaurants prennent des centaines de décisions opérationnelles chaque jour, pourtant beaucoup s'appuient encore sur des tableurs, l'intuition et des systèmes déconnectés.",
+      "p2": "Nous avons créé PrepIQ pour combler ce fossé. Plutôt que de remplacer les chefs ou les systèmes de caisse existants, PrepIQ agit comme une couche d'intelligence — apprenant des opérations de cuisine, prévoyant la demande, réduisant le gaspillage et aidant les équipes à prendre de meilleures décisions avant que les problèmes ne surviennent.",
+      "p3": "Chaque jour où une cuisine utilise PrepIQ, elle devient un peu plus intelligente.",
+      "timeline": [
+        "Problème",
+        "Recherche",
+        "Prototype",
+        "Apprentissage automatique",
+        "Pilote",
+        "PrepIQ"
+      ]
+    },
+    "principles": {
+      "eyebrow": "Ce que nous croyons",
+      "heading": "Principes",
+      "cards": [
+        {
+          "title": "Les cuisines d'abord",
+          "body": "La technologie doit s'adapter aux cuisines — et non l'inverse."
+        },
+        {
+          "title": "Des décisions, pas des tableaux de bord",
+          "body": "L'information ne compte que si elle aide quelqu'un à prendre une meilleure décision."
+        },
+        {
+          "title": "Apprendre en continu",
+          "body": "Chaque service, chaque ajustement, chaque jour apprend quelque chose au système."
+        },
+        {
+          "title": "IA pratique",
+          "body": "L'intelligence artificielle doit résoudre de vrais problèmes opérationnels, pas créer plus de complexité."
+        },
+        {
+          "title": "Confiance",
+          "body": "Les données opérationnelles appartiennent aux entreprises qui les génèrent."
+        }
+      ]
+    },
+    "careers": {
+      "eyebrow": "Carrières",
+      "heading": "Rejoignez-nous",
+      "intro": "PrepIQ en est encore à ses débuts. Nous construisons une entreprise qui valorise la curiosité, la responsabilité et la résolution de problèmes opérationnels difficiles. Si cela vous ressemble, nous aimerions vous rencontrer.",
+      "openingsHeading": "Postes ouverts",
+      "openingsSub": "Postes ouverts dans toute l'équipe. Cliquez sur un poste pour en savoir plus et postuler.",
+      "emptyTitle": "Aucun poste ouvert pour le moment.",
+      "emptyBody": "Vous pensez être fait pour PrepIQ ? Envoyez-nous votre CV.",
+      "sendCv": "Envoyez votre CV",
+      "email": "careers@prepiq.net",
+      "alwaysHeading": "Nous sommes toujours intéressés à rencontrer",
+      "alwaysRoles": [
+        "Ingénieurs Backend",
+        "Ingénieurs en apprentissage automatique",
+        "Designers produit",
+        "Ingénieurs mobile",
+        "Ventes",
+        "Customer Success"
+      ],
+      "viewRole": "Voir le poste",
+      "applyNow": "Postuler"
+    },
+    "future": {
+      "eyebrow": "L'avenir",
+      "heading": "Où nous allons",
+      "p1": "Aujourd'hui, PrepIQ aide les restaurants à prévoir la demande et à réduire le gaspillage.",
+      "p2": "Demain, nous construisons une plateforme qui relie prévisions, planification, stocks, main-d'œuvre, achats et intelligence opérationnelle en un seul système qui aide les cuisines à s'améliorer en continu.",
+      "ambitionLabel": "Notre ambition est simple",
+      "ambition": "Devenir le système d'exploitation des cuisines modernes.",
+      "steps": [
+        "Prévisions",
+        "Planification",
+        "Stocks",
+        "Production",
+        "Apprentissage",
+        "Un lendemain plus intelligent"
+      ]
+    },
+    "builtIn": "Conçu en Ouganda. Pensé pour les cuisines du monde entier."
+  },
+  "careers": {
+    "backToAbout": "Retour à À propos",
+    "backToCareers": "Retour aux postes ouverts",
+    "openRole": "Poste ouvert",
+    "labels": {
+      "department": "Département",
+      "location": "Lieu",
+      "type": "Type de contrat"
+    },
+    "employmentType": {
+      "FULL_TIME": "Temps plein",
+      "PART_TIME": "Temps partiel",
+      "CONTRACT": "Contrat",
+      "INTERNSHIP": "Stage"
+    },
+    "aboutRole": "À propos du poste",
+    "apply": {
+      "heading": "Postuler à ce poste",
+      "sub": "Parlez-nous un peu de vous. Nous examinons chaque candidature.",
+      "name": "Nom complet",
+      "email": "Adresse e-mail",
+      "resume": "Lien vers le CV",
+      "resumeHint": "Collez un lien vers votre CV ou portfolio (Google Drive, Dropbox, site personnel, etc.). Nous n'acceptons pas les fichiers.",
+      "linkedin": "LinkedIn (facultatif)",
+      "coverNote": "Pourquoi vous ? (facultatif)",
+      "coverNotePlaceholder": "Quelques lignes sur pourquoi vous seriez idéal.",
+      "submit": "Envoyer ma candidature",
+      "submitting": "Envoi…",
+      "successTitle": "Candidature reçue",
+      "successBody": "Merci pour votre candidature. Si le profil correspond, nous vous contacterons par e-mail.",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer.",
+      "invalidUrl": "Veuillez saisir un lien valide (commençant par http)."
     }
   }
 }

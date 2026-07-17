@@ -42,7 +42,8 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "security": "Security"
-    }
+    },
+    "builtIn": "Built in Uganda. Designed for kitchens everywhere."
   },
   "integrations": {
     "badge": "Integrations",
@@ -891,6 +892,135 @@
           "Waste, accuracy & margin, tracked over time"
         ]
       }
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "About PrepIQ — Operational Intelligence for Professional Kitchens",
+      "description": "PrepIQ is the operational intelligence layer for restaurants and hotels — forecasting, production planning, inventory intelligence and real-time insights that help kitchens waste less and prepare smarter."
+    },
+    "hero": {
+      "badge": "About PrepIQ",
+      "headline": "Building the operational intelligence layer for professional kitchens.",
+      "copy": "PrepIQ helps restaurants and hotels make better daily decisions through forecasting, production planning, inventory intelligence, and real-time operational insights.",
+      "missionLabel": "Our mission is simple",
+      "mission": "Help every kitchen waste less, prepare smarter, and become more predictable every single day.",
+      "contact": "Contact Us",
+      "careers": "View Careers"
+    },
+    "story": {
+      "eyebrow": "Our Story",
+      "heading": "Why PrepIQ exists",
+      "p1": "Restaurants make hundreds of operational decisions every day, yet many still rely on spreadsheets, intuition, and disconnected systems.",
+      "p2": "We built PrepIQ to bridge that gap. Rather than replacing chefs or existing POS systems, PrepIQ acts as an intelligence layer — learning from kitchen operations, forecasting demand, reducing waste, and helping teams make better decisions before problems happen.",
+      "p3": "Every day a kitchen uses PrepIQ, it becomes a little smarter.",
+      "timeline": [
+        "Problem",
+        "Research",
+        "Prototype",
+        "Machine Learning",
+        "Pilot",
+        "PrepIQ"
+      ]
+    },
+    "principles": {
+      "eyebrow": "What We Believe",
+      "heading": "Principles",
+      "cards": [
+        {
+          "title": "Kitchens first",
+          "body": "Technology should adapt to kitchens — not the other way around."
+        },
+        {
+          "title": "Decisions over dashboards",
+          "body": "Information only matters if it helps someone make a better decision."
+        },
+        {
+          "title": "Learn continuously",
+          "body": "Every service, every adjustment, every day teaches the system something new."
+        },
+        {
+          "title": "Practical AI",
+          "body": "Artificial intelligence should solve real operational problems, not create more complexity."
+        },
+        {
+          "title": "Trust",
+          "body": "Operational data belongs to the businesses that generate it."
+        }
+      ]
+    },
+    "careers": {
+      "eyebrow": "Careers",
+      "heading": "Join us",
+      "intro": "PrepIQ is still early. We're building a company that values curiosity, ownership, and solving difficult operational problems. If that sounds like you, we'd love to hear from you.",
+      "openingsHeading": "Current openings",
+      "openingsSub": "Open roles across the team. Click a role to read more and apply.",
+      "emptyTitle": "No open positions right now.",
+      "emptyBody": "Think you'd be a great fit? Send us your CV.",
+      "sendCv": "Send your CV",
+      "email": "careers@prepiq.net",
+      "alwaysHeading": "We're always interested in meeting",
+      "alwaysRoles": [
+        "Backend Engineers",
+        "Machine Learning Engineers",
+        "Product Designers",
+        "Mobile Engineers",
+        "Sales",
+        "Customer Success"
+      ],
+      "viewRole": "View role",
+      "applyNow": "Apply now"
+    },
+    "future": {
+      "eyebrow": "The Future",
+      "heading": "Where we're going",
+      "p1": "Today PrepIQ helps restaurants forecast demand and reduce waste.",
+      "p2": "Tomorrow we're building a platform that connects forecasting, planning, inventory, labor, purchasing, and operational intelligence into a single system that helps kitchens continuously improve.",
+      "ambitionLabel": "Our ambition is simple",
+      "ambition": "To become the operating system for modern kitchens.",
+      "steps": [
+        "Forecasting",
+        "Planning",
+        "Inventory",
+        "Production",
+        "Learning",
+        "Smarter Tomorrow"
+      ]
+    },
+    "builtIn": "Built in Uganda. Designed for kitchens everywhere."
+  },
+  "careers": {
+    "backToAbout": "Back to About",
+    "backToCareers": "Back to open roles",
+    "openRole": "Open role",
+    "labels": {
+      "department": "Department",
+      "location": "Location",
+      "type": "Employment type"
+    },
+    "employmentType": {
+      "FULL_TIME": "Full-time",
+      "PART_TIME": "Part-time",
+      "CONTRACT": "Contract",
+      "INTERNSHIP": "Internship"
+    },
+    "aboutRole": "About the role",
+    "apply": {
+      "heading": "Apply for this role",
+      "sub": "Tell us a little about you. We review every application.",
+      "name": "Full name",
+      "email": "Email address",
+      "resume": "Resume / CV link",
+      "resumeHint": "Paste a link to your CV or portfolio (Google Drive, Dropbox, personal site, etc.). We don't accept file uploads.",
+      "linkedin": "LinkedIn (optional)",
+      "coverNote": "Why you? (optional)",
+      "coverNotePlaceholder": "A few lines on why you'd be a great fit.",
+      "submit": "Submit application",
+      "submitting": "Submitting…",
+      "successTitle": "Application received",
+      "successBody": "Thanks for applying. If there's a fit, we'll reach out by email.",
+      "errorGeneric": "Something went wrong. Please try again.",
+      "invalidUrl": "Please enter a valid link (starting with http)."
     }
   }
 }

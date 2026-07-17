@@ -82,9 +82,14 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
 
       <div className="border-t border-border/50 relative">
         <div className="section-container flex flex-col items-center gap-4 py-6 md:flex-row md:justify-between">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} PrepIQ. {t("footer.rights")}
-          </p>
+          <div className="flex flex-col items-center gap-1 md:items-start">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} PrepIQ. {t("footer.rights")}
+            </p>
+            <p className="text-xs text-muted-foreground/70">
+              {t("footer.builtIn")}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
             {[
               { name: "X", Icon: X },
