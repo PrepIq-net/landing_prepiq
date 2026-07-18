@@ -17,7 +17,7 @@ import {
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 export const metadata: Metadata = {
-  title: "About PrepIQ — Operational Intelligence for Professional Kitchens",
+  title: "About PrepIQ — Operational Intelligence for Professional Kitchens around the globes",
   description:
     "PrepIQ is the operational intelligence layer for restaurants and hotels — forecasting, production planning, inventory intelligence and real-time insights that help kitchens waste less and prepare smarter.",
   alternates: { canonical: "https://prepiq.com/about" },
