@@ -1,6 +1,11 @@
 import { Suspense, lazy } from "react";
 import Navbar from "@/components/landing/Navbar";
-import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/lib/data";
+import {
+  getPageWithSections,
+  getActiveNavLinks,
+  getActiveFooterLinks,
+  getFeaturedBlogPosts,
+} from "@/lib/data";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ScrollToTop from "@/components/ScrollToTop";
 import CookieConsent from "@/components/CookieConsent";
@@ -14,10 +19,11 @@ const SectionFallback = () => (
 );
 
 export default async function Page() {
-  const [page, navLinks, footerLinks] = await Promise.all([
+  const [page, navLinks, footerLinks, featuredPosts] = await Promise.all([
     getPageWithSections("home"),
     getActiveNavLinks(),
     getActiveFooterLinks(),
+    getFeaturedBlogPosts(3),
   ]);
 
   if (!page) return <div>Page not found</div>;
@@ -31,7 +37,10 @@ export default async function Page() {
       <ScrollToTop />
       <CookieConsent />
 
-      <DynamicSectionRenderer sections={page.sections} />
+      <DynamicSectionRenderer
+        sections={page.sections}
+        featuredPosts={featuredPosts}
+      />
 
       <Suspense fallback={<SectionFallback />}>
         <Footer links={footerLinks} />

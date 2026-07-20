@@ -1076,5 +1076,27 @@
       "errorGeneric": "Something went wrong. Please try again.",
       "invalidUrl": "Please enter a valid link (starting with http)."
     }
+  },
+  "blog": {
+    "eyebrow": "PrepIQ Journal",
+    "title": "Notes on running a <gold>sharper kitchen</gold>",
+    "subtitle": "Practical writing for restaurant owners and kitchen managers — on food waste, daily prep, forecasting, and getting more out of the systems you already run.",
+    "latest": "Latest",
+    "allTopics": "All topics",
+    "readArticle": "Read article",
+    "readTime": "{{minutes}} min read",
+    "backToBlog": "All articles",
+    "onThisPage": "On this page",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "keepReading": "Keep reading",
+    "empty": "No articles published yet. Check back shortly.",
+    "emptyCategory": "No articles in this topic yet.",
+    "cta": {
+      "title": "See what your kitchen could stop guessing about",
+      "subtitle": "PrepIQ turns your sales history into a daily prep plan, watches service as it runs, and learns from every shift.",
+      "primary": "Start free",
+      "secondary": "Book a 10-min demo"
+    }
   }
 }

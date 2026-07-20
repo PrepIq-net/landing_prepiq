@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
+import { BLOG_TEASER } from "./content/blog-teaser";
 
 const prisma = new PrismaClient();
 
@@ -442,6 +443,7 @@ async function main() {
     pricing: { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: enContent.pricing, fr: frContent.pricing } },
     faq: { componentType: "FAQSection", titleEn: "FAQ", titleFr: "FAQ", contentJson: { en: enContent.faq, fr: frContent.faq } },
     contact: { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: enContent.contact, fr: frContent.contact } },
+    blogTeaser: { componentType: "BlogTeaserSection", titleEn: "Featured Articles", titleFr: "Articles en vedette", contentJson: { en: BLOG_TEASER.en, fr: BLOG_TEASER.fr } },
     explore: { componentType: "ExploreSection", titleEn: "Explore", titleFr: "Explorer", contentJson: { en: EXPLORE.en, fr: EXPLORE.fr } },
     finalCTA: { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: enContent.finalCTA, fr: frContent.finalCTA } },
   };
@@ -457,7 +459,7 @@ async function main() {
   const marketingPages = [
     {
       slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
-      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.explore, SECTIONS.finalCTA],
+      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.blogTeaser, SECTIONS.explore, SECTIONS.finalCTA],
     },
     {
       slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,

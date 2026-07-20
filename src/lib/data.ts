@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
 import { unstable_cache } from "next/cache";
+import { estimateReadMinutes } from "@/types/blog";
+import type { BlogPostDetail, BlogPostSummary } from "@/types/blog";
 
 export const getActiveNavLinks = unstable_cache(
   async () => {
@@ -162,4 +164,142 @@ export const getPublishedJobRole = unstable_cache(
   },
   ["job-role"],
   { tags: ["careers"] }
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Blog                                                                       */
+/* -------------------------------------------------------------------------- */
+
+const SUMMARY_SELECT = {
+  slug: true,
+  titleEn: true,
+  titleFr: true,
+  excerptEn: true,
+  excerptFr: true,
+  coverUrl: true,
+  coverAlt: true,
+  category: true,
+  tags: true,
+  authorName: true,
+  readMinutes: true,
+  publishedAt: true,
+  // Selected only to estimate reading time when the author hasn't set one.
+  bodyEn: true,
+} as const;
+
+type SummaryRow = {
+  readMinutes: number | null;
+  publishedAt: Date | null;
+  bodyEn: string;
+} & Omit<BlogPostSummary, "readMinutes" | "publishedAt">;
+
+function toSummary({ bodyEn, ...row }: SummaryRow): BlogPostSummary {
+  return {
+    ...row,
+    readMinutes: row.readMinutes ?? estimateReadMinutes(bodyEn),
+    publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
+  };
+}
+
+export const getPublishedBlogPosts = unstable_cache(
+  async (): Promise<BlogPostSummary[]> => {
+    const posts = await prisma.blogPost.findMany({
+      where: { isPublished: true },
+      select: SUMMARY_SELECT,
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+    });
+    return posts.map(toSummary);
+  },
+  ["blog-posts"],
+  { tags: ["blog"] }
+);
+
+export const getFeaturedBlogPosts = unstable_cache(
+  async (limit = 3): Promise<BlogPostSummary[]> => {
+    const posts = await prisma.blogPost.findMany({
+      where: { isPublished: true, isFeatured: true },
+      select: SUMMARY_SELECT,
+      orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
+      take: limit,
+    });
+
+    // A home page with an empty strip looks broken, so fall back to the most
+    // recent posts when nothing has been explicitly featured.
+    if (posts.length < limit) {
+      const filler = await prisma.blogPost.findMany({
+        where: {
+          isPublished: true,
+          slug: { notIn: posts.map((p) => p.slug) },
+        },
+        select: SUMMARY_SELECT,
+        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        take: limit - posts.length,
+      });
+      return [...posts, ...filler].map(toSummary);
+    }
+
+    return posts.map(toSummary);
+  },
+  ["blog-featured"],
+  { tags: ["blog"] }
+);
+
+export const getPublishedBlogPost = unstable_cache(
+  async (slug: string): Promise<BlogPostDetail | null> => {
+    const post = await prisma.blogPost.findFirst({
+      where: { slug, isPublished: true },
+      select: {
+        ...SUMMARY_SELECT,
+        bodyFr: true,
+        authorRole: true,
+        authorAvatar: true,
+        seoTitle: true,
+        seoDescription: true,
+        updatedAt: true,
+      },
+    });
+    if (!post) return null;
+
+    const { bodyEn, updatedAt, seoTitle, seoDescription, ...rest } = post;
+    return {
+      ...toSummary({ ...rest, bodyEn } as SummaryRow),
+      bodyEn,
+      bodyFr: post.bodyFr,
+      authorRole: post.authorRole,
+      authorAvatar: post.authorAvatar,
+      seoTitle,
+      seoDescription,
+      updatedAt: updatedAt.toISOString(),
+    } as BlogPostDetail;
+  },
+  ["blog-post"],
+  { tags: ["blog"] }
+);
+
+/** Same-category posts first, topped up with recent ones so the strip is full. */
+export const getRelatedBlogPosts = unstable_cache(
+  async (slug: string, category: string, limit = 3): Promise<BlogPostSummary[]> => {
+    const sameCategory = await prisma.blogPost.findMany({
+      where: { isPublished: true, category, slug: { not: slug } },
+      select: SUMMARY_SELECT,
+      orderBy: [{ publishedAt: "desc" }],
+      take: limit,
+    });
+
+    if (sameCategory.length >= limit) return sameCategory.map(toSummary);
+
+    const filler = await prisma.blogPost.findMany({
+      where: {
+        isPublished: true,
+        slug: { notIn: [slug, ...sameCategory.map((p) => p.slug)] },
+      },
+      select: SUMMARY_SELECT,
+      orderBy: [{ publishedAt: "desc" }],
+      take: limit - sameCategory.length,
+    });
+
+    return [...sameCategory, ...filler].map(toSummary);
+  },
+  ["blog-related"],
+  { tags: ["blog"] }
 );
