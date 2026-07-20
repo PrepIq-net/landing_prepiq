@@ -85,6 +85,33 @@ export async function confirmMapping(connectorId: string, mappingId: string) {
   revalidatePath(`/admin/connectors/${connectorId}`);
 }
 
+/**
+ * Point a canonical field at a different source column, or clear it by passing
+ * a null columnId. Confirming only ratifies the classifier's guess; this is the
+ * correction path for when it guessed wrong.
+ */
+export async function remapField(
+  connectorId: string,
+  tableId: string,
+  canonicalField: string,
+  columnId: string | null,
+) {
+  const email = await requireAdminEmail();
+  await djangoAdminFetch(
+    `/api/mgmt/connectors/${connectorId}/field-mappings/remap/`,
+    email,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        table_id: tableId,
+        canonical_field: canonicalField,
+        column_id: columnId,
+      }),
+    },
+  );
+  revalidatePath(`/admin/connectors/${connectorId}`);
+}
+
 export async function confirmAllMappings(connectorId: string, tableId?: string) {
   const email = await requireAdminEmail();
   const body = tableId ? JSON.stringify({ table_id: tableId }) : undefined;
