@@ -15,6 +15,7 @@ import {
   confirmTable,
   confirmMapping,
   confirmAllMappings,
+  remapField,
   requestSchemaRefresh,
   requestSyncNow,
 } from '@/lib/actions/connector-actions';
@@ -75,18 +76,46 @@ const ENTITY_OPTIONS = [
   { value: 'sales', label: 'Sales' },
   { value: 'products', label: 'Products' },
   { value: 'inventory', label: 'Inventory' },
+  { value: 'staff', label: 'Staff' },
 ];
 
+// Mirrors CANONICAL_REQUIRED_FIELDS in backend/connector/constants.py — the two
+// must stay in step, since the backend rejects a remap to a field it does not
+// recognise for the entity.
 const ENTITY_REQUIRED_FIELDS: Record<string, string[]> = {
   sales: ['sale_id', 'timestamp', 'item_name', 'quantity', 'amount'],
   products: ['product_id', 'name', 'category'],
   inventory: ['ingredient_id', 'stock_level'],
+  staff: ['employee_id', 'employee_name', 'role', 'clock_in', 'clock_out', 'hours_worked'],
+};
+
+// Plain-language prompts for the mapping grid. The technician doing this is
+// looking at a stranger's database and needs to be asked a question, not shown
+// a field name.
+const FIELD_PROMPT: Record<string, string> = {
+  sale_id: 'Which column uniquely identifies each sale?',
+  timestamp: 'Which column holds the date/time of the sale?',
+  item_name: 'Which column names the item sold?',
+  quantity: 'Which column holds how many units were sold?',
+  amount: 'Which column represents Total Price?',
+  product_id: 'Which column uniquely identifies each product?',
+  name: 'Which column holds the product name?',
+  category: 'Which column holds the product category?',
+  ingredient_id: 'Which column uniquely identifies each stock item?',
+  stock_level: 'Which column holds the quantity on hand?',
+  employee_id: 'Which column uniquely identifies each employee?',
+  employee_name: "Which column holds the employee's name?",
+  role: 'Which column holds their job role or position?',
+  clock_in: 'Which column holds the clock-in time?',
+  clock_out: 'Which column holds the clock-out time?',
+  hours_worked: 'Which column holds total hours worked?',
 };
 
 const ENTITY_COLOR: Record<string, string> = {
   sales: 'text-green-400',
   products: 'text-blue-400',
   inventory: 'text-amber-400',
+  staff: 'text-purple-400',
 };
 
 function TableCard({
@@ -285,42 +314,90 @@ function TableCard({
             )}
           </div>
 
-          {mappings.length === 0 ? (
+          {requiredFields.length === 0 ? (
             <p className="text-[11px] text-muted-foreground italic">
-              No field mappings yet — AI analysis may still be running. Refresh in a moment, or
-              re-confirm the table to generate mappings from column AI suggestions.
+              No canonical fields defined for this entity.
             </p>
           ) : (
-            <div className="space-y-1">
-              {mappings.map((m) => (
-                <div key={m.id} className="flex items-center justify-between py-0.5">
-                  <div className="flex items-center gap-3 text-[11px]">
-                    <span className="text-muted-foreground font-mono w-28 truncate">
-                      {m.canonical_field}
-                    </span>
-                    <span className="text-muted-foreground/50">←</span>
-                    <span className="text-foreground font-mono">{m.column_name}</span>
-                    {m.is_ai_suggested && (
-                      <span className="text-[9px] text-amber-400/60 border border-amber-400/20 px-1 rounded">
-                        AI
-                      </span>
-                    )}
-                  </div>
-                  {m.is_confirmed ? (
-                    <span className="text-[10px] text-green-400">✓ confirmed</span>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 text-[10px] px-2 text-muted-foreground hover:text-green-400"
-                      onClick={() => act(() => confirmMapping(connectorId, m.id), 'Field confirmed')}
-                      disabled={isPending}
+            <div className="space-y-1.5">
+              {requiredFields.map((field) => {
+                const m = mappings.find((x) => x.canonical_field === field);
+                const selectedColumn = m
+                  ? table.columns.find((c) => c.column_name === m.column_name)
+                  : undefined;
+                return (
+                  <div
+                    key={field}
+                    className="grid grid-cols-[11rem_1fr_auto] items-center gap-3 py-0.5"
+                  >
+                    <span
+                      className="text-[11px] text-muted-foreground font-mono truncate"
+                      title={FIELD_PROMPT[field] ?? field}
                     >
-                      Confirm
-                    </Button>
-                  )}
-                </div>
-              ))}
+                      {field}
+                    </span>
+
+                    {/* The correction path: the classifier's guess is just the
+                        initial value of this dropdown, not a final answer. */}
+                    <select
+                      value={selectedColumn?.id ?? ''}
+                      disabled={isPending}
+                      aria-label={FIELD_PROMPT[field] ?? `Column for ${field}`}
+                      onChange={(e) =>
+                        act(
+                          () =>
+                            remapField(
+                              connectorId,
+                              table.id,
+                              field,
+                              e.target.value || null,
+                            ),
+                          e.target.value ? `${field} mapped` : `${field} cleared`,
+                        )
+                      }
+                      className="text-[11px] bg-[#2A2A2E] border border-[#3A3A3E] rounded px-2 py-1 text-foreground font-mono disabled:opacity-50 min-w-0"
+                    >
+                      <option value="">— not mapped —</option>
+                      {table.columns.map((col) => (
+                        <option key={col.id} value={col.id}>
+                          {col.column_name}
+                          {col.data_type ? ` (${col.data_type})` : ''}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="flex items-center gap-2 justify-end w-24">
+                      {!m ? (
+                        <span className="text-[10px] text-amber-400">unmapped</span>
+                      ) : m.is_confirmed ? (
+                        <span className="text-[10px] text-green-400">✓ confirmed</span>
+                      ) : (
+                        <>
+                          {m.is_ai_suggested && (
+                            <span
+                              className="text-[9px] text-amber-400/60 border border-amber-400/20 px-1 rounded"
+                              title="Suggested automatically — confirm or correct it"
+                            >
+                              guess
+                            </span>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 text-[10px] px-2 text-muted-foreground hover:text-green-400"
+                            onClick={() =>
+                              act(() => confirmMapping(connectorId, m.id), 'Field confirmed')
+                            }
+                            disabled={isPending}
+                          >
+                            Confirm
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -492,8 +569,12 @@ export function SchemaTab({ connectorId, tables, fieldMappings, checkpoints }: S
             <div className="bg-amber-400/5 border border-amber-400/20 rounded-xl px-5 py-3">
               <div className="text-[11px] text-amber-400 font-semibold mb-1">Action needed to start data flow</div>
               <ol className="text-[11px] text-muted-foreground space-y-0.5 list-decimal list-inside">
-                <li>Select the entity type for each table (Sales / Products / Inventory)</li>
-                <li>Click <strong className="text-foreground">Confirm</strong> — this generates field mappings from AI suggestions</li>
+                <li>Select the entity type for each table (Sales / Products / Inventory / Staff)</li>
+                <li>Click <strong className="text-foreground">Confirm</strong> — this generates field mappings automatically</li>
+                <li>
+                  Check each mapping. A wrong guess can be corrected with the dropdown —
+                  pick the column that really holds that field
+                </li>
                 <li>Click <strong className="text-foreground">Confirm All</strong> on the mappings to approve them</li>
                 <li>The connector picks up mappings on its next heartbeat and starts syncing</li>
               </ol>
