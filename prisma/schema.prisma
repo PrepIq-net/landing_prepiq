@@ -35,6 +35,7 @@ enum EntityType {
   SUPPORT_REQUEST
   JOB_ROLE
   JOB_APPLICATION
+  BLOG_POST
 }
 
 model User {
@@ -303,6 +304,76 @@ model JobApplication {
 
   @@index([roleId, status])
   @@index([createdAt])
+}
+
+model BlogPost {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  // Unlike JobRole/LegalDocument, the French variants are optional: a 1,500-word
+  // article is too costly to mirror on every publish, so the public pages fall
+  // back to English whenever a French field is empty.
+  titleEn   String
+  titleFr   String?
+  excerptEn String
+  excerptFr String?
+  bodyEn    String // markdown
+  bodyFr    String? // markdown
+
+  // Cover/thumbnail. publicId is retained so the asset can be destroyed when the
+  // cover is replaced or the post is deleted.
+  coverUrl      String?
+  coverPublicId String?
+  coverAlt      String?
+
+  category String   @default("Operations")
+  tags     String[] @default([])
+
+  authorName   String  @default("PrepIQ Team")
+  authorRole   String?
+  authorAvatar String?
+
+  // Overrides the computed word-count estimate when set.
+  readMinutes Int?
+
+  // SEO overrides — fall back to title/excerpt when null.
+  seoTitle       String?
+  seoDescription String?
+
+  isPublished Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  // Ordering for the featured strip on the home page; lower shows first.
+  sortOrder   Int       @default(0)
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images BlogImage[]
+
+  @@index([isPublished, publishedAt])
+  @@index([isPublished, isFeatured, sortOrder])
+  @@index([category])
+}
+
+// Every Cloudinary asset uploaded through the blog editor, so in-body images can
+// be destroyed alongside their post instead of leaking in the media account.
+model BlogImage {
+  id     String    @id @default(cuid())
+  postId String?
+  post   BlogPost? @relation(fields: [postId], references: [id], onDelete: SetNull)
+
+  publicId String @unique
+  url      String
+  filename String
+  format   String?
+  width    Int     @default(0)
+  height   Int     @default(0)
+  bytes    Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([postId])
 }
 
 enum MeetingStatus {

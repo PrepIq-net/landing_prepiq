@@ -1073,5 +1073,27 @@
       "errorGeneric": "Une erreur est survenue. Veuillez réessayer.",
       "invalidUrl": "Veuillez saisir un lien valide (commençant par http)."
     }
+  },
+  "blog": {
+    "eyebrow": "Journal PrepIQ",
+    "title": "Notes pour une <gold>cuisine plus précise</gold>",
+    "subtitle": "Des articles pratiques pour les restaurateurs et les chefs — sur le gaspillage alimentaire, la préparation quotidienne, la prévision, et comment tirer plus des systèmes que vous utilisez déjà.",
+    "latest": "Dernier article",
+    "allTopics": "Tous les sujets",
+    "readArticle": "Lire l'article",
+    "readTime": "{{minutes}} min de lecture",
+    "backToBlog": "Tous les articles",
+    "onThisPage": "Sur cette page",
+    "share": "Partager",
+    "copyLink": "Copier le lien",
+    "keepReading": "À lire ensuite",
+    "empty": "Aucun article publié pour le moment. Revenez bientôt.",
+    "emptyCategory": "Aucun article dans ce sujet pour le moment.",
+    "cta": {
+      "title": "Voyez ce que votre cuisine pourrait arrêter de deviner",
+      "subtitle": "PrepIQ transforme votre historique de ventes en plan de préparation quotidien, suit le service en direct et apprend de chaque shift.",
+      "primary": "Commencer gratuitement",
+      "secondary": "Réserver une démo de 10 min"
+    }
   }
 }

@@ -72,3 +72,69 @@ export async function destroySupportAttachment(
     invalidate: true,
   });
 }
+
+export type UploadedBlogImage = {
+  publicId: string;
+  url: string;
+  filename: string;
+  format: string | null;
+  width: number;
+  height: number;
+  bytes: number;
+};
+
+/**
+ * Upload a blog cover or in-body image into the `blog/` folder. Images are
+ * capped at 2000px and re-encoded to the best format the requesting browser
+ * supports, so editors can drop full-resolution photos in without thinking
+ * about page weight.
+ */
+export async function uploadBlogImage(file: File): Promise<UploadedBlogImage> {
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const result = await new Promise<{
+    public_id: string;
+    secure_url: string;
+    format?: string;
+    width?: number;
+    height?: number;
+    bytes: number;
+  }>((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: "blog",
+          resource_type: "image",
+          use_filename: true,
+          unique_filename: true,
+          transformation: [
+            { width: 2000, crop: "limit" },
+            { quality: "auto", fetch_format: "auto" },
+          ],
+        },
+        (error, uploadResult) => {
+          if (error || !uploadResult) reject(error ?? new Error("Upload failed"));
+          else resolve(uploadResult);
+        }
+      )
+      .end(buffer);
+  });
+
+  return {
+    publicId: result.public_id,
+    url: result.secure_url,
+    filename: file.name,
+    format: result.format ?? null,
+    width: result.width ?? 0,
+    height: result.height ?? 0,
+    bytes: result.bytes,
+  };
+}
+
+/** Remove a blog image from Cloudinary. Safe to call for already-gone assets. */
+export async function destroyBlogImage(publicId: string): Promise<void> {
+  await cloudinary.uploader.destroy(publicId, {
+    resource_type: "image",
+    invalidate: true,
+  });
+}

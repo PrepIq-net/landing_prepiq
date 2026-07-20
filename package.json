@@ -13,7 +13,8 @@
     "db:seed:pages": "tsx scripts/seedPages.ts",
     "db:seed:legal": "tsx scripts/seedLegal.ts",
     "db:seed:careers": "tsx scripts/seedCareers.ts",
-    "db:seed": "npm run db:seed:admin && npm run db:seed:pages && npm run db:seed:legal && npm run db:seed:careers",
+    "db:seed:blog": "tsx scripts/seedBlog.ts",
+    "db:seed": "npm run db:seed:admin && npm run db:seed:pages && npm run db:seed:legal && npm run db:seed:careers && npm run db:seed:blog",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -81,6 +82,7 @@
     "react-resizable-panels": "^2.1.9",
     "react-simple-code-editor": "^0.14.1",
     "recharts": "^2.15.4",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

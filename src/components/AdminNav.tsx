@@ -17,6 +17,7 @@ import {
   Shield,
   HeadsetHelp,
   Suitcase,
+  Journal,
 } from "iconoir-react";
 
 interface NavItem {
@@ -39,6 +40,7 @@ const CONTENT_SECTIONS: NavSection[] = [
     items: [
       { href: "/admin", label: "Dashboard", icon: ViewGrid, exact: true },
       { href: "/admin/pages", label: "Pages", icon: Page },
+      { href: "/admin/blog", label: "Blog", icon: Journal },
       { href: "/admin/legal", label: "Legal", icon: Shield },
       { href: "/admin/links", label: "Links", icon: LinkIcon },
       { href: "/admin/messages", label: "Communications", icon: Mail },

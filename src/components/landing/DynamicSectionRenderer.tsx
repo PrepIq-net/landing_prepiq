@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Suspense, useMemo } from "react";
+import type { BlogPostSummary } from "@/types/blog";
 
 const SectionFallback = () => (
   <div className="py-20 flex items-center justify-center">
@@ -26,6 +27,14 @@ const COMPONENTS: Record<string, any> = {
   FAQSection: dynamic(() => import("./FAQSection")),
   ContactSection: dynamic(() => import("./ContactSection")),
   FinalCTASection: dynamic(() => import("./FinalCTASection")),
+  BlogTeaserSection: dynamic(() => import("./BlogTeaserSection")),
+};
+
+// Sections whose copy is CMS-managed but whose data comes from elsewhere in the
+// database. The page fetches the rows server-side and they are handed through
+// here, since this renderer is a client component.
+const DATA_PROP: Record<string, string> = {
+  BlogTeaserSection: "posts",
 };
 
 interface DynamicSectionRendererProps {
@@ -34,9 +43,13 @@ interface DynamicSectionRendererProps {
     componentType: string;
     contentJson: any;
   }[];
+  featuredPosts?: BlogPostSummary[];
 }
 
-export default function DynamicSectionRenderer({ sections }: DynamicSectionRendererProps) {
+export default function DynamicSectionRenderer({
+  sections,
+  featuredPosts,
+}: DynamicSectionRendererProps) {
   return (
     <>
       {sections.map((section) => {
@@ -47,9 +60,12 @@ export default function DynamicSectionRenderer({ sections }: DynamicSectionRende
           ? JSON.parse(section.contentJson)
           : section.contentJson;
 
+        const dataProp = DATA_PROP[section.componentType];
+        const extraProps = dataProp ? { [dataProp]: featuredPosts } : {};
+
         return (
           <Suspense key={section.id} fallback={<SectionFallback />}>
-            <Component dbContent={content} />
+            <Component dbContent={content} {...extraProps} />
           </Suspense>
         );
       })}
