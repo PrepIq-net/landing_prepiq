@@ -28,6 +28,13 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Lock body scroll while the panel is open so the page behind doesn't move.
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
   useEffect(() => {
     // preventScroll: true — the panel is fixed to the viewport, but focusing
     // an element still makes some browsers scroll the whole document to
@@ -74,7 +81,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
   return (
     <div
       role="dialog"
-      aria-modal="false"
+      aria-modal="true"
       aria-label={t("concierge.title")}
       className="fixed inset-x-0 bottom-0 z-50 flex h-[75dvh] flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-l3 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[560px] sm:w-[380px] sm:rounded-2xl"
     >
@@ -152,6 +159,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
           handleSend();
         }}
         className="flex items-end gap-2 border-t border-border bg-card px-3 py-3"
+        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
       >
         <textarea
           ref={inputRef}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { I18nProviderWrapper } from "./I18nProviderWrapper";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -55,7 +56,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <I18nProviderWrapper>
+          <Providers>{children}</Providers>
+        </I18nProviderWrapper>
         <Script
           id="structured-data"
           type="application/ld+json"

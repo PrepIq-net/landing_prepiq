@@ -31,7 +31,7 @@ function renderContent(content: string): React.ReactNode[] {
           href={url}
           target={url.startsWith("/") ? undefined : "_blank"}
           rel="noopener noreferrer"
-          className="text-primary underline underline-offset-2 hover:opacity-80"
+          className="text-primary underline underline-offset-2 hover:opacity-80 inline-block py-0.5"
         >
           {barePath ?? label}
         </a>
