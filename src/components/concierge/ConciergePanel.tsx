@@ -29,7 +29,10 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // preventScroll: true — the panel is fixed to the viewport, but focusing
+    // an element still makes some browsers scroll the whole document to
+    // "reveal" it, which snaps a scrolled-down page back to the top.
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   // Keep the newest message in view.
@@ -45,6 +48,15 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // Auto-grow the composer with content, capped at ~4 lines (max-h-24) so it
+  // reads as a chat input, not an open-ended textarea.
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [draft]);
 
   const handleSend = () => {
     const text = draft.trim();
@@ -155,7 +167,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
           maxLength={1000}
           placeholder={t("concierge.placeholder")}
           aria-label={t("concierge.placeholder")}
-          className="max-h-24 min-h-[38px] flex-1 resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="max-h-24 min-h-[38px] flex-1 resize-none overflow-y-auto rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         />
         <Button
           type="submit"
