@@ -1095,5 +1095,35 @@
       "primary": "Commencer gratuitement",
       "secondary": "Réserver une démo de 10 min"
     }
+  },
+  "concierge": {
+    "title": "Assistant PrepIQ",
+    "subtitle": "Conseiller en intelligence de cuisine",
+    "open": "Ouvrir l'assistant PrepIQ",
+    "close": "Fermer la discussion",
+    "send": "Envoyer le message",
+    "greeting": "Bonjour 👋 Je suis l'assistant PrepIQ. Je peux vous expliquer comment PrepIQ fonctionne, détailler les tarifs ou vous aider à réserver une démo.",
+    "placeholder": "Une question sur PrepIQ…",
+    "thinking": "PrepIQ réfléchit…",
+    "fallbackReply": "Je n'arrive pas à répondre pour le moment. Laissez vos coordonnées et notre équipe vous recontactera personnellement.",
+    "starters": {
+      "pos": "Comment PrepIQ fonctionne-t-il avec mon POS ?",
+      "price": "Combien ça coûte ?",
+      "chef": "L'IA va-t-elle remplacer mon chef ?",
+      "demo": "Comment réserver une démo ?"
+    },
+    "lead": {
+      "title": "Souhaitez-vous être recontacté ?",
+      "subtitle": "Partagez vos coordonnées et un spécialiste PrepIQ vous contactera. Sans spam.",
+      "email": "E-mail professionnel *",
+      "restaurant": "Nom du restaurant",
+      "role": "Votre rôle",
+      "location": "Ville / pays",
+      "phone": "Téléphone (facultatif)",
+      "submit": "Envoyer à l'équipe",
+      "dismiss": "Pas maintenant",
+      "thanks": "Merci — notre équipe vous contactera rapidement. Vous pouvez continuer à poser vos questions en attendant.",
+      "error": "L'envoi a échoué. Vérifiez l'adresse e-mail et réessayez."
+    }
   }
 }

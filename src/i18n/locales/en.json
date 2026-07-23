@@ -1098,5 +1098,35 @@
       "primary": "Start free",
       "secondary": "Book a 10-min demo"
     }
+  },
+  "concierge": {
+    "title": "PrepIQ Assistant",
+    "subtitle": "Kitchen intelligence advisor",
+    "open": "Open the PrepIQ Assistant",
+    "close": "Close chat",
+    "send": "Send message",
+    "greeting": "Hi 👋 I'm the PrepIQ Assistant. I can help you understand how PrepIQ works, explain pricing, or help you book a demo.",
+    "placeholder": "Ask about PrepIQ…",
+    "thinking": "PrepIQ is thinking…",
+    "fallbackReply": "I'm having trouble answering right now. Leave your details and our team will follow up personally.",
+    "starters": {
+      "pos": "How does PrepIQ work with my POS?",
+      "price": "What does it cost?",
+      "chef": "Will AI replace my chef?",
+      "demo": "How do I book a demo?"
+    },
+    "lead": {
+      "title": "Want the team to follow up?",
+      "subtitle": "Share your details and a PrepIQ specialist will reach out. No spam.",
+      "email": "Work email *",
+      "restaurant": "Restaurant name",
+      "role": "Your role",
+      "location": "Location",
+      "phone": "Phone (optional)",
+      "submit": "Send to the team",
+      "dismiss": "Not now",
+      "thanks": "Thanks — our team will reach out shortly. Feel free to keep asking questions in the meantime.",
+      "error": "That didn't go through. Check the email address and try again."
+    }
   }
 }

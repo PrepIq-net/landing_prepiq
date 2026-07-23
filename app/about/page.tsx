@@ -2,7 +2,7 @@ import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
 import Navbar from "@/components/landing/Navbar";
-import ScrollToTop from "@/components/ScrollToTop";
+import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import AboutHero from "@/components/about/AboutHero";
 import OurStory from "@/components/about/OurStory";
 import Principles from "@/components/about/Principles";
@@ -64,7 +64,7 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar links={navLinks} />
-      <ScrollToTop />
+      <ConciergeWidget />
 
       <main>
         <AboutHero />
