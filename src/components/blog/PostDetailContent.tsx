@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, Clock, Calendar } from "iconoir-react";
+import { ArrowLeft, Clock, Calendar, NavArrowDown } from "iconoir-react";
 import BlogMarkdown, { extractHeadings } from "./BlogMarkdown";
 import BlogCard, { formatPostDate } from "./BlogCard";
 import ShareBar from "./ShareBar";
@@ -34,41 +34,63 @@ function ReadingProgress() {
   );
 }
 
-function TableOfContents({
-  headings,
-  label,
-}: {
-  headings: { id: string; text: string; level: 2 | 3 }[];
-  label: string;
-}) {
+function useActiveHeading(headings: { id: string }[]) {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
     if (headings.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // The topmost heading currently in the upper band of the viewport wins,
-        // so the outline tracks reading position rather than scroll direction.
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActiveId(visible[0].target.id);
-      },
-      { rootMargin: "-100px 0px -70% 0px" }
-    );
+    const update = () => {
+      const threshold = 140;
+      let active = headings[0]?.id ?? "";
 
-    for (const h of headings) {
-      const el = document.getElementById(h.id);
-      if (el) observer.observe(el);
-    }
-    return () => observer.disconnect();
+      for (const h of headings) {
+        const el = document.getElementById(h.id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) {
+          active = h.id;
+        }
+      }
+
+      setActiveId(active);
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [headings]);
 
+  return activeId;
+}
+
+function DesktopTableOfContents({
+  headings,
+  activeId,
+  label,
+}: {
+  headings: { id: string; text: string; level: 2 | 3 }[];
+  activeId: string;
+  label: string;
+}) {
   if (headings.length < 3) return null;
 
   return (
-    <nav className="sticky top-28 hidden lg:block">
+    <nav className="sticky top-28 self-start hidden lg:block">
       <p className="mb-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
       </p>
@@ -77,10 +99,10 @@ function TableOfContents({
           <li key={h.id} className={h.level === 3 ? "pl-3" : ""}>
             <a
               href={`#${h.id}`}
-              className={`-ml-px block border-l-2 pl-4 text-sm leading-snug transition-colors duration-200 ${
+              className={`-ml-px block border-l-2 pl-4 py-1 text-sm leading-snug transition-all duration-200 ${
                 activeId === h.id
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                  ? "border-primary text-primary font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
               }`}
             >
               {h.text}
@@ -89,6 +111,59 @@ function TableOfContents({
         ))}
       </ul>
     </nav>
+  );
+}
+
+function MobileTableOfContents({
+  headings,
+  activeId,
+  label,
+}: {
+  headings: { id: string; text: string; level: 2 | 3 }[];
+  activeId: string;
+  label: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  if (headings.length < 3) return null;
+
+  return (
+    <div className="sticky top-14 z-30 -mx-6 md:-mx-8 lg:hidden">
+      <div className="border-y border-border/50 bg-background px-6 md:px-8">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="flex w-full items-center justify-between py-3 text-sm font-medium text-foreground"
+          aria-expanded={open}
+        >
+          {label}
+          <NavArrowDown
+            className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        {open && (
+          <div className="pb-3 space-y-1">
+            {headings.map((h) => (
+              <a
+                key={h.id}
+                href={`#${h.id}`}
+                onClick={() => setOpen(false)}
+                className={`block py-1.5 text-sm leading-snug transition-all duration-200 ${
+                  h.level === 3 ? "pl-4" : ""
+                } ${
+                  activeId === h.id
+                    ? "font-medium text-primary border-l-2 border-primary -ml-px pl-3"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {h.text}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -109,6 +184,7 @@ export default function PostDetailContent({
   const body = localized(lang, post.bodyEn, post.bodyFr);
 
   const headings = useMemo(() => extractHeadings(body), [body]);
+  const activeHeading = useActiveHeading(headings);
 
   return (
     <>
@@ -126,8 +202,8 @@ export default function PostDetailContent({
         {/* Everything from the title down shares one column so the header, the
             cover and the prose all hang off the same left edge; the outline
             rides in the gutter beside them. */}
-        <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)] lg:gap-14">
-          <TableOfContents headings={headings} label={t("blog.onThisPage")} />
+        <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)] lg:gap-14 lg:items-start">
+          <DesktopTableOfContents headings={headings} activeId={activeHeading} label={t("blog.onThisPage")} />
 
           <div className="mx-auto w-full max-w-[68ch] lg:mx-0">
             <header>
@@ -192,6 +268,8 @@ export default function PostDetailContent({
               </div>
             )}
 
+            <MobileTableOfContents headings={headings} activeId={activeHeading} label={t("blog.onThisPage")} />
+
             <div className="mt-12">
               <BlogMarkdown body={body} />
             </div>
@@ -210,23 +288,23 @@ export default function PostDetailContent({
             )}
 
             {/* Closing CTA — the reason the article exists. */}
-            <div className="mt-12 overflow-hidden rounded-2xl border border-primary/20 bg-card/60 p-8 wash-gold-top sm:p-10">
+            <div className="mt-12 overflow-hidden rounded-2xl border border-primary/20 bg-card/60 p-6 wash-gold-top sm:p-10">
               <h2 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
                 {t("blog.cta.title")}
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
                 {t("blog.cta.subtitle")}
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={APP_URL}
-                  className="inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-[#B8962E]"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-[#B8962E] sm:py-2.5 sm:px-5"
                 >
                   {t("blog.cta.primary")}
                 </a>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors duration-200 hover:border-primary/30 hover:text-primary"
+                  className="inline-flex items-center justify-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-foreground transition-colors duration-200 hover:border-primary/30 hover:text-primary sm:py-2.5 sm:px-5"
                 >
                   {t("blog.cta.secondary")}
                 </Link>

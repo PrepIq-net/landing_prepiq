@@ -5,35 +5,28 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import fr from './locales/fr.json';
 
-if (!i18n.isInitialized && typeof window !== 'undefined') {
+if (typeof window === 'undefined') {
+  if (!i18n.isInitialized) {
+    i18n
+      .use(initReactI18next)
+      .init({
+        resources: { en: { translation: en }, fr: { translation: fr } },
+        fallbackLng: 'en',
+        interpolation: { escapeValue: false },
+        initImmediate: false,
+      });
+  }
+} else if (!i18n.isInitialized) {
   i18n
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-      resources: {
-        en: { translation: en },
-        fr: { translation: fr },
-      },
+      resources: { en: { translation: en }, fr: { translation: fr } },
       fallbackLng: 'en',
-      interpolation: {
-        escapeValue: false,
-      },
+      interpolation: { escapeValue: false },
       detection: {
         order: ['querystring', 'cookie', 'localStorage', 'navigator', 'path', 'subdomain'],
         caches: ['localStorage', 'cookie'],
-      },
-    });
-} else if (!i18n.isInitialized) {
-  i18n
-    .use(initReactI18next)
-    .init({
-      resources: {
-        en: { translation: en },
-        fr: { translation: fr },
-      },
-      fallbackLng: 'en',
-      interpolation: {
-        escapeValue: false,
       },
     });
 }
