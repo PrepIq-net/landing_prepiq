@@ -2,7 +2,7 @@ import { Suspense, lazy } from "react";
 import Navbar from "@/components/landing/Navbar";
 import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/lib/data";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
-import ScrollToTop from "@/components/ScrollToTop";
+import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import CookieConsent from "@/components/CookieConsent";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <div className="min-h-screen bg-background">
       <Navbar links={navLinks} />
-      <ScrollToTop />
+      <ConciergeWidget />
       <CookieConsent />
 
       <DynamicSectionRenderer sections={page.sections} />

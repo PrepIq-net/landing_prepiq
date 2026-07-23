@@ -36,6 +36,8 @@ enum EntityType {
   JOB_ROLE
   JOB_APPLICATION
   BLOG_POST
+  CONCIERGE_CONVERSATION
+  CONCIERGE_LEAD
 }
 
 model User {
@@ -395,4 +397,76 @@ model Meeting {
   status      MeetingStatus @default(PENDING)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// PrepIQ Concierge — landing-page sales chatbot
+// ---------------------------------------------------------------------------
+
+enum ConciergeMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model ConciergeConversation {
+  id    String @id @default(cuid())
+  refNo Int    @unique @default(autoincrement()) // displayed as "CHAT-{refNo}"
+
+  locale    String @default("en")
+  visitorId String // anonymous id minted by the widget (localStorage)
+
+  // Abuse tracing without storing raw IPs: sha256(ip + CONCIERGE_IP_SALT).
+  ipHash      String?
+  userAgent   String?
+  startedPath String? // page the chat was opened on
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  endedAt   DateTime?
+
+  messageCount Int @default(0) // denormalized for the admin list
+
+  // Future phases attach here without migrations: topic tags, objection
+  // counts, ROI-calculator inputs, qualification score.
+  meta Json?
+
+  messages ConciergeMessage[]
+  lead     ConciergeLead?
+
+  @@index([updatedAt])
+  @@index([visitorId])
+}
+
+model ConciergeMessage {
+  id             String                @id @default(cuid())
+  conversationId String
+  conversation   ConciergeConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role      ConciergeMessageRole
+  content   String
+  createdAt DateTime             @default(now())
+
+  // Assistant turns: { provider, model, usage, latencyMs }. Future analytics
+  // (topicTag, objectionType, intent) attach here without migrations.
+  meta Json?
+
+  @@index([conversationId, createdAt])
+}
+
+model ConciergeLead {
+  id             String                @id @default(cuid())
+  conversationId String                @unique
+  conversation   ConciergeConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  email          String
+  restaurantName String?
+  location       String?
+  role           String?
+  phone          String?
+
+  createdAt DateTime @default(now())
+
+  // Future: qualification score, plan interest, handled-by markers.
+  meta Json?
 }

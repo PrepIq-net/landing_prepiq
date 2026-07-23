@@ -7,7 +7,7 @@ import {
   getFeaturedBlogPosts,
 } from "@/lib/data";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
-import ScrollToTop from "@/components/ScrollToTop";
+import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import CookieConsent from "@/components/CookieConsent";
 
 const Footer = lazy(() => import("@/components/landing/Footer"));
@@ -34,7 +34,7 @@ export default async function Page() {
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
       <Navbar links={navLinks} />
-      <ScrollToTop />
+      <ConciergeWidget />
       <CookieConsent />
 
       <DynamicSectionRenderer
