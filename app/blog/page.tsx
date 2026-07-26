@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
 import Navbar from "@/components/landing/Navbar";
 import BlogIndexContent from "@/components/blog/BlogIndexContent";
 import { SITE_URL } from "@/lib/constants";
@@ -12,7 +11,7 @@ import {
 
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
-const TITLE = "Blog — Kitchen operations, forecasting and food waste | PrepIQ";
+const TITLE = "Blog — Kitchen operations, forecasting and food waste";
 const DESCRIPTION =
   "Practical guidance for restaurant owners and kitchen managers on reducing food waste, planning daily prep, and getting more out of the systems you already run.";
 
@@ -80,8 +79,7 @@ export default async function BlogIndexPage() {
       <Suspense fallback={null}>
         <Footer links={footerLinks} />
       </Suspense>
-      <Script
-        id="blog-jsonld"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
       />
