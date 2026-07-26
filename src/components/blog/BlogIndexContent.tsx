@@ -35,7 +35,7 @@ export default function BlogIndexContent({
   );
 
   return (
-    <main className="section-container max-w-6xl py-28 sm:py-32">
+    <main className="section-container max-w-6xl pb-20 pt-24 sm:pb-24 sm:pt-32">
       <motion.header
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,10 +45,10 @@ export default function BlogIndexContent({
         <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary/80">
           {t("blog.eyebrow")}
         </span>
-        <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+        <h1 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
           <GoldText text={t("blog.title")} />
         </h1>
-        <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+        <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
           {t("blog.subtitle")}
         </p>
       </motion.header>
@@ -62,7 +62,7 @@ export default function BlogIndexContent({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.06, duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            className="mt-14"
+            className="mt-10 sm:mt-16"
           >
             <Link
               href={`/blog/${lead.slug}`}
@@ -80,25 +80,27 @@ export default function BlogIndexContent({
                 )}
               </div>
 
-              <div className="flex flex-col justify-center p-7 sm:p-10">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex flex-col justify-center p-6 sm:p-8 md:p-10">
+                {/* Wraps rather than overflows — French labels run noticeably
+                    longer than their English counterparts. */}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
                   <span className="rounded-md border border-primary/20 bg-primary/[0.08] px-2.5 py-1 font-medium uppercase tracking-wider text-primary">
                     {t("blog.latest")}
                   </span>
                   <span>{formatPostDate(lead.publishedAt, lang)}</span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5" />
+                    <Clock className="h-3.5 w-3.5 shrink-0" />
                     {t("blog.readTime", { minutes: lead.readMinutes })}
                   </span>
                 </div>
 
-                <h2 className="mt-5 font-display text-2xl font-semibold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:text-3xl">
+                <h2 className="mt-4 break-words font-display text-xl font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:mt-6 sm:text-2xl md:text-3xl">
                   {localized(lang, lead.titleEn, lead.titleFr)}
                 </h2>
-                <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+                <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:line-clamp-none sm:text-[15px]">
                   {localized(lang, lead.excerptEn, lead.excerptFr)}
                 </p>
-                <span className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary sm:mt-8">
                   {t("blog.readArticle")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </span>
@@ -109,25 +111,29 @@ export default function BlogIndexContent({
           {rest.length > 0 && (
             <>
               {categories.length > 1 && (
-                <div className="mt-16 flex flex-wrap items-center gap-2 border-b border-border/50 pb-5">
-                  {[ALL, ...categories].map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setCategory(c)}
-                      className={`rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
-                        category === c
-                          ? "border border-primary/20 bg-primary/[0.08] text-primary"
-                          : "border border-transparent text-muted-foreground hover:border-border hover:text-foreground"
-                      }`}
-                    >
-                      {c === ALL ? t("blog.allTopics") : c}
-                    </button>
-                  ))}
+                <div className="mt-12 border-b border-border/50 sm:mt-16">
+                  {/* One swipeable row on phones — wrapping these into three
+                      stacked rows pushes the grid below the fold. */}
+                  <div className="no-scrollbar -mx-6 flex items-center gap-2 overflow-x-auto px-6 pb-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+                    {[ALL, ...categories].map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setCategory(c)}
+                        className={`shrink-0 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-200 sm:py-1.5 ${
+                          category === c
+                            ? "border border-primary/20 bg-primary/[0.08] text-primary"
+                            : "border border-transparent text-muted-foreground hover:border-border hover:text-foreground"
+                        }`}
+                      >
+                        {c === ALL ? t("blog.allTopics") : c}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
                 {filtered.map((post, i) => (
                   <motion.div
                     key={post.slug}

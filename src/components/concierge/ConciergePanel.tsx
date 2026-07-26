@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { SendDiagonal, Sparks, Xmark } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,43 @@ import { ConciergeMessage } from "./ConciergeMessage";
 import { useConcierge } from "./useConcierge";
 
 const STARTER_KEYS = ["pos", "price", "chef", "demo"] as const;
+
+/** Composer ceiling, ~5 lines at 16px. Past this the textarea scrolls instead. */
+const MAX_COMPOSER_HEIGHT = 132;
+
+/**
+ * How much of the layout viewport an on-screen keyboard is covering.
+ *
+ * Mobile keyboards shrink the *visual* viewport but leave the layout viewport
+ * alone, so `dvh` and `position: fixed` both keep measuring the full screen
+ * and the composer ends up underneath the keyboard. visualViewport is the only
+ * thing that reports the real visible area on iOS.
+ */
+function useKeyboardInset() {
+  const [inset, setInset] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const update = () => {
+      const covered = window.innerHeight - vv.height - vv.offsetTop;
+      // Sub-pixel noise and the URL bar collapsing both show up here; ignore
+      // anything too small to be a keyboard.
+      setInset(covered > 80 ? Math.round(covered) : 0);
+    };
+
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
+  }, []);
+
+  return inset;
+}
 
 export function ConciergePanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -27,6 +64,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
   const [leadThanked, setLeadThanked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const keyboardInset = useKeyboardInset();
 
   // Lock body scroll while the panel is open so the page behind doesn't move.
   useEffect(() => {
@@ -42,11 +80,12 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
     inputRef.current?.focus({ preventScroll: true });
   }, []);
 
-  // Keep the newest message in view.
+  // Keep the newest message in view — including when the keyboard opens and
+  // takes half the panel with it.
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages.length, sending, leadOffered]);
+  }, [messages.length, sending, leadOffered, keyboardInset]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -56,13 +95,22 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // Auto-grow the composer with content, capped at ~4 lines (max-h-24) so it
-  // reads as a chat input, not an open-ended textarea.
+  // Auto-grow the composer with content, capped so it reads as a chat input
+  // rather than an open-ended textarea.
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
+
     el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
+    // scrollHeight covers content + padding but not the border, which the
+    // border-box height does include — without it every line sits 2px clipped.
+    const border = el.offsetHeight - el.clientHeight;
+    const content = el.scrollHeight + border;
+
+    el.style.height = `${Math.min(content, MAX_COMPOSER_HEIGHT)}px`;
+    // Only allow scrolling once the box has actually hit its ceiling, so the
+    // scrollbar doesn't flicker in and out on every newline while it grows.
+    el.style.overflowY = content > MAX_COMPOSER_HEIGHT ? "auto" : "hidden";
   }, [draft]);
 
   const handleSend = () => {
@@ -83,25 +131,30 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
       role="dialog"
       aria-modal="true"
       aria-label={t("concierge.title")}
-      className="fixed inset-x-0 bottom-0 z-50 flex h-[75dvh] flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-l3 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[560px] sm:w-[380px] sm:rounded-2xl"
+      // The inset rides in as a variable so the mobile `bottom` can consume it
+      // while `sm:bottom-24` still wins outright on desktop.
+      style={{ "--kb": `${keyboardInset}px` } as CSSProperties}
+      className="fixed inset-x-0 bottom-[var(--kb,0px)] z-50 flex h-[75dvh] max-h-[calc(100dvh-var(--kb,0px)-1.5rem)] flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-l3 sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[560px] sm:max-h-[calc(100dvh-8rem)] sm:w-[380px] sm:rounded-2xl"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
+      <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15">
             <Sparks className="h-4 w-4 text-primary" aria-hidden />
           </span>
-          <div>
-            <p className="font-display text-sm font-semibold text-foreground">
+          <div className="min-w-0">
+            <p className="truncate font-display text-sm font-semibold text-foreground">
               {t("concierge.title")}
             </p>
-            <p className="text-xs text-muted-foreground">{t("concierge.subtitle")}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {t("concierge.subtitle")}
+            </p>
           </div>
         </div>
         <button
           onClick={onClose}
           aria-label={t("concierge.close")}
-          className="rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="-mr-1 shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Xmark className="h-5 w-5" aria-hidden />
         </button>
@@ -110,7 +163,9 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
       {/* Messages */}
       <div
         ref={scrollRef}
-        className="flex-1 space-y-3 overflow-y-auto px-4 py-4"
+        // min-h-0 lets this actually shrink inside the flex column; without it
+        // the messages push the composer off the bottom of the panel.
+        className="scrollbar-subtle min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4"
         aria-live="polite"
       >
         <ConciergeMessage
@@ -158,15 +213,23 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
           e.preventDefault();
           handleSend();
         }}
-        className="flex items-end gap-2 border-t border-border bg-card px-3 py-3"
-        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+        className="flex shrink-0 items-end gap-2 border-t border-border bg-card px-3 py-3"
+        style={{
+          // The home indicator is behind the keyboard while it's up, so its
+          // safe-area padding would just be dead space on top of the inset.
+          paddingBottom: keyboardInset
+            ? "0.75rem"
+            : "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
+        }}
       >
         <textarea
           ref={inputRef}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            // Enter sends on pointer-and-keyboard setups; on a touch keyboard
+            // it has to insert a newline, since there's no shift to hold.
+            if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(hover: hover)").matches) {
               e.preventDefault();
               handleSend();
             }
@@ -175,13 +238,17 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
           maxLength={1000}
           placeholder={t("concierge.placeholder")}
           aria-label={t("concierge.placeholder")}
-          className="max-h-24 min-h-[38px] flex-1 resize-none overflow-y-auto rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          // text-base below sm is load-bearing: iOS Safari zooms the whole page
+          // in when a focused field is under 16px, which is what pushes the
+          // send button off-screen.
+          className="scrollbar-subtle min-h-[40px] w-full flex-1 resize-none overflow-y-hidden rounded-md border border-input bg-background px-3 py-2 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm"
         />
         <Button
           type="submit"
           size="icon"
           disabled={sending || !draft.trim()}
           aria-label={t("concierge.send")}
+          className="h-10 w-10 shrink-0"
         >
           <SendDiagonal className="h-4 w-4" aria-hidden />
         </Button>

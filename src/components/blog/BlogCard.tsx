@@ -65,18 +65,18 @@ export default function BlogCard({
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="mb-3 flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="flex flex-1 flex-col p-4 sm:p-6">
+        <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
           <span>{formatPostDate(post.publishedAt, lang)}</span>
-          <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
+          <span className="hidden h-1 w-1 rounded-full bg-muted-foreground/40 sm:block" />
           <span className="inline-flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
+            <Clock className="h-3.5 w-3.5 shrink-0" />
             {t("blog.readTime", { minutes: post.readMinutes })}
           </span>
         </div>
 
         <h3
-          className={`font-display font-semibold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary ${
+          className={`break-words font-display font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary ${
             featured ? "text-xl sm:text-2xl" : "text-lg"
           }`}
         >

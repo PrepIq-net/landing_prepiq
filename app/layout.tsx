@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -6,6 +6,14 @@ import { I18nProviderWrapper } from "./I18nProviderWrapper";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Lets the layout viewport (and therefore `dvh`) shrink when the on-screen
+  // keyboard opens, so fixed-bottom UI stays above it instead of behind it.
+  interactiveWidget: "resizes-content",
+};
 
 export const metadata: Metadata = {
   title: "PrepIQ — Daily Prep Intelligence for Kitchens",
