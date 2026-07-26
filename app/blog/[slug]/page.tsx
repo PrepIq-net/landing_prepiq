@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/landing/Navbar";
 import PostDetailContent from "@/components/blog/PostDetailContent";
@@ -29,14 +28,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublishedBlogPost(slug);
-  if (!post) return { title: "Article not found — PrepIQ" };
+  if (!post) return { title: { absolute: "Article not found — PrepIQ" } };
 
   const title = post.seoTitle ?? `${post.titleEn} — PrepIQ`;
   const description = post.seoDescription ?? post.excerptEn;
   const url = `${SITE_URL}/blog/${post.slug}`;
 
   return {
-    title,
+    // `absolute` bypasses the root title template so an admin-authored seoTitle
+    // is used verbatim rather than gaining a second "— PrepIQ".
+    title: { absolute: title },
     description,
     keywords: post.tags,
     authors: [{ name: post.authorName }],
@@ -127,13 +128,13 @@ export default async function BlogPostPage({
       <Suspense fallback={null}>
         <Footer links={footerLinks} />
       </Suspense>
-      <Script
-        id="blogposting-jsonld"
+      {/* Plain <script>: next/script injects on the client, so this markup
+          would be absent from the server-rendered HTML crawlers parse. */}
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <Script
-        id="breadcrumb-jsonld"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />

@@ -13,9 +13,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const page = await getPageWithSections(slug);
   if (!page) return {};
+
+  const title = `${page.titleEn} — PrepIQ`;
+  const description = page.metaDescriptionEn || undefined;
+  const url = `/${slug}`;
+
   return {
-    title: `${page.titleEn} — PrepIQ`,
-    description: page.metaDescriptionEn || undefined,
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url,
+      siteName: "PrepIQ",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

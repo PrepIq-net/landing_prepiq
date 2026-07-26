@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
+import { SITE_URL } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/landing/Navbar";
 import RoleDetailContent from "@/components/careers/RoleDetailContent";
@@ -26,16 +26,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const role = await getPublishedJobRole(slug);
-  if (!role) return { title: "Role not found — PrepIQ" };
+  if (!role) return { title: "Role not found" };
   return {
-    title: `${role.titleEn} — Careers at PrepIQ`,
+    title: `${role.titleEn} — Careers`,
     description: role.summaryEn,
-    alternates: { canonical: `https://prepiq.com/careers/${role.slug}` },
+    alternates: { canonical: `${SITE_URL}/careers/${role.slug}` },
     openGraph: {
-      title: `${role.titleEn} — Careers at PrepIQ`,
+      title: `${role.titleEn} — Careers`,
       description: role.summaryEn,
       type: "website",
-      url: `https://prepiq.com/careers/${role.slug}`,
+      url: `${SITE_URL}/careers/${role.slug}`,
       siteName: "PrepIQ",
     },
   };
@@ -64,8 +64,8 @@ export default async function RolePage({
     hiringOrganization: {
       "@type": "Organization",
       name: "PrepIQ",
-      sameAs: "https://prepiq.com",
-      logo: "https://prepiq.com/logo/golden-main-transparent.png",
+      sameAs: SITE_URL,
+      logo: `${SITE_URL}/logo/golden-main-transparent.png`,
     },
     jobLocation: {
       "@type": "Place",
@@ -82,8 +82,7 @@ export default async function RolePage({
       <Suspense fallback={null}>
         <Footer links={footerLinks} />
       </Suspense>
-      <Script
-        id="jobposting-jsonld"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd) }}
       />

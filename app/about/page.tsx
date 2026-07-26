@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
+import { SITE_URL } from "@/lib/constants";
 import Navbar from "@/components/landing/Navbar";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import AboutHero from "@/components/about/AboutHero";
@@ -17,17 +17,16 @@ import {
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 export const metadata: Metadata = {
-  title: "About PrepIQ — Operational Intelligence for Professional Kitchens around the globes",
+  title: "About — Operational Intelligence for Professional Kitchens",
   description:
     "PrepIQ is the operational intelligence layer for restaurants and hotels — forecasting, production planning, inventory intelligence and real-time insights that help kitchens waste less and prepare smarter.",
-  alternates: { canonical: "https://prepiq.com/about" },
+  alternates: { canonical: "/about" },
   openGraph: {
     title: "About PrepIQ",
     description:
       "Building the operational intelligence layer for professional kitchens.",
     type: "website",
-    url: "https://prepiq.com/about",
-    images: ["/og-image.png"],
+    url: "/about",
     siteName: "PrepIQ",
   },
   twitter: {
@@ -35,7 +34,6 @@ export const metadata: Metadata = {
     title: "About PrepIQ",
     description:
       "Building the operational intelligence layer for professional kitchens.",
-    images: ["/og-image.png"],
   },
 };
 
@@ -43,8 +41,8 @@ const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "PrepIQ",
-  url: "https://prepiq.com",
-  logo: "https://prepiq.com/logo/golden-main-transparent.png",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo/golden-main-transparent.png`,
   description:
     "Operational intelligence for professional kitchens — forecasting, production planning, inventory intelligence and real-time operational insights.",
   foundingLocation: {
@@ -78,8 +76,7 @@ export default async function AboutPage() {
         <Footer links={footerLinks} />
       </Suspense>
 
-      <Script
-        id="about-org-jsonld"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
