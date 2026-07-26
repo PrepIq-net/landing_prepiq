@@ -78,6 +78,9 @@ function useActiveHeading(headings: { id: string }[]) {
   return activeId;
 }
 
+/** An outline shorter than this isn't worth a gutter, so the article goes full width. */
+const MIN_TOC_HEADINGS = 3;
+
 function DesktopTableOfContents({
   headings,
   activeId,
@@ -87,8 +90,6 @@ function DesktopTableOfContents({
   activeId: string;
   label: string;
 }) {
-  if (headings.length < 3) return null;
-
   return (
     <nav className="sticky top-28 self-start hidden lg:block">
       <p className="mb-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -124,8 +125,6 @@ function MobileTableOfContents({
   label: string;
 }) {
   const [open, setOpen] = useState(false);
-
-  if (headings.length < 3) return null;
 
   return (
     <div className="sticky top-14 z-30 -mx-6 md:-mx-8 lg:hidden">
@@ -186,6 +185,12 @@ export default function PostDetailContent({
   const headings = useMemo(() => extractHeadings(body), [body]);
   const activeHeading = useActiveHeading(headings);
 
+  // The outline is derived from the body, so switching language can change how
+  // many headings there are. The gutter track has to be dropped in the same
+  // breath as the outline itself — otherwise the article is left alone in a
+  // 220px column and a desktop page suddenly renders at mobile width.
+  const hasToc = headings.length >= MIN_TOC_HEADINGS;
+
   return (
     <>
       <ReadingProgress />
@@ -202,10 +207,24 @@ export default function PostDetailContent({
         {/* Everything from the title down shares one column so the header, the
             cover and the prose all hang off the same left edge; the outline
             rides in the gutter beside them. */}
-        <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)] lg:gap-14 lg:items-start">
-          <DesktopTableOfContents headings={headings} activeId={activeHeading} label={t("blog.onThisPage")} />
+        <div
+          className={`mt-8 ${
+            hasToc
+              ? "lg:grid lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)] lg:gap-14 lg:items-start"
+              : ""
+          }`}
+        >
+          {hasToc && (
+            <DesktopTableOfContents
+              headings={headings}
+              activeId={activeHeading}
+              label={t("blog.onThisPage")}
+            />
+          )}
 
-          <div className="mx-auto w-full max-w-[68ch] lg:mx-0">
+          <div
+            className={`mx-auto w-full max-w-[68ch] ${hasToc ? "lg:mx-0" : ""}`}
+          >
             <header>
               <div className="flex flex-wrap items-center gap-3 text-xs">
                 <span className="rounded-md border border-primary/20 bg-primary/[0.08] px-2.5 py-1 font-medium uppercase tracking-wider text-primary">
@@ -268,7 +287,13 @@ export default function PostDetailContent({
               </div>
             )}
 
-            <MobileTableOfContents headings={headings} activeId={activeHeading} label={t("blog.onThisPage")} />
+            {hasToc && (
+              <MobileTableOfContents
+                headings={headings}
+                activeId={activeHeading}
+                label={t("blog.onThisPage")}
+              />
+            )}
 
             <div className="mt-12">
               <BlogMarkdown body={body} />

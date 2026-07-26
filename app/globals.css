@@ -112,6 +112,41 @@
     @apply bg-gradient-to-r from-primary to-[hsl(40,80%,50%)] bg-clip-text text-transparent;
   }
 
+  /* Swipeable rows (category filters, chip strips) that shouldn't advertise
+     the fact with a scrollbar. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Thin, low-contrast scrollbar for small scroll areas inside chrome — the
+     default one is heavy enough to unbalance a chat composer. */
+  .scrollbar-subtle {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+
   .pattern-dots {
     background-image: radial-gradient(circle, hsla(40, 70%, 39%, 0.08) 1.5px, transparent 1.5px);
     background-size: 24px 24px;
