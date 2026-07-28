@@ -50,14 +50,20 @@ const HeroSection = ({
 
   return (
     <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-end overflow-hidden">
-      {/* Background photo with ken burns */}
+      {/* Background video */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
-          src="/images/hero-kitchen.jpg"
-          alt="Chef at work in a commercial kitchen"
-          className="w-full h-[60%] md:h-full object-cover object-center object-top scale-110 translate-110 animate-kenburns"
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/hero-kitchen.jpg"
+          className="w-full h-full object-cover object-center"
           style={{ filter: "saturate(0.92) brightness(0.96)" }}
-        />
+        >
+          <source src="/images/hero.webm" type="video/webm" />
+          <source src="/images/hero.mp4" type="video/mp4" />
+        </video>
         {/* Vertical gradient overlay */}
         <div
           className="absolute inset-0"
