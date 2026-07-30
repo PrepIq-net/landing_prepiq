@@ -4,45 +4,57 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { PricingContent, SectionContent } from "@/types/cms";
+import type { PlanCatalogByLang } from "@/lib/plans";
+import {
+  LIMIT_MAX_STAFF_PER_BRANCH,
+  type PublicPlan,
+  type PublicPlanCatalog,
+} from "@/types/plans";
 import { GoldText } from "./GoldText";
 import { APP_URL } from "@/lib/constants";
 
-const PLAN_META = {
-  core: {
+/**
+ * Plan data comes from the backend catalog (`/api/v1/subscriptions/plans/`,
+ * fetched server-side and passed in as `catalog`), so a price or feature edited
+ * in /admin → Subscription Plans appears here without a deploy.
+ *
+ * The constants below are the offline fallback used only when that fetch fails
+ * — the marketing page must still render a credible price list if the backend
+ * is unreachable. They are not the source of truth; if they drift from the
+ * seeded plans, the seed wins.
+ */
+const FALLBACK_PLAN_META = [
+  {
+    plan_type: "CORE",
+    name: "Core",
     monthlyPrice: 49,
     yearlyPrice: 499,
-    trial: true,
+    trialDays: 0,
     popular: false,
-    limits: { branches: "1", staffEn: "Up to 15", staffFr: "Jusqu'à 15" },
+    customPricing: false,
+    staffPerBranch: 10,
   },
-  intelligence: {
+  {
+    plan_type: "INTELLIGENCE",
+    name: "Intelligence",
     monthlyPrice: 149,
     yearlyPrice: 1519,
-    trial: false,
+    trialDays: 30,
     popular: true,
-    limits: { branches: "10", staffEn: "Unlimited", staffFr: "Illimité" },
+    customPricing: false,
+    staffPerBranch: null,
   },
-  command: {
+  {
+    plan_type: "COMMAND",
+    name: "Command",
     monthlyPrice: 349,
     yearlyPrice: 3559,
-    trial: false,
+    trialDays: 0,
     popular: false,
-    limits: {
-      branchesEn: "Unlimited",
-      branchesFr: "Illimité",
-      staffEn: "Unlimited",
-      staffFr: "Illimité",
-    },
+    customPricing: true,
+    staffPerBranch: null,
   },
-} as const;
-
-const ADDON_META = [
-  { price: 79, plans: ["Command"] },
-  { price: 59, plans: ["Command"] },
-  { price: 99, plans: ["Intelligence", "Command"] },
-  { price: 49, plans: ["Intelligence", "Command"] },
-  { price: 299, plans: ["Command"] },
-];
+] as const;
 
 const FALLBACK_FEATURES = {
   en: {
@@ -116,54 +128,75 @@ const FALLBACK_FEATURES = {
 const FALLBACK_ADDONS = {
   en: [
     {
-      name: "Tax Engine",
-      desc: "Automatically calculate and apply local tax rules across jurisdictions, so every location stays compliant without manual work.",
-    },
-    {
-      name: "Liability Shield",
+      name: "Compliance & Audit Suite",
       desc: "Generates audit-ready waste logs, HACCP-aligned reports, and timestamped records for regulatory inspections and insurance claims.",
+      price: 59,
     },
     {
       name: "Enterprise SSO",
       desc: "Single sign-on via SAML/OIDC for your entire org. One login, centralized access control, and automatic provisioning.",
+      price: 99,
     },
     {
-      name: "Advanced API",
+      name: "Integration API",
       desc: "Full REST API access to push forecasts, pull waste data, and integrate PrepIQ into your existing ERP, BI, or procurement systems.",
+      price: 49,
     },
     {
-      name: "Dedicated Analyst",
+      name: "Kitchen Intelligence Advisor",
       desc: "A named PrepIQ analyst reviews your data weekly, delivers optimization recommendations, and helps you hit waste-reduction targets.",
+      price: 299,
     },
   ],
   fr: [
     {
-      name: "Moteur Fiscal",
-      desc: "Calcul et application automatique des taxes locales selon les juridictions pour rester conforme sans effort.",
-    },
-    {
-      name: "Bouclier Légal",
+      name: "Suite Conformité & Audit",
       desc: "Génère des registres de pertes conformes HACCP et des rapports horodatés pour les inspections et assurances.",
+      price: 59,
     },
     {
       name: "SSO Entreprise",
       desc: "Connexion unique via SAML/OIDC pour toute l'organisation. Un seul login, accès centralisé.",
+      price: 99,
     },
     {
-      name: "API Avancée",
+      name: "API d'Intégration",
       desc: "Accès complet à l'API REST pour pousser les prévisions et intégrer PrepIQ à vos ERP ou BI existants.",
+      price: 49,
     },
     {
-      name: "Analyste Dédié",
+      name: "Conseiller en Intelligence Culinaire",
       desc: "Un analyste PrepIQ examine vos données chaque semaine et vous aide à atteindre vos objectifs de réduction des pertes.",
+      price: 299,
     },
   ],
 };
 
+interface PlanCard {
+  key: string;
+  name: string;
+  tagline: string;
+  cta: string;
+  ctaHref: string;
+  features: string[];
+  monthlyPrice: number;
+  yearlyPrice: number;
+  trial: string | null;
+  popular: boolean;
+  customPricing: boolean;
+  staffLabel: string;
+}
+
+/** Prices are decimal strings on the wire ("49.00"). */
+const toNumber = (value: string | number) =>
+  typeof value === "number" ? value : Number.parseFloat(value) || 0;
+
 const PricingSection = ({
   dbContent,
+  catalog,
 }: {
   dbContent?: SectionContent<PricingContent>;
+  catalog?: PlanCatalogByLang | null;
 }) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
@@ -180,7 +213,6 @@ const PricingSection = ({
     perYear: t("pricing.perYear"),
     billedAnnually: t("pricing.billedAnnually"),
     billedMonthly: t("pricing.billedMonthly"),
-    branches: t("pricing.branches"),
     staff: t("pricing.staff"),
     mostPopular: t("pricing.mostPopular"),
     footer: t("pricing.footer"),
@@ -207,58 +239,133 @@ const PricingSection = ({
     addOns: {
       title: t("pricing.addOns.title"),
       subtitle: t("pricing.addOns.subtitle"),
-      items: FALLBACK_ADDONS[currentLang],
+      items: FALLBACK_ADDONS[currentLang].map(({ name, desc }) => ({ name, desc })),
     },
   };
 
-  const staffLabel = (key: keyof typeof PLAN_META) => {
-    const limits = PLAN_META[key].limits as Record<string, string>;
-    return currentLang === "fr" ? limits.staffFr : limits.staffEn;
-  };
-  const branchesLabel = (key: keyof typeof PLAN_META) => {
-    const limits = PLAN_META[key].limits as Record<string, string>;
-    if (limits.branches) return limits.branches;
-    return currentLang === "fr" ? limits.branchesFr : limits.branchesEn;
+  const live: PublicPlanCatalog | null = catalog?.[currentLang] ?? null;
+
+  /**
+   * Prices are quoted in the backend's billing currency (USD — billing is not
+   * FX-converted), so the currency shown must follow the API, not the UI
+   * language. Quoting € on a USD charge would misstate what we bill.
+   */
+  const formatPrice = useMemo(() => {
+    const currency = live?.currency || "USD";
+    const formatter = new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    return (value: number) => formatter.format(value);
+  }, [live?.currency, currentLang]);
+
+  /** CMS/i18n copy for a plan, matched on plan_type ("CORE" → content.plans.core). */
+  const cmsCopyFor = (planType: string) =>
+    (content.plans as Record<string, { name?: string; tagline?: string; cta?: string; features?: string[] }>)[
+      planType.toLowerCase()
+    ];
+
+  const staffLabelFor = (limit: number | null | undefined) =>
+    limit == null ? t("pricing.unlimited") : String(limit);
+
+  const ctaFor = (customPricing: boolean, planType: string) => {
+    const copy = cmsCopyFor(planType);
+    if (copy?.cta) return copy.cta;
+    return customPricing ? t("pricing.talkToSales") : t("pricing.getStarted");
   };
 
-  const plans = useMemo(
-    () =>
-      (["core", "intelligence", "command"] as const).map((key) => {
-        const meta = PLAN_META[key];
-        const planContent = content.plans[key] || {
-          name: "",
-          tagline: "",
-          cta: "",
-          features: [],
-        };
+  const plans: PlanCard[] = useMemo(() => {
+    if (live?.plans?.length) {
+      return live.plans.map((plan: PublicPlan) => {
+        const copy = cmsCopyFor(plan.plan_type);
+        const customPricing =
+          plan.custom_pricing || plan.pricing?.mode === "CUSTOM_ONLY";
         return {
-          key,
-          name: planContent.name,
-          tagline: planContent.tagline,
-          cta: planContent.cta,
-          features: Array.isArray(planContent.features)
-            ? planContent.features
-            : [],
-          monthlyPrice: meta.monthlyPrice,
-          yearlyPrice: meta.yearlyPrice,
-          trial: meta.trial
-            ? currentLang === "fr"
-              ? "Essai gratuit de 30 jours"
-              : "30-day free pilot"
-            : null,
-          popular: meta.popular,
-          limits: { branches: branchesLabel(key), staff: staffLabel(key) },
+          key: plan.id,
+          // The API is the source of truth for name, tagline, and features;
+          // CMS copy only fills a gap the backend left blank.
+          name: plan.name,
+          tagline: plan.tagline || copy?.tagline || "",
+          cta: ctaFor(customPricing, plan.plan_type),
+          ctaHref: customPricing ? "/contact" : APP_URL,
+          features: plan.features?.length ? plan.features : (copy?.features ?? []),
+          monthlyPrice: toNumber(plan.monthly_price),
+          yearlyPrice: toNumber(plan.yearly_price),
+          trial:
+            plan.trial_days > 0
+              ? t("pricing.trialDays", { days: plan.trial_days })
+              : null,
+          popular: plan.is_popular,
+          customPricing,
+          staffLabel: staffLabelFor(plan.limits?.[LIMIT_MAX_STAFF_PER_BRANCH]),
         };
-      }),
-    [content, currentLang],
-  );
+      });
+    }
+
+    return FALLBACK_PLAN_META.map((meta) => {
+      const copy = cmsCopyFor(meta.plan_type);
+      return {
+        key: meta.plan_type,
+        name: copy?.name || meta.name,
+        tagline: copy?.tagline || "",
+        cta: ctaFor(meta.customPricing, meta.plan_type),
+        ctaHref: meta.customPricing ? "/contact" : APP_URL,
+        features: copy?.features ?? [],
+        monthlyPrice: meta.monthlyPrice,
+        yearlyPrice: meta.yearlyPrice,
+        trial:
+          meta.trialDays > 0
+            ? t("pricing.trialDays", { days: meta.trialDays })
+            : null,
+        popular: meta.popular,
+        customPricing: meta.customPricing,
+        staffLabel: staffLabelFor(meta.staffPerBranch),
+      };
+    });
+  }, [live, content, currentLang, t]);
 
   const addOns = useMemo(() => {
-    const items = Array.isArray(content.addOns?.items)
-      ? content.addOns.items
-      : [];
-    return items.map((item, i) => ({ ...item, ...ADDON_META[i] }));
-  }, [content]);
+    if (live?.add_ons?.length) {
+      return live.add_ons.map((addOn) => ({
+        name: addOn.name,
+        desc: addOn.description,
+        price: toNumber(addOn.monthly_price),
+      }));
+    }
+    // CMS descriptions paired with fallback prices, matched by position.
+    const cmsItems = Array.isArray(content.addOns?.items) ? content.addOns.items : [];
+    const fallback = FALLBACK_ADDONS[currentLang];
+    if (!cmsItems.length) return fallback;
+    return cmsItems.map((item, i) => ({
+      ...item,
+      price: fallback[i]?.price ?? 0,
+    }));
+  }, [live, content, currentLang]);
+
+  /**
+   * The annual-savings badge is derived from the live prices, never authored.
+   * It is set in the admin by editing a plan's yearly price — a separately
+   * typed percentage could contradict what the cards actually charge.
+   *
+   * Plans discount by slightly different amounts, so we claim the best one and
+   * say "up to"; when every plan lands on the same figure we state it flat.
+   */
+  const saveLabel = useMemo(() => {
+    const discounts = (live?.plans ?? [])
+      .map((plan) => plan.yearly_discount_percentage)
+      .filter((value): value is number => typeof value === "number" && value > 0)
+      .map(Math.round);
+
+    if (!discounts.length) return content.save;
+
+    const lowest = Math.min(...discounts);
+    const highest = Math.max(...discounts);
+    return lowest === highest
+      ? t("pricing.saveExact", { percent: highest })
+      : t("pricing.saveUpTo", { percent: highest });
+  }, [live, content.save, t]);
 
   const [footerBefore, footerLink, footerAfter] = useMemo(() => {
     const match = content.footer?.match(
@@ -293,6 +400,18 @@ const PricingSection = ({
           <p className="text-sm md:text-lg text-base text-muted-foreground max-w-[512px] mx-auto leading-relaxed">
             {content.subtitle}
           </p>
+
+          {/* Branch scoping is the one thing a reader must not misunderstand:
+              a plan buys one kitchen, not the whole company. */}
+          <div className="mt-7 inline-flex flex-col items-center gap-2.5 max-w-[560px] mx-auto">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold text-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              {t("pricing.branchScope")}
+            </span>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {t("pricing.branchScopeNote")}
+            </p>
+          </div>
         </motion.div>
 
         {/* Billing toggle */}
@@ -304,7 +423,10 @@ const PricingSection = ({
           </span>
           <button
             onClick={() => setAnnual(!annual)}
-            className={`relative h-8 w-14 rounded-full border transition-colors duration-200 ${
+            role="switch"
+            aria-checked={annual}
+            aria-label={`${content.monthly} / ${content.annual}`}
+            className={`relative h-8 w-14 rounded-full border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
               annual
                 ? "bg-primary/20 border-primary/30"
                 : "bg-accent border-border"
@@ -323,9 +445,9 @@ const PricingSection = ({
           >
             {content.annual}
           </span>
-          {annual && (
+          {annual && saveLabel && (
             <span className="text-xs font-medium text-[hsl(var(--success))] bg-[hsl(var(--success)/.08)] border border-[hsl(var(--success)/.15)] rounded-full px-3 py-1">
-              {content.save}
+              {saveLabel}
             </span>
           )}
         </div>
@@ -382,7 +504,7 @@ const PricingSection = ({
                           }}
                           className="inline-block text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground"
                         >
-                          {currentLang === "fr" ? `${price} €` : `$${price}`}
+                          {formatPrice(price)}
                         </motion.span>
                       </AnimatePresence>
                       <span className="text-sm text-muted-foreground/40">
@@ -390,19 +512,21 @@ const PricingSection = ({
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground/40 mt-2">
-                      {currentLang === "fr" ? "par site" : "per location"} ·{" "}
+                      {t("pricing.perBranch")} ·{" "}
                       {annual ? content.billedAnnually : content.billedMonthly}
                       {annual && (
                         <span className="text-muted-foreground/50">
                           {" "}
-                          ·{" "}
-                          {currentLang === "fr"
-                            ? `${plan.yearlyPrice} €`
-                            : `$${plan.yearlyPrice}`}
+                          · {formatPrice(plan.yearlyPrice)}
                           {content.perYear}
                         </span>
                       )}
                     </p>
+                    {plan.customPricing && (
+                      <p className="text-xs text-muted-foreground/50 mt-1.5">
+                        {t("pricing.customPricing")}
+                      </p>
+                    )}
                     {plan.trial && (
                       <p className="text-xs text-[hsl(var(--success))] font-medium mt-2.5 flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success))]" />
@@ -411,18 +535,13 @@ const PricingSection = ({
                     )}
                   </div>
 
-                  <div className="flex gap-3 mb-7">
-                    <div className="rounded-xl bg-accent/40 border border-border/20 px-4 py-3 flex-1 text-center">
+                  {/* Branch count is not a per-plan variable — every plan buys
+                      exactly one branch, which the section header already
+                      states. Only the staff cap differs between plans. */}
+                  <div className="mb-7">
+                    <div className="rounded-xl bg-accent/40 border border-border/20 px-4 py-3 text-center">
                       <p className="text-sm font-semibold text-foreground">
-                        {plan.limits.branches}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">
-                        {content.branches}
-                      </p>
-                    </div>
-                    <div className="rounded-xl bg-accent/40 border border-border/20 px-4 py-3 flex-1 text-center">
-                      <p className="text-sm font-semibold text-foreground">
-                        {plan.limits.staff}
+                        {plan.staffLabel}
                       </p>
                       <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mt-0.5">
                         {content.staff}
@@ -447,9 +566,9 @@ const PricingSection = ({
                     size="lg"
                     className="w-full group"
                   >
-                    {plan.key === "command" ? (
+                    {plan.customPricing ? (
                       <a
-                        href="/contact"
+                        href={plan.ctaHref}
                         className="flex items-center justify-center gap-2"
                       >
                         {plan.cta}
@@ -457,7 +576,7 @@ const PricingSection = ({
                       </a>
                     ) : (
                       <a
-                        href={APP_URL}
+                        href={plan.ctaHref}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
@@ -474,37 +593,38 @@ const PricingSection = ({
         </div>
 
         {/* Add-ons */}
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary/60 font-medium mb-3">
-              {content.addOns.title}
-            </p>
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              {content.addOns.subtitle}
-            </p>
-          </div>
+        {addOns.length > 0 && (
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-8">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary/60 font-medium mb-3">
+                {content.addOns.title}
+              </p>
+              <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                {content.addOns.subtitle}
+              </p>
+            </div>
 
-          <div className="flex flex-wrap justify-center gap-3">
-            {addOns.map((addon) => (
-              <div
-                key={addon.name}
-                className="flex items-center gap-3 rounded-full border border-border bg-card/80 px-5 py-2.5 hover:border-primary/30 transition-colors duration-200"
-              >
-                <span className="text-sm font-medium text-foreground">
-                  {addon.name}
-                </span>
-                <span className="text-sm font-semibold text-primary">
-                  {currentLang === "fr"
-                    ? `${addon.price} €`
-                    : `$${addon.price}`}
-                  <span className="text-xs font-normal text-muted-foreground/50">
-                    {content.perMonth}
+            <div className="flex flex-wrap justify-center gap-3">
+              {addOns.map((addon) => (
+                <div
+                  key={addon.name}
+                  title={addon.desc}
+                  className="flex items-center gap-3 rounded-full border border-border bg-card/80 px-5 py-2.5 hover:border-primary/30 transition-colors duration-200"
+                >
+                  <span className="text-sm font-medium text-foreground">
+                    {addon.name}
                   </span>
-                </span>
-              </div>
-            ))}
+                  <span className="text-sm font-semibold text-primary">
+                    {formatPrice(addon.price)}
+                    <span className="text-xs font-normal text-muted-foreground/50">
+                      {content.perMonth}
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <p className="text-center text-xs text-muted-foreground/40 mt-10 md:mt-14 max-w-lg mx-auto leading-relaxed px-2">
           {footerBefore}

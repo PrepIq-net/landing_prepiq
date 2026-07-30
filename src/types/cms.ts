@@ -224,12 +224,16 @@ export interface PricingContent {
   subtitle: string;
   monthly: string;
   annual: string;
+  /**
+   * Fallback only. The rendered badge is computed from each plan's real
+   * monthly/yearly prices (see PricingSection) so it cannot contradict them;
+   * this authored string is used only when the plan catalog is unreachable.
+   */
   save: string;
   perMonth: string;
   perYear: string;
   billedAnnually: string;
   billedMonthly: string;
-  branches: string;
   staff: string;
   mostPopular: string;
   footer: string;

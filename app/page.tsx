@@ -6,6 +6,7 @@ import {
   getActiveFooterLinks,
   getFeaturedBlogPosts,
 } from "@/lib/data";
+import { getPublicPlanCatalogs } from "@/lib/plans";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import CookieConsent from "@/components/CookieConsent";
@@ -31,6 +32,11 @@ export default async function Page() {
   const config = typeof page.configJson === 'string' ? JSON.parse(page.configJson || "{}") : (page.configJson || {});
   const maxWidth = config.maxWidth || "1440px";
 
+  const hasPricingSection = page.sections.some(
+    (section) => section.componentType === "PricingSection",
+  );
+  const planCatalog = hasPricingSection ? await getPublicPlanCatalogs() : null;
+
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
       <Navbar links={navLinks} />
@@ -40,6 +46,7 @@ export default async function Page() {
       <DynamicSectionRenderer
         sections={page.sections}
         featuredPosts={featuredPosts}
+        planCatalog={planCatalog}
       />
 
       <Suspense fallback={<SectionFallback />}>

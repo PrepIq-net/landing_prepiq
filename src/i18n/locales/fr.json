@@ -768,7 +768,7 @@
   "pricing": {
     "badge": "Tarification",
     "title": "Une cuisine ou <gold>cinquante</gold>",
-    "subtitle": "Un tarif par site qui suit votre croissance. Commencez par un essai, évoluez avec votre réseau.",
+    "subtitle": "Un forfait couvre une cuisine active. Démarrez une cuisine avec un essai gratuit, puis placez chaque cuisine sur le forfait dont son exploitation a réellement besoin.",
     "monthly": "Mensuel",
     "annual": "Annuel",
     "save": "Économisez ~15 %",
@@ -776,14 +776,13 @@
     "perYear": "/an",
     "billedAnnually": "facturé annuellement",
     "billedMonthly": "facturé mensuellement",
-    "branches": "Sites",
-    "staff": "Équipe",
+    "staff": "Équipe par cuisine",
     "mostPopular": "Le plus populaire",
     "addOns": {
       "title": "Modules optionnels",
-      "subtitle": "Étendez PrepIQ avec des modules spécialisés. Chaque ajout est facturé par site et peut être modifié à tout moment."
+      "subtitle": "Étendez PrepIQ avec des modules spécialisés. Chaque ajout est facturé par cuisine et peut être modifié à tout moment."
     },
-    "footer": "Tous les forfaits incluent le chiffrement, les pratiques SOC 2 et un accompagnement dédié. Pour 10+ sites, contactez-nous pour un <primary>tarif sur mesure</primary>.",
+    "footer": "Tous les forfaits incluent le chiffrement, les pratiques SOC 2 et un accompagnement dédié. Pour 10+ cuisines, contactez-nous pour un <primary>tarif sur mesure</primary>.",
     "plans": {
       "core": {
         "name": "Core",
@@ -800,7 +799,17 @@
         "tagline": "Centre de Pilotage Multi-Sites",
         "cta": "Parler à un expert"
       }
-    }
+    },
+    "branchScope": "1 forfait = 1 cuisine active",
+    "branchScopeNote": "Les cuisines ne sont jamais facturées à l'unité. Ajoutez-en autant que vous en exploitez : chacune souscrit son propre forfait — un café sur Core à côté d'un site phare sur Command.",
+    "perBranch": "par cuisine",
+    "unlimited": "Illimité",
+    "customPricing": "Tarif sur mesure",
+    "talkToSales": "Parler à un expert",
+    "getStarted": "Commencer",
+    "trialDays": "Essai gratuit de {{days}} jours",
+    "saveExact": "Économisez {{percent}} %",
+    "saveUpTo": "Économisez jusqu'à {{percent}} %"
   },
   "faq": {
     "badge": "Questions & Réponses",

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { I18nProviderWrapper } from "./I18nProviderWrapper";
 import { SITE_URL } from "@/lib/constants";
+import { getPublicPlanCatalog } from "@/lib/plans";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -79,9 +80,44 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Published prices, straight from the backend catalog so structured data can
+ * never drift from what /pricing shows. Falls back to the seeded list if the
+ * backend is unreachable — omitting offers entirely would lose the rich result.
+ */
+const FALLBACK_OFFERS = [
+  { name: "Core", price: "49" },
+  { name: "Intelligence", price: "149" },
+  { name: "Command", price: "349" },
+];
+
+async function buildOffers() {
+  const catalog = await getPublicPlanCatalog("en");
+  const source =
+    catalog?.plans?.map((plan) => ({
+      name: plan.name,
+      // Schema.org wants a bare decimal, not "49.00 USD".
+      price: String(Number.parseFloat(plan.monthly_price)),
+    })) ?? FALLBACK_OFFERS;
+
+  return source.map((offer) => ({
+    "@type": "Offer",
+    name: offer.name,
+    price: offer.price,
+    priceCurrency: catalog?.currency ?? "USD",
+    url: `${SITE_URL}/pricing`,
+    // Each offer buys one kitchen branch, not an org-wide licence.
+    eligibleQuantity: {
+      "@type": "QuantitativeValue",
+      value: 1,
+      unitText: "kitchen branch",
+    },
+  }));
+}
+
 // One @graph so Organization, WebSite and the product entity are linked by @id
 // rather than parsed as three unrelated blobs.
-const jsonLd = {
+const buildJsonLd = (offers: unknown[]) => ({
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -116,39 +152,18 @@ const jsonLd = {
       operatingSystem: "Web",
       url: SITE_URL,
       publisher: { "@id": `${SITE_URL}/#organization` },
-      // Mirrors PLAN_META in components/landing/PricingSection.tsx.
-      offers: [
-        {
-          "@type": "Offer",
-          name: "Core",
-          price: "49",
-          priceCurrency: "USD",
-          url: `${SITE_URL}/pricing`,
-        },
-        {
-          "@type": "Offer",
-          name: "Intelligence",
-          price: "149",
-          priceCurrency: "USD",
-          url: `${SITE_URL}/pricing`,
-        },
-        {
-          "@type": "Offer",
-          name: "Command",
-          price: "349",
-          priceCurrency: "USD",
-          url: `${SITE_URL}/pricing`,
-        },
-      ],
+      offers,
     },
   ],
-};
+});
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = buildJsonLd(await buildOffers());
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
