@@ -771,7 +771,7 @@
   "pricing": {
     "badge": "Pricing",
     "title": "One Kitchen or <gold>Fifty</gold>",
-    "subtitle": "Per-location pricing that scales with your operations. Start with a free pilot, upgrade as your network grows.",
+    "subtitle": "One plan covers one active kitchen branch. Start a branch on a free pilot, and put each branch on the plan its operation actually needs.",
     "monthly": "Monthly",
     "annual": "Annual",
     "save": "Save ~15%",
@@ -779,14 +779,13 @@
     "perYear": "/yr",
     "billedAnnually": "billed annually",
     "billedMonthly": "billed monthly",
-    "branches": "Branches",
-    "staff": "Staff",
+    "staff": "Staff per branch",
     "mostPopular": "Most Popular",
     "addOns": {
       "title": "Optional Add-ons",
-      "subtitle": "Extend PrepIQ with specialized modules. Each add-on is billed per location and can be added or removed anytime."
+      "subtitle": "Extend PrepIQ with specialized modules. Each add-on is billed per kitchen branch and can be added or removed anytime."
     },
-    "footer": "All plans include encrypted data, SOC 2 practices, and dedicated onboarding. Enterprise deployments with 10+ locations get custom pricing — <primary>talk to sales</primary>.",
+    "footer": "All plans include encrypted data, SOC 2 practices, and dedicated onboarding. Enterprise deployments with 10+ branches get custom pricing — <primary>talk to sales</primary>.",
     "plans": {
       "core": {
         "name": "Core",
@@ -803,7 +802,17 @@
         "tagline": "Multi-Branch Command Center",
         "cta": "Talk to Sales"
       }
-    }
+    },
+    "branchScope": "1 plan = 1 active kitchen branch",
+    "branchScopeNote": "Branches are never metered. Add as many as you run, and each one subscribes on its own — a single café on Core alongside a flagship on Command.",
+    "perBranch": "per kitchen branch",
+    "unlimited": "Unlimited",
+    "customPricing": "Custom pricing",
+    "talkToSales": "Talk to Sales",
+    "getStarted": "Get Started",
+    "trialDays": "{{days}}-day free pilot",
+    "saveExact": "Save {{percent}}%",
+    "saveUpTo": "Save up to {{percent}}%"
   },
   "faq": {
     "badge": "Questions & Answers",
