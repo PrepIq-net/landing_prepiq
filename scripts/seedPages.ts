@@ -337,7 +337,6 @@ function buildContent(loc: any, isFr: boolean) {
       perYear: loc.pricing.perYear,
       billedAnnually: loc.pricing.billedAnnually,
       billedMonthly: loc.pricing.billedMonthly,
-      branches: loc.pricing.branches,
       staff: loc.pricing.staff,
       mostPopular: loc.pricing.mostPopular,
       footer: stripTags(loc.pricing.footer),

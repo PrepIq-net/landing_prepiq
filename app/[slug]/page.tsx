@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import Navbar from "@/components/landing/Navbar";
 import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/lib/data";
+import { getPublicPlanCatalogs } from "@/lib/plans";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import CookieConsent from "@/components/CookieConsent";
@@ -55,13 +56,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     notFound();
   }
 
+  // Only pay for the pricing fetch on pages that actually render prices
+  // (/pricing today, but keyed off the section so any page works).
+  const hasPricingSection = page.sections.some(
+    (section) => section.componentType === "PricingSection",
+  );
+  const planCatalog = hasPricingSection ? await getPublicPlanCatalogs() : null;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar links={navLinks} />
       <ConciergeWidget />
       <CookieConsent />
 
-      <DynamicSectionRenderer sections={page.sections} />
+      <DynamicSectionRenderer sections={page.sections} planCatalog={planCatalog} />
 
       <Suspense fallback={<SectionFallback />}>
         <Footer links={footerLinks} />

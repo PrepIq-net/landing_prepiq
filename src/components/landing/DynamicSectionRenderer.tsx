@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { Suspense, useMemo } from "react";
 import type { BlogPostSummary } from "@/types/blog";
+import type { PlanCatalogByLang } from "@/lib/plans";
 
 const SectionFallback = () => (
   <div className="py-20 flex items-center justify-center">
@@ -35,6 +36,7 @@ const COMPONENTS: Record<string, any> = {
 // here, since this renderer is a client component.
 const DATA_PROP: Record<string, string> = {
   BlogTeaserSection: "posts",
+  PricingSection: "catalog",
 };
 
 interface DynamicSectionRendererProps {
@@ -44,11 +46,14 @@ interface DynamicSectionRendererProps {
     contentJson: any;
   }[];
   featuredPosts?: BlogPostSummary[];
+  /** Live plan catalog from the backend; PricingSection falls back if absent. */
+  planCatalog?: PlanCatalogByLang | null;
 }
 
 export default function DynamicSectionRenderer({
   sections,
   featuredPosts,
+  planCatalog,
 }: DynamicSectionRendererProps) {
   return (
     <>
@@ -61,7 +66,11 @@ export default function DynamicSectionRenderer({
           : section.contentJson;
 
         const dataProp = DATA_PROP[section.componentType];
-        const extraProps = dataProp ? { [dataProp]: featuredPosts } : {};
+        const DATA_VALUES: Record<string, unknown> = {
+          posts: featuredPosts,
+          catalog: planCatalog,
+        };
+        const extraProps = dataProp ? { [dataProp]: DATA_VALUES[dataProp] } : {};
 
         return (
           <Suspense key={section.id} fallback={<SectionFallback />}>
