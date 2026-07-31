@@ -4,8 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "iconoir-react";
 import { useTranslation } from "react-i18next";
-import { HeroContent, SectionContent } from "@/types/cms";
-import { CountUp } from "./motion-primitives";
+import { HeroContent, SectionContent, ProofFact } from "@/types/cms";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
 const fadeUp = {
@@ -26,7 +25,23 @@ const HeroSection = ({
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [videoPlaying, setVideoPlaying] = useState(false);
 
-  const content: HeroContent = dbContent?.[currentLang] || {
+  /*
+   * These three are deliberately claims we can keep on day one — what the
+   * product does and what the pilot costs — not averaged results from a
+   * customer base we do not yet have.
+   */
+  const translatedStats = t("hero.stats", { returnObjects: true });
+  const fallbackStats: ProofFact[] = Array.isArray(translatedStats)
+    ? (translatedStats as ProofFact[])
+    : [
+        { value: "Day 1", label: "A prep plan before we have your history" },
+        { value: "Every service", label: "The forecast relearns from what actually sold" },
+        { value: "30 days", label: "Free pilot, no card required" },
+      ];
+
+  const localized = dbContent?.[currentLang] as Partial<HeroContent> | undefined;
+
+  const fallbackContent: HeroContent = {
     badge: t("hero.badge", "AI prep planning for professional kitchens"),
     titleLine1: t("hero.titleLine1", "Stop cooking on a hunch."),
     titleLine2: t("hero.titleLine2", "Prep exactly what tomorrow will sell."),
@@ -38,18 +53,18 @@ const HeroSection = ({
     },
     ctaStart: t("hero.ctaStart", "Start Free"),
     ctaDemo: t("hero.ctaDemo", "Book a 10-min Demo"),
-    stats: {
-      accuracy: t("hero.stats.accuracy", "Forecast accuracy"),
-      waste: t("hero.stats.waste", "Food waste"),
-      stockouts: t("hero.stats.stockouts", "Stockouts avg / week"),
-    },
+    stats: fallbackStats,
   };
 
-  const stats = [
-    { value: "92%", label: content.stats.accuracy, color: "text-primary" },
-    { value: "−34%", label: content.stats.waste, color: "text-foreground" },
-    { value: "0", label: content.stats.stockouts, color: "text-foreground" },
-  ];
+  const content: HeroContent = {
+    ...fallbackContent,
+    ...localized,
+    // Sections seeded before the stat bar became a list still hold the old
+    // label-only object; ignore it rather than rendering blanks.
+    stats: Array.isArray(localized?.stats) ? localized.stats : fallbackStats,
+  };
+
+  const stats = content.stats;
 
   return (
     <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-end overflow-hidden">
@@ -187,14 +202,17 @@ const HeroSection = ({
           transition={{ delay: 0.3 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-10 md:gap-20 justify-start mt-12 sm:mt-16 md:mt-[72px] py-6 sm:py-8 border-t border-foreground/[0.12] w-full md:w-fit"
         >
-          {stats.map((stat) => (
+          {stats.map((stat, i) => (
             <div key={stat.label} className="flex flex-col gap-1 min-w-0 text-center sm:text-left">
               <p
-                className={`font-display text-2xl sm:text-3xl md:text-[44px] font-semibold tracking-[-0.02em] ${stat.color}`}
+                className={`font-display text-2xl sm:text-3xl md:text-[38px] font-semibold tracking-[-0.02em] ${
+                  i === 0 ? "text-primary" : "text-foreground"
+                }`}
               >
-                <CountUp value={stat.value} />
+                {/* Not counted up — "Day 1" would read "Day 0" until it lands. */}
+                {stat.value}
               </p>
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-foreground/55 truncate">
+              <p className="text-[10px] sm:text-xs leading-snug text-foreground/55 max-w-[30ch] mx-auto sm:mx-0">
                 {stat.label}
               </p>
             </div>

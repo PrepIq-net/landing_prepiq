@@ -32,10 +32,13 @@ const CostOfGuessingSection = ({
           "problem.items.overprep.desc",
           "Food and money in the bin, every single day. Margins bleed silently.",
         ),
-        impact: "$2,400",
+        // Qualitative on purpose: the previous "$2,400 / 14% / 0%" figures were
+        // invented industry averages. The Savings Calculator further down is
+        // where numbers belong, because the visitor supplies their own.
+        impact: t("problem.items.overprep.impact", "Every day"),
         impactLabel: t(
           "problem.items.overprep.impactLabel",
-          "thrown away monthly",
+          "prep you paid for, binned",
         ),
       },
       {
@@ -45,8 +48,11 @@ const CostOfGuessingSection = ({
           "problem.items.underprep.desc",
           "Your best items run out at peak. Customers don't come back.",
         ),
-        impact: "14%",
-        impactLabel: t("problem.items.underprep.impactLabel", "revenue lost"),
+        impact: t("problem.items.underprep.impact", "At peak"),
+        impactLabel: t(
+          "problem.items.underprep.impactLabel",
+          "when a stockout costs most",
+        ),
       },
       {
         title: t("problem.items.spreadsheets.title", "Spreadsheets"),
@@ -55,8 +61,11 @@ const CostOfGuessingSection = ({
           "problem.items.spreadsheets.desc",
           "The same guessing game every morning. Yesterday teaches nothing.",
         ),
-        impact: "0%",
-        impactLabel: t("problem.items.spreadsheets.impactLabel", "improvement"),
+        impact: t("problem.items.spreadsheets.impact", "Zero"),
+        impactLabel: t(
+          "problem.items.spreadsheets.impactLabel",
+          "learned from yesterday",
+        ),
       },
     ],
     pressures: [],
@@ -99,12 +108,11 @@ const CostOfGuessingSection = ({
                 }}
               />
               <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl backdrop-blur-2xl bg-background/40 border border-white/10 px-4 py-3 w-fit max-w-full">
-                <span className="font-display text-[40px] sm:text-[52px] font-semibold text-foreground tracking-[-0.02em]">
-                  {problems[0]?.impact || "$2,400"}
+                <span className="font-display text-[28px] sm:text-[36px] font-semibold text-foreground tracking-[-0.02em]">
+                  {problems[0]?.impact || "Every day"}
                 </span>
                 <span className="text-[13px] uppercase tracking-[0.15em] text-foreground/70">
-                  {problems[0]?.impactLabel ||
-                    "thrown away monthly, on average"}
+                  {problems[0]?.impactLabel || "prep you paid for, binned"}
                 </span>
               </div>
             </div>
@@ -137,10 +145,10 @@ const CostOfGuessingSection = ({
               {problems.map((p, i) => (
                 <div
                   key={p.title}
-                  className="grid grid-cols-[120px_1fr] gap-8 items-start py-7 border-t border-border hover:bg-accent/25 transition-colors"
+                  className="grid grid-cols-[130px_1fr] gap-8 items-start py-7 border-t border-border hover:bg-accent/25 transition-colors"
                 >
                   <p
-                    className="font-display text-4xl font-semibold tracking-[-0.02em]"
+                    className="font-display text-2xl font-semibold tracking-[-0.02em] leading-tight"
                     style={{ color: PROBLEM_COLORS[i] }}
                   >
                     {p.impact}

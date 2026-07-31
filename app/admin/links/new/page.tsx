@@ -59,7 +59,22 @@ export default function NewLink() {
         {type === "footer" && (
           <div>
             <Label htmlFor="category">Category</Label>
-            <Input id="category" name="category" placeholder="e.g., Company" />
+            <Select name="category" defaultValue="product">
+              <SelectTrigger id="category">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="product">Product column</SelectItem>
+                <SelectItem value="company">Company column</SelectItem>
+                <SelectItem value="legal">Legal column</SelectItem>
+                <SelectItem value="social">Social icon (opens in a new tab)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Social links render as icons in the footer bar. The icon is picked
+              from the URL — LinkedIn, X, GitHub, Instagram, Facebook and
+              YouTube are recognised.
+            </p>
           </div>
         )}
         <div>

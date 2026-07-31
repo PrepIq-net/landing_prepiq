@@ -57,10 +57,27 @@ export default function EditLinkForm({ link }: { link: Link }) {
           <Input id="url" name="url" defaultValue={link.url} />
           {errors.url && <p className="text-red-600 text-sm mt-1">{errors.url[0]}</p>}
         </div>
-        <div>
-          <Label htmlFor="category">Category</Label>
-          <Input id="category" name="category" defaultValue={link.category || ""} />
-        </div>
+        {type === "footer" && (
+          <div>
+            <Label htmlFor="category">Category</Label>
+            <Select name="category" defaultValue={link.category || "product"}>
+              <SelectTrigger id="category">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="product">Product column</SelectItem>
+                <SelectItem value="company">Company column</SelectItem>
+                <SelectItem value="legal">Legal column</SelectItem>
+                <SelectItem value="social">Social icon (opens in a new tab)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Social links render as icons in the footer bar. The icon is picked
+              from the URL — LinkedIn, X, GitHub, Instagram, Facebook and
+              YouTube are recognised.
+            </p>
+          </div>
+        )}
         <div>
           <Label htmlFor="sortOrder">Sort Order</Label>
           <Input id="sortOrder" name="sortOrder" type="number" defaultValue={link.sortOrder} />
