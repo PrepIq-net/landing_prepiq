@@ -1,8 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { BuiltForScaleContent, SectionContent } from "@/types/cms";
-import { CountUp } from "./motion-primitives";
+import { BuiltForScaleContent, SectionContent, ProofFact } from "@/types/cms";
 
 const PERSONA_PHOTOS = [
   "/images/persona-chef.jpg",
@@ -19,26 +18,46 @@ const BuiltForScaleSection = ({
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
+  /*
+   * The `stat` line names what each role gets out of PrepIQ. It is intentionally
+   * not a number: we do not have a customer base large enough to average
+   * accuracy, waste or locations, and a made-up figure here would be read as one.
+   */
   const fallbackPersonas = [
     {
       title: "Head Chefs",
-      stat: "92% accuracy avg.",
-      desc: "Prep decisions backed by real data, not memory. You stay in control — the AI learns from your overrides.",
+      stat: "Prep you review, not guess",
+      desc: "Prep decisions backed by your own sales history, not memory. You stay in control — the AI learns from your overrides.",
     },
     {
       title: "Ops Managers",
-      stat: "Real-time visibility",
-      desc: "Cost impact and forecast accuracy, daily. Know exactly where the margin leaks.",
+      stat: "Daily cost visibility",
+      desc: "Cost impact and forecast accuracy, measured on your data every day. Know exactly where the margin leaks.",
     },
     {
       title: "Owners & Brands",
-      stat: "6+ locations managed",
-      desc: "Scale production without scaling waste. One dashboard, every kitchen aligned.",
+      stat: "Every branch in one view",
+      desc: "Compare kitchens side by side and roll results up. One dashboard, every kitchen aligned.",
     },
     {
       title: "Front of House",
-      stat: "0 surprise 86's",
+      stat: "Stock alerts before the table",
       desc: 'Live stock alerts reach the pass before the table hears "we\'re out."',
+    },
+  ];
+
+  const fallbackStats: ProofFact[] = [
+    {
+      value: t("builtForScale.stats.perBranch.value", "Per branch"),
+      label: t("builtForScale.stats.perBranch.label", "Every kitchen gets its own forecast, prep list and staffing plan"),
+    },
+    {
+      value: t("builtForScale.stats.compare.value", "Side by side"),
+      label: t("builtForScale.stats.compare.label", "Compare accuracy, waste and cost across kitchens in one view"),
+    },
+    {
+      value: t("builtForScale.stats.currency.value", "Local currency"),
+      label: t("builtForScale.stats.currency.label", "Each branch keeps its own currency; group totals normalise for you"),
     },
   ];
 
@@ -53,11 +72,7 @@ const BuiltForScaleSection = ({
     networkTitle: "",
     networkSubtitle: "",
     sidebarTitle: "",
-    stats: {
-      margin: { label: "Avg. margin uplift across branches" },
-      waste: { label: "Monthly waste saved network-wide" },
-      accuracy: { label: "Weighted forecast accuracy" },
-    },
+    stats: fallbackStats,
     branches: [],
     globalTitle: "",
     globalSubtitle: "",
@@ -74,18 +89,15 @@ const BuiltForScaleSection = ({
     personas: Array.isArray(localizedContent?.personas)
       ? localizedContent.personas
       : fallbackContent.personas,
-    stats: {
-      ...fallbackContent.stats,
-      ...(localizedContent?.stats ?? {}),
-    },
+    // Sections seeded before the stat bar became a list still hold the old
+    // {margin,waste,accuracy} object of network averages — ignore it.
+    stats: Array.isArray(localizedContent?.stats)
+      ? localizedContent.stats
+      : fallbackStats,
   };
 
   const personas = content.personas ?? fallbackPersonas;
-  const networkStats = [
-    { value: "+2.8%", label: content.stats.margin.label },
-    { value: "$22,500", label: content.stats.waste.label },
-    { value: "92.5%", label: content.stats.accuracy.label },
-  ];
+  const networkStats = content.stats;
 
   return (
     <section className="relative py-20 sm:py-24 md:py-36 border-t border-border/50">
@@ -167,10 +179,10 @@ const BuiltForScaleSection = ({
               key={s.label}
               className="bg-card px-6 sm:px-7 py-6 sm:py-7 text-center hover:bg-accent/40 transition-colors"
             >
-              <p className="font-display text-[28px] sm:text-[32px] font-semibold text-primary tracking-[-0.02em] mb-1">
-                <CountUp value={s.value} />
+              <p className="font-display text-[22px] sm:text-[26px] font-semibold text-primary tracking-[-0.02em] mb-1.5">
+                {s.value}
               </p>
-              <p className="text-[13px] font-medium text-muted-foreground max-w-[18ch] mx-auto">
+              <p className="text-[13px] leading-snug text-muted-foreground max-w-[30ch] mx-auto">
                 {s.label}
               </p>
             </div>

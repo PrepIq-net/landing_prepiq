@@ -7,18 +7,12 @@ const prisma = new PrismaClient();
 
 const stripTags = (s: string) => s.replace(/<\/?[a-zA-Z]+>/g, "");
 
-const TESTIMONIALS = {
-  en: [
-    { quote: "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.", name: "Chef Adamu", role: "Head Chef", company: "Lagos Kitchen Co.", metric: "9% waste reduction" },
-    { quote: "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.", name: "Sarah K.", role: "Ops Manager", company: "FreshBite", metric: "$3,200/mo saved" },
-    { quote: "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.", name: "Marcus T.", role: "Owner", company: "3-Branch Network", metric: "92% accuracy" },
-  ],
-  fr: [
-    { quote: "Je devinais la mise en place chaque matin. Maintenant, je la valide. PrepIQ a changé notre vision du gaspillage.", name: "Chef Adamu", role: "Chef de Cuisine", company: "Lagos Kitchen Co.", metric: "-9% de gaspillage" },
-    { quote: "Nous avons réduit le gaspillage de 9% dès le premier mois. La prévision fonctionne tout simplement. Notre marge a bondi.", name: "Sarah K.", role: "Responsable Opérations", company: "FreshBite", metric: "3 200€/mois sauvés" },
-    { quote: "Enfin un système qui comprend la réalité d'une cuisine. Pas de superflu, pas de formation. Juste de l'intelligence.", name: "Marcus T.", role: "Propriétaire", company: "3-Branch Network", metric: "92% de précision" },
-  ],
-};
+/*
+ * Testimonials are deliberately NOT seeded. They live in the Testimonial table
+ * and are managed at /admin/testimonials, so the only quotes the site can ever
+ * show are ones a real customer gave us. The seeded section carries the copy
+ * around the quotes (heading, empty state, verifiable facts) and nothing else.
+ */
 
 const PRICING_FEATURES = {
   en: {
@@ -54,30 +48,32 @@ const FAQ_ITEMS = {
   en: [
     { q: "How does PrepIQ help kitchens reduce waste and stockouts?", a: "PrepIQ forecasts daily demand so your kitchen preps the right amount — every day. By eliminating guesswork, kitchens consistently reduce over-prep waste while avoiding the stockouts that cost you revenue and customer trust." },
     { q: "How does PrepIQ generate daily prep forecasts?", a: "PrepIQ analyzes your historical sales, day-of-week patterns, weather signals, holidays, and recent kitchen behavior to predict tomorrow's demand. Each day's service improves the system — the more you use PrepIQ, the smarter the forecasts become." },
-    { q: "How accurate are the forecasts?", a: "Accuracy improves quickly as PrepIQ learns your kitchen's patterns. Most kitchens begin seeing reliable forecasts within the first week, and accuracy continues improving as more sales data and chef feedback are captured." },
+    { q: "How accurate are the forecasts?", a: "We deliberately don't publish an accuracy percentage. We're early, and any number we quoted would come from too few kitchens to mean anything for yours. What we do instead: PrepIQ scores every forecast against what actually sold and shows you that number in your own dashboard from week one, so you can judge it on your data rather than ours." },
+    { q: "How many kitchens use PrepIQ today?", a: "A small number — we're at the start. PrepIQ runs daily in a restaurant group operating two branches, and we're onboarding our next kitchens now. We'd rather tell you that than pad the number. Being early means direct access to the team building it, and real influence over what we build next." },
     { q: "Do I need a POS system to use PrepIQ?", a: "No. While POS integration provides the best real-time data, you can also upload sales data via CSV or enter it manually. PrepIQ is designed to work with the tools your kitchen already uses." },
-    { q: "How long does it take to set up?", a: "Most kitchens are fully set up within 48 hours. You'll connect your sales data, configure menu items, and PrepIQ immediately begins learning from your operations." },
+    { q: "How long does it take to set up?", a: "Connecting your sales data and confirming your menu items usually takes an afternoon. From there PrepIQ gives you a plan on day one — built from comparable items and your operating hours — and sharpens it as your own sales history accumulates over the following weeks." },
     { q: "Can chefs override the AI suggestions?", a: "Yes. PrepIQ is designed to support chefs, not replace them. Your team can adjust any recommended prep quantity, and the system learns from those adjustments to improve future forecasts." },
-    { q: "Does PrepIQ help reduce food waste?", a: "Yes. By forecasting demand more accurately, PrepIQ helps kitchens avoid over-prepping while reducing the risk of running out of key items during service. Many kitchens see significant waste reduction within the first few weeks." },
+    { q: "Does PrepIQ help reduce food waste?", a: "That's what it's built to do: forecasting demand more accurately means preparing closer to what will actually sell, without running out of key items mid-service. We won't promise you a percentage — PrepIQ measures your prepared-versus-sold gap and attributes where it went, so you can see the effect on your own numbers instead of taking ours on trust." },
     { q: "What happens during service if demand is higher than expected?", a: "PrepIQ's Live Mode tracks sales during service and alerts you if an item is trending toward a stockout. It can suggest adjustments like preparing an additional batch or slowing production to minimize waste." },
     { q: "Will it work for my type of kitchen?", a: "PrepIQ works for any food operation that prepares food daily — restaurants, cloud kitchens, catering operations, and multi-location brands. If your team preps food before service, PrepIQ can help optimize it." },
     { q: "How does multi-branch management work?", a: "Each branch gets its own localized forecasts based on its unique sales patterns. Managers can monitor all locations from a centralized dashboard and compare forecast accuracy, waste, and performance across the network." },
     { q: "What about data security?", a: "All data is encrypted in transit and at rest. Your kitchen data is never shared with other customers, and you retain full ownership of your information at all times." },
-    { q: "Is there a free trial?", a: "Yes. You can start with a free plan for a single branch and experience PrepIQ's forecasting capabilities. Upgrade anytime to unlock advanced analytics, multi-branch intelligence, and team collaboration tools." },
+    { q: "Is there a free trial?", a: "Yes — a 30-day pilot on a branch, with no credit card. You get the full forecasting workflow on your own sales data, and if it isn't earning its keep by the end you simply stop." },
   ],
   fr: [
     { q: "Comment PrepIQ aide-t-il à réduire le gaspillage et les ruptures ?", a: "PrepIQ prévoit la demande quotidienne pour que votre cuisine prépare la juste quantité. En éliminant les devinettes, vous réduisez le gaspillage lié à la sur-préparation tout en évitant les ruptures qui coûtent cher en CA et en confiance client." },
     { q: "Comment PrepIQ génère-t-il les prévisions quotidiennes ?", a: "PrepIQ analyse vos ventes historiques, les modèles par jour de la semaine, la météo, les jours fériés et le comportement récent de votre cuisine. Chaque service améliore le système : plus vous l'utilisez, plus il devient précis." },
-    { q: "Quel est le niveau de précision des prévisions ?", a: "La précision s'améliore rapidement. La plupart des cuisines obtiennent des prévisions fiables dès la première semaine, et cette précision s'affine continuellement grâce aux données de ventes et aux retours des chefs." },
+    { q: "Quel est le niveau de précision des prévisions ?", a: "Nous ne publions volontairement aucun pourcentage de précision : nous débutons, et un chiffre tiré de si peu de cuisines ne dirait rien de la vôtre. À la place, PrepIQ compare chaque prévision aux ventes réelles et affiche ce score dans votre tableau de bord dès la première semaine — vous jugez sur vos données, pas sur les nôtres." },
+    { q: "Combien de cuisines utilisent PrepIQ aujourd'hui ?", a: "Peu — nous démarrons. PrepIQ tourne chaque jour dans un groupe de restauration exploitant deux établissements, et nous intégrons les suivants en ce moment. Nous préférons le dire clairement plutôt que gonfler le chiffre. Arriver tôt, c'est un accès direct à l'équipe et une vraie influence sur la suite." },
     { q: "Ai-je besoin d'un système POS pour utiliser PrepIQ ?", a: "Non. Bien que l'intégration POS offre les meilleures données en temps réel, vous pouvez aussi importer vos ventes via CSV ou les saisir manuellement. PrepIQ est conçu pour s'adapter à vos outils actuels." },
-    { q: "Combien de temps prend la configuration ?", a: "La plupart des cuisines sont opérationnelles en moins de 48 heures. Il suffit de connecter vos données de ventes et de configurer vos produits pour que PrepIQ commence à apprendre." },
+    { q: "Combien de temps prend la configuration ?", a: "Connecter vos ventes et confirmer votre carte prend en général un après-midi. PrepIQ vous donne un plan dès le premier jour, puis l'affine à mesure que votre historique s'accumule." },
     { q: "Les chefs peuvent-ils modifier les suggestions de l'IA ?", a: "Oui. PrepIQ est un outil d'aide à la décision, pas un remplaçant. Votre équipe peut ajuster n'importe quelle quantité, et le système apprend de ces corrections pour s'améliorer." },
-    { q: "PrepIQ aide-t-il vraiment à réduire le gaspillage alimentaire ?", a: "Oui. En prévoyant mieux la demande, PrepIQ évite la sur-préparation tout en sécurisant la disponibilité des plats clés. La réduction de la freinte est souvent visible dès les premières semaines." },
+    { q: "PrepIQ aide-t-il vraiment à réduire le gaspillage alimentaire ?", a: "C'est sa raison d'être : mieux prévoir la demande, c'est préparer au plus près de ce qui se vendra, sans rupture en plein service. Nous ne promettons pas de pourcentage — PrepIQ mesure l'écart entre préparé et vendu et en attribue la cause, pour que vous constatiez l'effet sur vos propres chiffres." },
     { q: "Que se passe-t-il si la demande est plus forte que prévu pendant le service ?", a: "Le Mode Live de PrepIQ suit les ventes en direct et vous alerte si un produit risque la rupture. Il suggère alors des ajustements, comme lancer une nouvelle fournée ou ralentir la cadence." },
     { q: "Cela fonctionne-t-il pour mon type de cuisine ?", a: "PrepIQ fonctionne pour tout établissement préparant des produits frais quotidiennement : restaurants traditionnels, dark kitchens, traiteurs et chaînes multi-sites." },
     { q: "Comment fonctionne la gestion multi-sites ?", a: "Chaque établissement dispose de ses propres prévisions localisées. Les managers peuvent piloter tout le réseau depuis un tableau de bord centralisé et comparer les performances entre sites." },
     { q: "Qu'en est-il de la sécurité des données ?", a: "Toutes les données sont chiffrées en transit et au repos. Vos données de cuisine ne sont jamais partagées avec d'autres clients, et vous en restez le seul propriétaire." },
-    { q: "Existe-t-il un essai gratuit ?", a: "Oui. Vous pouvez commencer avec un essai pour un site et tester les capacités de prévision de PrepIQ. Vous pourrez évoluer ensuite vers des fonctions avancées ou multi-sites." },
+    { q: "Existe-t-il un essai gratuit ?", a: "Oui — un pilote de 30 jours sur un établissement, sans carte bancaire. Vous obtenez le flux de prévision complet sur vos propres ventes, et si cela ne vous apporte rien, vous arrêtez, simplement." },
   ],
 };
 
@@ -112,10 +108,13 @@ const PAGE_HEADERS = {
       titleLine1: "From sales signals",
       titleLine2: "to a precise prep plan.",
       subtitle: "PrepIQ turns your sales history, weather, events, and chef feedback into a daily prep plan your kitchen can trust — and it learns from every single service.",
+      // "8+ demand signals" is a countable product fact. The other two used to
+      // be "92% forecast accuracy" and "48h to go live" — neither is measured
+      // across enough kitchens to publish, so they are stated as what we do.
       stats: [
-        { value: "92%", label: "Forecast accuracy" },
-        { value: "8+", label: "Demand signals" },
-        { value: "48h", label: "To go live" },
+        { value: "8+", label: "Demand signals per forecast" },
+        { value: "Day 1", label: "First plan, before your history exists" },
+        { value: "Nightly", label: "The model relearns after every close" },
       ],
     },
     fr: {
@@ -125,9 +124,9 @@ const PAGE_HEADERS = {
       titleLine2: "à un plan de prod précis.",
       subtitle: "PrepIQ transforme votre historique de ventes, la météo, les événements et les retours des chefs en un plan de production quotidien fiable — qui apprend à chaque service.",
       stats: [
-        { value: "92%", label: "Précision des prévisions" },
-        { value: "8+", label: "Signaux de demande" },
-        { value: "48h", label: "Mise en service" },
+        { value: "8+", label: "Signaux de demande par prévision" },
+        { value: "Jour 1", label: "Premier plan, sans historique" },
+        { value: "Chaque nuit", label: "Le modèle réapprend après chaque clôture" },
       ],
     },
   },
@@ -240,12 +239,15 @@ function buildContent(loc: any, isFr: boolean) {
         { title: loc.problem.items.underprep.title, result: loc.problem.items.underprep.result, desc: loc.problem.items.underprep.desc, impact: loc.problem.items.underprep.impact, impactLabel: loc.problem.items.underprep.impactLabel },
         { title: loc.problem.items.spreadsheets.title, result: loc.problem.items.spreadsheets.result, desc: loc.problem.items.spreadsheets.desc, impact: loc.problem.items.spreadsheets.impact, impactLabel: loc.problem.items.spreadsheets.impactLabel },
       ],
-      pressures: [
-        { title: loc.whyNow.items.foodCosts.title, desc: loc.whyNow.items.foodCosts.desc, metric: "+18%", metricLabel: loc.whyNow.items.foodCosts.label },
-        { title: loc.whyNow.items.weather.title, desc: loc.whyNow.items.weather.desc, metric: "±30%", metricLabel: loc.whyNow.items.weather.label },
-        { title: loc.whyNow.items.events.title, desc: loc.whyNow.items.events.desc, metric: "2.4×", metricLabel: loc.whyNow.items.events.label },
-        { title: loc.whyNow.items.delivery.title, desc: loc.whyNow.items.delivery.desc, metric: "+42%", metricLabel: loc.whyNow.items.delivery.label },
-      ],
+      // The metrics used to be invented industry figures (+18%, ±30%, 2.4×,
+      // +42%) with no source behind them. They now name the direction of each
+      // pressure, which is the point the section is actually making.
+      pressures: (["foodCosts", "weather", "events", "delivery"] as const).map((k) => ({
+        title: loc.whyNow.items[k].title,
+        desc: loc.whyNow.items[k].desc,
+        metric: loc.whyNow.metrics[k],
+        metricLabel: loc.whyNow.items[k].label,
+      })),
       cta: stripTags(loc.whyNow.cta),
     },
     howItWorks: {
@@ -302,18 +304,12 @@ function buildContent(loc: any, isFr: boolean) {
       networkTitle: loc.multiBranch.title,
       networkSubtitle: loc.multiBranch.subtitle,
       sidebarTitle: loc.multiBranch.sidebarTitle,
-      stats: {
-        margin: { label: loc.multiBranch.stats.margin },
-        waste: { label: loc.multiBranch.stats.waste },
-        accuracy: { label: loc.multiBranch.stats.accuracy },
-      },
-      branches: [
-        { name: "Manhattan", country: isFr ? "États-Unis" : "USA", scenario: { tag: loc.kitchenNetwork.scenarios.waste.tag, problem: loc.kitchenNetwork.scenarios.waste.problem, aiLearning: loc.kitchenNetwork.scenarios.waste.aiLearning, prevention: loc.kitchenNetwork.scenarios.waste.prevention, saved: loc.kitchenNetwork.scenarios.waste.saved } },
-        { name: "London Bridge", country: isFr ? "Royaume-Uni" : "UK", scenario: { tag: loc.kitchenNetwork.scenarios.stockout.tag, problem: loc.kitchenNetwork.scenarios.stockout.problem, aiLearning: loc.kitchenNetwork.scenarios.stockout.aiLearning, prevention: loc.kitchenNetwork.scenarios.stockout.prevention, saved: loc.kitchenNetwork.scenarios.stockout.saved } },
-        { name: "Dubai Marina", country: isFr ? "Émirats Arabes Unis" : "UAE", scenario: { tag: loc.kitchenNetwork.scenarios.seasonal.tag, problem: loc.kitchenNetwork.scenarios.seasonal.problem, aiLearning: loc.kitchenNetwork.scenarios.seasonal.aiLearning, prevention: loc.kitchenNetwork.scenarios.seasonal.prevention, saved: loc.kitchenNetwork.scenarios.seasonal.saved } },
-        { name: "Lagos", country: "Nigeria", scenario: { tag: isFr ? "Protégé par le réseau" : "Network Protected", problem: "", aiLearning: "", prevention: isFr ? "Aucun incident ce mois-ci" : "No incidents this month", saved: "" } },
-        { name: "Sydney", country: isFr ? "Australie" : "Australia", scenario: { tag: isFr ? "Protégé par le réseau" : "Network Protected", problem: "", aiLearning: "", prevention: isFr ? "Aucun incident ce mois-ci" : "No incidents this month", saved: "" } },
-      ],
+      // Multi-branch capabilities, not network averages — see BuiltForScaleContent.
+      stats: loc.multiBranch.capabilities,
+      // No seeded branch roster. The previous five (Manhattan, London Bridge,
+      // Dubai Marina, Lagos, Sydney) were invented locations presented as a live
+      // customer network; PrepIQ runs in one group of two kitchens.
+      branches: [],
       globalTitle: loc.globalReady.title,
       globalSubtitle: loc.globalReady.subtitle,
       globalFeatures: ["currency", "timezone", "localized", "support"].map((k) => ({ label: loc.globalReady.features[k].label, desc: loc.globalReady.features[k].desc })),
@@ -323,8 +319,7 @@ function buildContent(loc: any, isFr: boolean) {
       badge: loc.testimonials.badge,
       title: loc.testimonials.title,
       subtitle: loc.testimonials.subtitle,
-      items: isFr ? TESTIMONIALS.fr : TESTIMONIALS.en,
-      stats: loc.testimonials.stats,
+      facts: loc.testimonials.facts,
     },
     pricing: {
       badge: loc.pricing.badge,
@@ -386,9 +381,11 @@ function buildContent(loc: any, isFr: boolean) {
       subtitle: loc.finalCTA.subtitle,
       ctaStart: loc.finalCTA.ctaStart,
       ctaDemo: loc.finalCTA.ctaDemo,
+      // Commitments we control, so they stay true regardless of how many
+      // kitchens we have. Nothing here asserts a measured customer outcome.
       proofs: isFr
-        ? ["Essai gratuit de 30 jours — sans CB", "Opérationnel en moins de 48h", "Compatible avec tout système POS"]
-        : ["30-day free pilot — no credit card", "Live in under 48 hours", "Works with any POS system"],
+        ? ["Essai gratuit de 30 jours — sans CB", "Connectez votre POS, ou partez d'un CSV", "Vos données restent les vôtres — export à tout moment"]
+        : ["30-day free pilot — no credit card", "Connect your POS, or start from a CSV", "Your data stays yours — export it any time"],
     },
   };
 }
@@ -570,12 +567,19 @@ async function main() {
     { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", category: "product", sortOrder: 0 },
     { labelEn: en.navbar.integrations, labelFr: fr.navbar.integrations, url: "/how-it-works#integrations", category: "product", sortOrder: 1 },
     { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", category: "product", sortOrder: 2 },
-    { labelEn: en.footer.links.about, labelFr: fr.footer.links.about, url: "#", category: "company", sortOrder: 0 },
-    { labelEn: en.footer.links.careers, labelFr: fr.footer.links.careers, url: "#", category: "company", sortOrder: 1 },
-    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", category: "company", sortOrder: 2 },
+    // Every URL below must resolve to a real page — a footer full of "#" is the
+    // fastest way to look like a site with nothing behind it. Careers points at
+    // the anchored section of /about, since there is no /careers index route.
+    { labelEn: en.footer.links.about, labelFr: fr.footer.links.about, url: "/about", category: "company", sortOrder: 0 },
+    { labelEn: en.footer.links.careers, labelFr: fr.footer.links.careers, url: "/about#careers", category: "company", sortOrder: 1 },
+    { labelEn: en.footer.links.blog, labelFr: fr.footer.links.blog, url: "/blog", category: "company", sortOrder: 2 },
+    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", category: "company", sortOrder: 3 },
     { labelEn: en.footer.links.privacy, labelFr: fr.footer.links.privacy, url: "/privacy-policy", category: "legal", sortOrder: 0 },
     { labelEn: en.footer.links.terms, labelFr: fr.footer.links.terms, url: "/terms-of-service", category: "legal", sortOrder: 1 },
     { labelEn: en.footer.links.security, labelFr: fr.footer.links.security, url: "/security", category: "legal", sortOrder: 2 },
+    // Social accounts render as icons in the footer bar, not as a text column.
+    // LinkedIn is the only account that exists; do not seed placeholders.
+    { labelEn: "LinkedIn", labelFr: "LinkedIn", url: "https://www.linkedin.com/company/prepiq-ai", category: "social", sortOrder: 0 },
   ];
 
   const currentFooterLinks = await prisma.link.findMany({ where: { type: "footer" } });

@@ -13,7 +13,11 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "How accurate are the forecasts?",
-      a: "Accuracy improves quickly as PrepIQ learns your kitchen's patterns. Most kitchens begin seeing reliable forecasts within the first week, and accuracy continues improving as more sales data and chef feedback are captured.",
+      a: "We deliberately don't publish an accuracy percentage. We're early, and any number we quoted would come from too few kitchens to mean anything for yours. What we do instead: PrepIQ scores every forecast against what actually sold and shows you that number in your own dashboard from week one, so you can judge it on your data rather than ours.",
+    },
+    {
+      q: "How many kitchens use PrepIQ today?",
+      a: "A small number — we're at the start. PrepIQ runs daily in a restaurant group operating two branches, and we're onboarding our next kitchens now. We'd rather tell you that than pad the number. Being early means you get direct access to the team building it, and real influence over what we build next.",
     },
     {
       q: "Do I need a POS system to use PrepIQ?",
@@ -21,7 +25,7 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "How long does it take to set up?",
-      a: "Most kitchens are fully set up within 48 hours. You'll connect your sales data, configure menu items, and PrepIQ immediately begins learning from your operations.",
+      a: "Connecting your sales data and confirming your menu items usually takes an afternoon. From there PrepIQ gives you a plan on day one — built from comparable items and your operating hours — and sharpens it as your own sales history accumulates over the following weeks.",
     },
     {
       q: "Can chefs override the AI suggestions?",
@@ -37,7 +41,7 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "Is there a free trial?",
-      a: "Yes. You can start with a free plan for a single branch and experience PrepIQ's forecasting capabilities. Upgrade anytime to unlock advanced analytics, multi-branch intelligence, and team collaboration tools.",
+      a: "Yes — a 30-day pilot on a branch, with no credit card. You get the full forecasting workflow on your own sales data, and if it isn't earning its keep by the end you simply stop.",
     },
   ],
   fr: [
@@ -47,7 +51,11 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "Quel est le niveau de précision des prévisions ?",
-      a: "La précision s'améliore rapidement. La plupart des cuisines obtiennent des prévisions fiables dès la première semaine.",
+      a: "Nous ne publions volontairement aucun pourcentage de précision : nous débutons, et un chiffre tiré de si peu de cuisines ne dirait rien de la vôtre. À la place, PrepIQ compare chaque prévision aux ventes réelles et affiche ce score dans votre tableau de bord dès la première semaine — vous jugez sur vos données, pas sur les nôtres.",
+    },
+    {
+      q: "Combien de cuisines utilisent PrepIQ aujourd'hui ?",
+      a: "Peu — nous démarrons. PrepIQ tourne chaque jour dans un groupe de restauration exploitant deux établissements, et nous intégrons les suivants en ce moment. Nous préférons le dire clairement plutôt que gonfler le chiffre. Arriver tôt, c'est un accès direct à l'équipe et une vraie influence sur la suite.",
     },
     {
       q: "Ai-je besoin d'un système POS ?",
@@ -55,7 +63,7 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "Combien de temps prend la configuration ?",
-      a: "La plupart des cuisines sont opérationnelles en moins de 48 heures.",
+      a: "Connecter vos ventes et confirmer votre carte prend en général un après-midi. PrepIQ vous donne un plan dès le premier jour, puis l'affine à mesure que votre historique s'accumule.",
     },
     {
       q: "Les chefs peuvent-ils modifier les suggestions ?",
@@ -71,7 +79,7 @@ const FALLBACK_ITEMS = {
     },
     {
       q: "Existe-t-il un essai gratuit ?",
-      a: "Oui. Vous pouvez commencer avec un essai pour un site et tester les capacités de prévision de PrepIQ.",
+      a: "Oui — un pilote de 30 jours sur un établissement, sans carte bancaire. Vous obtenez le flux de prévision complet sur vos propres ventes.",
     },
   ],
 };

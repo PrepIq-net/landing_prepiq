@@ -2,7 +2,24 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { X, Linkedin, Github, MapPin } from "iconoir-react";
+import { X, Linkedin, Github, Instagram, Facebook, Youtube, Globe, MapPin } from "iconoir-react";
+
+/**
+ * Icon for a social link, matched on its URL host. Anything we don't recognise
+ * still renders (as a globe) rather than being silently dropped, so a link added
+ * in /admin/links always shows up.
+ */
+const SOCIAL_ICONS: { match: RegExp; Icon: React.ElementType }[] = [
+  { match: /linkedin\.com/i, Icon: Linkedin },
+  { match: /(twitter\.com|(^|\/\/)x\.com)/i, Icon: X },
+  { match: /github\.com/i, Icon: Github },
+  { match: /instagram\.com/i, Icon: Instagram },
+  { match: /facebook\.com/i, Icon: Facebook },
+  { match: /(youtube\.com|youtu\.be)/i, Icon: Youtube },
+];
+
+const iconFor = (url: string) =>
+  SOCIAL_ICONS.find((s) => s.match.test(url))?.Icon ?? Globe;
 
 interface FooterLink {
   id: string;
@@ -26,6 +43,11 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
     heading: cat.heading,
     links: links.filter(l => l.category === cat.id)
   }));
+
+  // Social accounts are footer links under the "social" category, managed in
+  // /admin/links. We render only accounts that actually exist — an icon row of
+  // dead "#" links is worse than no icon row.
+  const socialLinks = links.filter(l => l.category === "social");
 
   return (
     <footer className="border-t border-border/50 relative overflow-hidden">
@@ -91,22 +113,27 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
               <span className="text-balance">{t("footer.builtIn")}</span>
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            {[
-              { name: "X", Icon: X },
-              { name: "LinkedIn", Icon: Linkedin },
-              { name: "GitHub", Icon: Github },
-            ].map(({ name, Icon }) => (
-              <a
-                key={name}
-                href="#"
-                aria-label={name}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <Icon className="h-3.5 w-3.5" />
-              </a>
-            ))}
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex items-center gap-2">
+              {socialLinks.map((link) => {
+                const Icon = iconFor(link.url);
+                const label = currentLang === "fr" ? link.labelFr : link.labelEn;
+                return (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 text-muted-foreground hover:text-primary hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </footer>

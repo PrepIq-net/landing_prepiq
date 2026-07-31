@@ -38,6 +38,7 @@ enum EntityType {
   BLOG_POST
   CONCIERGE_CONVERSATION
   CONCIERGE_LEAD
+  TESTIMONIAL
 }
 
 model User {
@@ -137,6 +138,39 @@ model Link {
   category  String? // for grouping footer links
   isActive  Boolean @default(true)
   sortOrder Int     @default(0)
+}
+
+/// Customer testimonials shown on the marketing site.
+///
+/// This table is the *only* source of testimonials — the landing page renders
+/// nothing rather than falling back to authored placeholder quotes, so an empty
+/// table means an empty (honest) section. Add rows here as real customers give
+/// us permission to quote them.
+model Testimonial {
+  id      String @id @default(cuid())
+  quoteEn String
+  /// Optional: an untranslated quote is shown as-is to French visitors rather
+  /// than being dropped, since a real quote in the wrong language still beats
+  /// no quote at all.
+  quoteFr String?
+
+  name    String
+  role    String
+  company String
+
+  /// Headline figure shown above the quote (e.g. "12% less waste"). Optional by
+  /// design: only fill it in when the customer stated the number themselves.
+  metricEn String?
+  metricFr String?
+
+  /// Set once we have written permission to publish the quote.
+  isPublished Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
 }
 
 model ContactMessage {

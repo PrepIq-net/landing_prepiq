@@ -6,6 +6,7 @@ import {
   Mail,
   CreditCard,
   Wallet,
+  Quote,
   ArrowRight,
 } from "iconoir-react";
 
@@ -31,11 +32,13 @@ export default async function AdminDashboard() {
 
   const isAdmin = currentUser.role === "ADMIN";
 
-  const [pagesCount, linksCount, messagesCount] = await Promise.all([
-    prisma.page.count(),
-    prisma.link.count(),
-    prisma.contactMessage.count({ where: { status: "unread" } }),
-  ]);
+  const [pagesCount, linksCount, messagesCount, testimonialsCount] =
+    await Promise.all([
+      prisma.page.count(),
+      prisma.link.count(),
+      prisma.contactMessage.count({ where: { status: "unread" } }),
+      prisma.testimonial.count({ where: { isPublished: true } }),
+    ]);
 
   let planCatalog: AdminPlanListResponse | null = null;
   if (isAdmin) {
@@ -63,14 +66,14 @@ export default async function AdminDashboard() {
           System Overview
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl">
-          What we publish, and what we run. Content and growth surfaces on the
-          left of the sidebar; commercial and platform operations below them.
+          What we publish, and what we run. Everything counted here is editable
+          from the sidebar — nothing on the public site is hardcoded.
         </p>
       </div>
 
       <section className="space-y-5">
         <SectionHeading title="Content & Growth" />
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <MetricCard
             icon={Page}
             kicker="Site content"
@@ -95,6 +98,18 @@ export default async function AdminDashboard() {
               messagesCount > 0
                 ? { text: "Needs a reply", tone: "warning" }
                 : { text: "All handled", tone: "success" }
+            }
+          />
+          <MetricCard
+            icon={Quote}
+            kicker="Social proof"
+            value={testimonialsCount}
+            label="Published testimonials"
+            href="/admin/testimonials"
+            status={
+              testimonialsCount > 0
+                ? { text: "Live on the home page", tone: "success" }
+                : { text: "Section hidden until one exists", tone: "warning" }
             }
           />
         </div>
