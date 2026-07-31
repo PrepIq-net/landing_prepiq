@@ -11,11 +11,16 @@ const CONVERSATION_KEY = "piq.concierge.conversationId";
 const LEAD_OFFER_AFTER = 5;
 
 export interface ConciergeChatMessage {
+  /** Stable per-turn key, so a reply can be singled out to type itself in. */
+  id: string;
   role: "user" | "assistant";
   content: string;
   /** Assistant turn that failed upstream — rendered as a localized apology. */
   fallback?: boolean;
 }
+
+let messageSeq = 0;
+const nextMessageId = () => `m${++messageSeq}`;
 
 export interface LeadFields {
   email: string;
@@ -41,6 +46,9 @@ export function useConcierge() {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [leadDismissedAt, setLeadDismissedAt] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  // Set only for replies that arrive live in this session — rehydrated history
+  // is already "said" and shouldn't retype itself on every page load.
+  const [animatingId, setAnimatingId] = useState<string | null>(null);
   const conversationIdRef = useRef<string | null>(null);
 
   // Rehydrate a previous conversation once, on first mount.
@@ -62,7 +70,7 @@ export function useConcierge() {
           conversationIdRef.current = data.conversationId;
           setMessages(
             (data.messages as { role: "user" | "assistant"; content: string }[]).map(
-              (m) => ({ role: m.role, content: m.content })
+              (m) => ({ id: nextMessageId(), role: m.role, content: m.content })
             )
           );
           setLeadSubmitted(Boolean(data.hasLead));
@@ -83,7 +91,10 @@ export function useConcierge() {
       const message = text.trim().slice(0, 1000);
       if (!message || sending) return;
       setSending(true);
-      setMessages((prev) => [...prev, { role: "user", content: message }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: nextMessageId(), role: "user", content: message },
+      ]);
       try {
         const res = await fetch("/api/concierge/chat", {
           method: "POST",
@@ -101,19 +112,26 @@ export function useConcierge() {
           conversationIdRef.current = data.conversationId;
           localStorage.setItem(CONVERSATION_KEY, data.conversationId);
         }
+        const replyId = nextMessageId();
         if (data?.reply) {
-          setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+          setMessages((prev) => [
+            ...prev,
+            { id: replyId, role: "assistant", content: data.reply },
+          ]);
         } else {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant", content: "", fallback: true },
+            { id: replyId, role: "assistant", content: "", fallback: true },
           ]);
         }
+        setAnimatingId(replyId);
       } catch {
+        const replyId = nextMessageId();
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "", fallback: true },
+          { id: replyId, role: "assistant", content: "", fallback: true },
         ]);
+        setAnimatingId(replyId);
       } finally {
         setSending(false);
       }
@@ -159,11 +177,18 @@ export function useConcierge() {
     [userMessageCount]
   );
 
+  const endAnimation = useCallback(
+    (id: string) => setAnimatingId((current) => (current === id ? null : current)),
+    []
+  );
+
   return {
     messages,
     sending,
     hydrated,
     send,
+    animatingId,
+    endAnimation,
     leadOffered,
     leadSubmitted,
     submitLead,

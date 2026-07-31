@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChatBubbleEmpty, Xmark } from "iconoir-react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,28 @@ const ConciergeWidget = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const reducedMotion = useReducedMotion();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Desktop click-away. The mobile sheet already closes via its dim backdrop,
+  // which is pointer-transparent on desktop so the page stays usable — so the
+  // floating panel needs its own outside-click to dismiss.
+  useEffect(() => {
+    if (!open) return;
+    const desktop = window.matchMedia("(min-width: 640px)");
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!desktop.matches) return;
+      const target = event.target as Node;
+      if (panelRef.current?.contains(target)) return;
+      // Leave the toggle to its own handler, or it closes here and reopens there.
+      if (toggleRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
 
   return (
     <>
@@ -33,6 +55,7 @@ const ConciergeWidget = () => {
         {open && (
           <motion.div
             key="panel"
+            ref={panelRef}
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
@@ -44,6 +67,7 @@ const ConciergeWidget = () => {
       </AnimatePresence>
 
       <motion.button
+        ref={toggleRef}
         initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}

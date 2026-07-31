@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
@@ -45,13 +46,59 @@ function renderContent(content: string): React.ReactNode[] {
   return nodes;
 }
 
-export function ConciergeMessage({ message }: { message: ConciergeChatMessage }) {
+/** ~14ms per character ≈ 70 chars/sec, the same cadence as the app assistant. */
+const TYPE_INTERVAL_MS = 14;
+
+export function ConciergeMessage({
+  message,
+  animateIn = false,
+  onAnimationDone,
+}: {
+  message: ConciergeChatMessage;
+  animateIn?: boolean;
+  onAnimationDone?: () => void;
+}) {
   const { t } = useTranslation();
+  const reducedMotion = useReducedMotion();
   const isUser = message.role === "user";
   const content = message.fallback ? t("concierge.fallbackReply") : message.content;
+
+  const typing = animateIn && !isUser && !reducedMotion;
+  const [typed, setTyped] = useState(typing ? "" : content);
+
+  // The panel passes a fresh closure every render; a ref keeps that from
+  // restarting the interval and stuttering the text.
+  const doneRef = useRef(onAnimationDone);
+  doneRef.current = onAnimationDone;
+
+  useEffect(() => {
+    if (!typing) {
+      setTyped(content);
+      return;
+    }
+    setTyped("");
+    if (!content.length) {
+      doneRef.current?.();
+      return;
+    }
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTyped(content.slice(0, i));
+      if (i >= content.length) {
+        clearInterval(id);
+        doneRef.current?.();
+      }
+    }, TYPE_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [content, typing]);
+
+  // Linkify only once the full text has landed — mid-type, a partial
+  // "[label](/blog/" would render as raw markdown before it resolves.
+  const settled = typed.length >= content.length;
   const rendered = useMemo(
-    () => (isUser ? [content] : renderContent(content)),
-    [content, isUser]
+    () => (isUser || !settled ? [typed] : renderContent(content)),
+    [typed, content, isUser, settled]
   );
 
   return (
