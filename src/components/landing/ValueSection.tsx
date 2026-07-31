@@ -211,6 +211,15 @@ const ValueSection = ({
           </p>
         </motion.div>
 
+        {/*
+          Stated as ranges and labelled as modelled, because they are: PrepIQ
+          has not run in enough kitchens to publish measured averages, and an
+          unqualified "5–12%" on a card reads as one.
+        */}
+        <p className="text-center text-xs uppercase tracking-[0.15em] text-muted-foreground/70 mb-5">
+          {t("value.metricsNote", "Illustrative ranges used by the model below.")}
+        </p>
+
         {/* Metric cards */}
         <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 mb-12 md:mb-16">
           {metrics.map((m, i) => (
@@ -473,10 +482,14 @@ const ValueSection = ({
                 ))}
               </div>
 
-              {/* ROI note */}
-              <div className="rounded-lg bg-[hsl(var(--success)/.08)] px-3 sm:px-4 py-2.5 sm:py-3 flex items-start gap-2.5">
-                <Percentage className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[hsl(var(--success))] mt-0.5 shrink-0" />
-                <p className="text-[11px] sm:text-xs text-[hsl(var(--success))] leading-relaxed">
+              {/*
+                Neutral, not success-green: this line is a disclosure about
+                where the numbers come from, and styling a caveat as a win is
+                exactly the kind of thing it exists to prevent.
+              */}
+              <div className="rounded-lg bg-muted/50 border border-border px-3 sm:px-4 py-2.5 sm:py-3 flex items-start gap-2.5">
+                <Percentage className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground mt-0.5 shrink-0" />
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
                   {content.calculator.roiNote}
                 </p>
               </div>

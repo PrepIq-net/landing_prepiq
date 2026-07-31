@@ -1,105 +1,82 @@
 "use client";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { TestimonialsContent, SectionContent } from "@/types/cms";
-import { CountUp } from "./motion-primitives";
+import { TestimonialsContent, SectionContent, ProofFact } from "@/types/cms";
+import type { PublishedTestimonial } from "@/lib/data";
 
-const FALLBACK_TESTIMONIALS = {
-  en: [
-    {
-      quote:
-        "I used to guess prep every morning. Now I review it. PrepIQ changed how my kitchen thinks about waste.",
-      name: "Chef Adamu",
-      role: "Head Chef",
-      company: "Lagos Kitchen Co.",
-      metric: "−9% waste",
-    },
-    {
-      quote:
-        "We cut waste by 9% in the first month. The forecast just works. Our margin improved before we even noticed.",
-      name: "Sarah K.",
-      role: "Ops Manager",
-      company: "FreshBite",
-      metric: "$3,200/mo",
-    },
-    {
-      quote:
-        "Finally, a system that understands how kitchens actually run. No bloat, no training needed. Just intelligence.",
-      name: "Marcus T.",
-      role: "Owner",
-      company: "3-Branch Network",
-      metric: "92% acc.",
-    },
-  ],
-  fr: [
-    {
-      quote:
-        "Je devinais la mise en place chaque matin. Maintenant, je la valide. PrepIQ a changé notre vision du gaspillage.",
-      name: "Chef Adamu",
-      role: "Chef de Cuisine",
-      company: "Lagos Kitchen Co.",
-      metric: "-9% gaspillage",
-    },
-    {
-      quote:
-        "Nous avons réduit le gaspillage de 9% dès le premier mois. La prévision fonctionne tout simplement.",
-      name: "Sarah K.",
-      role: "Responsable Opérations",
-      company: "FreshBite",
-      metric: "3 200€/mois",
-    },
-    {
-      quote:
-        "Enfin un système qui comprend la réalité d'une cuisine. Pas de superflu, pas de formation. Juste de l'intelligence.",
-      name: "Marcus T.",
-      role: "Propriétaire",
-      company: "3-Branch Network",
-      metric: "92% précision",
-    },
-  ],
-};
+/**
+ * Grid shape by quote count. One quote centred and given room reads as a
+ * deliberate feature; the same quote stretched across a three-column grid reads
+ * as two missing ones. Everything is single-column below `sm` regardless.
+ */
+function gridClassFor(count: number) {
+  if (count === 1) return "max-w-[760px] mx-auto";
+  if (count === 2) return "sm:grid-cols-2 max-w-[1000px] mx-auto";
+  return "sm:grid-cols-2 lg:grid-cols-3";
+}
 
+/**
+ * There is deliberately no fallback quote list here.
+ *
+ * Every testimonial comes from the Testimonial table (managed at
+ * /admin/testimonials) and only when published. With none published the whole
+ * section is omitted — we neither invent quotes nor leave an apologetic empty
+ * card on the page.
+ */
 const TestimonialsSection = ({
   dbContent,
+  testimonials = [],
 }: {
   dbContent?: SectionContent<TestimonialsContent>;
+  testimonials?: PublishedTestimonial[];
 }) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const content: TestimonialsContent = dbContent?.[currentLang] || {
-    badge: t("testimonials.badge", "From the Kitchen"),
-    title: t("testimonials.title", "Real teams. Real margins."),
+  const translatedFacts = t("testimonials.facts", { returnObjects: true });
+  const fallbackFacts: ProofFact[] = Array.isArray(translatedFacts)
+    ? (translatedFacts as ProofFact[])
+    : [
+        { value: "2", label: "Kitchens running PrepIQ every day" },
+        { value: "Day 1", label: "First prep plan, before we have your history" },
+        { value: "30 days", label: "Free pilot, no card required" },
+        { value: "Yours", label: "Your data, exportable at any time" },
+      ];
+
+  const localized = dbContent?.[currentLang] as
+    | Partial<TestimonialsContent>
+    | undefined;
+
+  const fallbackContent: TestimonialsContent = {
+    badge: t("testimonials.badge", "From the kitchen"),
+    title: t("testimonials.title", "In their words."),
     subtitle: t("testimonials.subtitle", ""),
-    items: FALLBACK_TESTIMONIALS[currentLang] || FALLBACK_TESTIMONIALS.en,
-    stats: {
-      powered: t("testimonials.stats.powered", "Kitchens powered"),
-      processed: t("testimonials.stats.processed", "Meals / week"),
-      onboarding: t("testimonials.stats.onboarding", "Avg. onboarding"),
-      accuracy: t("testimonials.stats.accuracy", "Forecast accuracy"),
-    },
+    facts: fallbackFacts,
   };
 
-  const items = Array.isArray(content.items)
-    ? content.items
-    : FALLBACK_TESTIMONIALS[currentLang] || FALLBACK_TESTIMONIALS.en;
+  const content: TestimonialsContent = {
+    ...fallbackContent,
+    ...localized,
+    facts:
+      Array.isArray(localized?.facts) && localized.facts.length > 0
+        ? localized.facts
+        : fallbackFacts,
+  };
 
-  const trustSignals = [
-    { value: "40+", label: content.stats.powered },
-    { value: "8,000+", label: content.stats.processed },
-    { value: "48h", label: content.stats.onboarding },
-    { value: "92%", label: content.stats.accuracy },
-  ];
+  // No published quotes, no section.
+  if (testimonials.length === 0) return null;
+
+  const isSingle = testimonials.length === 1;
 
   return (
     <section className="relative py-24 md:py-32 border-t border-border/50 section-band">
-      <div className="max-w-[1440px] mx-auto px-8 lg:px-16">
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-3.5 mb-6">
             <div className="w-10 h-px bg-primary" />
@@ -108,60 +85,98 @@ const TestimonialsSection = ({
             </span>
             <div className="w-10 h-px bg-primary" />
           </div>
-          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em]">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-[56px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] text-balance">
             {content.title}
           </h2>
+          {content.subtitle && (
+            <p className="mt-5 text-sm sm:text-base md:text-lg text-muted-foreground max-w-[620px] mx-auto leading-relaxed">
+              {content.subtitle}
+            </p>
+          )}
         </motion.div>
 
-        {/* Testimonial cards */}
-        <div className="grid gap-5 md:grid-cols-3 mb-12">
-          {items.map((item, i) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
-              transition={{ delay: i * 0.1 }}
-              className="rounded-2xl border border-border bg-card p-8 flex flex-col hover:border-primary/30 hover:shadow-l2 transition-all duration-300"
-            >
-              {/* Metric lead */}
-              <p className="font-display text-md md:text-[44px] font-semibold text-primary tracking-[-0.02em] leading-none mb-4">
-                {item.metric}
-              </p>
+        <div className={`grid gap-5 mb-14 ${gridClassFor(testimonials.length)}`}>
+          {testimonials.map((item, i) => {
+            const quote =
+              (currentLang === "fr" ? item.quoteFr : item.quoteEn) ||
+              item.quoteEn;
+            const metric =
+              (currentLang === "fr" ? item.metricFr : item.metricEn) ?? null;
 
-              {/* Quote */}
-              <p className="text-[15px] text-foreground/90 leading-relaxed flex-1">
-                &ldquo;{item.quote}&rdquo;
-              </p>
+            return (
+              <motion.figure
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -4, transition: { duration: 0.2, delay: 0 } }}
+                // Cap the stagger so a long list doesn't leave the last card
+                // waiting a second and a half to appear.
+                transition={{ delay: Math.min(i, 5) * 0.08 }}
+                className={`rounded-2xl border border-border bg-card flex flex-col hover:border-primary/30 hover:shadow-l2 transition-all duration-300 ${
+                  isSingle ? "p-8 sm:p-11 text-center items-center" : "p-7 sm:p-8"
+                }`}
+              >
+                {metric && (
+                  <p
+                    className={`font-display font-semibold text-primary tracking-[-0.02em] leading-none mb-4 ${
+                      isSingle
+                        ? "text-[32px] sm:text-[44px]"
+                        : "text-[26px] sm:text-[32px]"
+                    }`}
+                  >
+                    {metric}
+                  </p>
+                )}
 
-              {/* Author */}
-              <div className="mt-7 pt-5 border-t border-border flex items-center gap-3">
-                <div className="h-[38px] w-[38px] rounded-full bg-primary/[0.12] border border-primary/25 flex items-center justify-center font-display font-semibold text-sm text-primary">
-                  {item.name[0]}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    {item.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {item.role}, {item.company}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                <blockquote
+                  className={`text-foreground/90 flex-1 ${
+                    isSingle
+                      ? "font-display text-lg sm:text-2xl leading-[1.45] tracking-[-0.01em] max-w-[46ch]"
+                      : "text-[15px] leading-relaxed"
+                  }`}
+                >
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+
+                <figcaption
+                  className={`flex items-center gap-3 border-t border-border w-full ${
+                    isSingle
+                      ? "mt-8 pt-6 justify-center"
+                      : "mt-7 pt-5"
+                  }`}
+                >
+                  <div className="h-[38px] w-[38px] shrink-0 rounded-full bg-primary/[0.12] border border-primary/25 flex items-center justify-center font-display font-semibold text-sm text-primary">
+                    {item.name[0]}
+                  </div>
+                  <div className={isSingle ? "text-left" : ""}>
+                    <p className="text-sm font-semibold text-foreground">
+                      {item.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {item.role}, {item.company}
+                    </p>
+                  </div>
+                </figcaption>
+              </motion.figure>
+            );
+          })}
         </div>
 
-        {/* Trust signals */}
-        <div className="flex justify-center gap-16 flex-wrap">
-          {trustSignals.map((s) => (
-            <div key={s.label} className="text-center">
+        {/* Facts we can actually stand behind */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+          {content.facts.map((fact) => (
+            <div key={fact.label} className="text-center">
+              {/*
+                Rendered as-is, not counted up: these are phrases ("Day 1",
+                "Yours"), and animating from zero turns them into statements
+                that are briefly false — "Day 0", "0 days".
+              */}
               <p className="font-display text-[26px] font-semibold text-foreground">
-                <CountUp value={s.value} />
+                {fact.value}
               </p>
-              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground mt-1">
-                {s.label}
+              <p className="text-xs leading-snug text-muted-foreground mt-1.5 max-w-[22ch] mx-auto">
+                {fact.label}
               </p>
             </div>
           ))}

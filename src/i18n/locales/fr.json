@@ -19,11 +19,20 @@
     },
     "ctaStart": "Essayer Gratuitement",
     "ctaDemo": "Réserver une démo de 10 min",
-    "stats": {
-      "accuracy": "Précision des prévisions",
-      "waste": "Gaspillage en moins",
-      "stockouts": "Ruptures / semaine"
-    }
+    "stats": [
+      {
+        "value": "Jour 1",
+        "label": "Un plan de mise en place avant même votre historique"
+      },
+      {
+        "value": "Chaque service",
+        "label": "La prévision réapprend de ce qui s'est réellement vendu"
+      },
+      {
+        "value": "30 jours",
+        "label": "Pilote gratuit, sans carte bancaire"
+      }
+    ]
   },
   "footer": {
     "description": "Intelligence quotidienne de préparation pour les cuisines qui prennent les opérations alimentaires au sérieux. Prédisez la demande, réduisez le gaspillage, protégez les marges.",
@@ -100,29 +109,29 @@
   "problem": {
     "badge": "Le Problème",
     "title": "La plupart des cuisines préparent encore à l'instinct.",
-    "subtitle": "Le résultat ? Des pertes prévisibles qui se multiplient chaque jour.",
+    "subtitle": "Le résultat ? Les mêmes trois pertes, qui s'accumulent chaque jour, dans toute cuisine qui prépare de mémoire.",
     "cta": "PrepIQ remplace les devinettes par une <gold>intelligence quotidienne</gold>.",
     "items": {
       "overprep": {
         "title": "Sur-préparation",
         "result": "Gaspillage",
         "desc": "Jeter de la nourriture et de l'argent chaque jour. Les marges s'effritent silencieusement.",
-        "impact": "2 200 €",
-        "impactLabel": "gaspillage mensuel moyen"
+        "impact": "Chaque jour",
+        "impactLabel": "de la mise en place payée, jetée"
       },
       "underprep": {
         "title": "Sous-préparation",
         "result": "Ruptures de stock",
         "desc": "Perdre des revenus quand vos meilleurs produits manquent au pic. Les clients ne reviennent pas.",
-        "impact": "14 %",
-        "impactLabel": "revenus perdus par ruptures"
+        "impact": "Au rush",
+        "impactLabel": "quand la rupture coûte le plus cher"
       },
       "spreadsheets": {
         "title": "Tableurs Manuels",
         "result": "Pas d'Apprentissage",
         "desc": "Le même jeu de devinettes, répété chaque matin. Hier n'apprend rien.",
-        "impact": "0 %",
-        "impactLabel": "amélioration au fil du temps"
+        "impact": "Zéro",
+        "impactLabel": "appris de la veille"
       }
     }
   },
@@ -320,23 +329,29 @@
       "foodCosts": {
         "title": "Hausse des coûts alimentaires",
         "desc": "Chaque kilo gaspillé coûte plus cher que l'année dernière.",
-        "label": "hausse moyenne"
+        "label": "coûts d'achat"
       },
       "weather": {
         "title": "La météo change le trafic",
         "desc": "Un mardi pluvieux ne ressemble en rien à un mardi ensoleillé.",
-        "label": "variation demande"
+        "label": "fréquentation"
       },
       "events": {
         "title": "Pics liés aux événements",
         "desc": "Les fêtes et événements locaux boostent la demande de façon imprévisible.",
-        "label": "multiplicateur pic"
+        "label": "événements locaux"
       },
       "delivery": {
         "title": "Pics de livraison",
         "desc": "Les commandes en ligne ajoutent une volatilité invisible à l'œil nu.",
-        "label": "croissance annuelle"
+        "label": "part de la livraison"
       }
+    },
+    "metrics": {
+      "foodCosts": "En hausse",
+      "weather": "Variable",
+      "events": "À-coups",
+      "delivery": "En croissance"
     }
   },
   "whyPrepIQ": {
@@ -449,7 +464,8 @@
         "salmonTrend": "↑ 12 % vs mar. dernier",
         "saladTrend": "Stable",
         "soupTrend": "↓ 5 % — pluie prévue"
-      }
+      },
+      "sampleData": "Données d'exemple — une illustration de l'interface, pas des résultats clients"
     },
     "liveFeatures": [
       {
@@ -501,7 +517,7 @@
     "suggested": "Suggéré : {{action}}",
     "monthlyProtection": "Protection mensuelle de marge",
     "totalProtection": "Protection totale mensuelle",
-    "roiNote": "PrepIQ s'amortit en moins de 48 heures.",
+    "roiNote": "Alertes illustratives. PrepIQ mesure le chiffre réel sur vos propres données de service.",
     "alerts": {
       "waste": {
         "type": "Risque Perte",
@@ -528,7 +544,7 @@
   },
   "value": {
     "title": "L'impact d'une meilleure mise en place",
-    "subtitle": "Des économies réelles dès le premier jour. Pas des projections, mais des résultats constatés en cuisine.",
+    "subtitle": "Une estimation, pas une promesse. Déplacez le curseur pour modéliser ce que ces fourchettes représenteraient pour votre cuisine — puis vérifiez sur vos propres chiffres dans l'application.",
     "metrics": {
       "waste": {
         "label": "Réduction pertes",
@@ -545,19 +561,20 @@
     },
     "calculator": {
       "title": "Calculateur d'économies",
-      "subtitle": "Déplacez le curseur pour voir vos économies projetées",
+      "subtitle": "Déplacez le curseur ou saisissez une valeur pour modéliser vos économies potentielles",
       "inputLabel": "Dépense mensuelle en pertes de mise en place",
       "monthlyRecovery": "Récupération mensuelle",
       "annualImpact": "Impact annuel",
       "projection": "Projection d'économies sur 6 mois",
       "breakdown": "Détail mensuel",
-      "roiNote": "La plupart des cuisines voient un ROI en moins de 2 semaines.",
+      "roiNote": "Modélisé à partir de fourchettes sectorielles publiées sur le gaspillage, les ruptures et la main-d'œuvre — et non de résultats mesurés chez des clients PrepIQ. Vos chiffres réels différeront, et PrepIQ les mesure sur vos propres données.",
       "categories": {
         "waste": "Pertes évitées",
         "stockout": "Ruptures récupérées",
         "labor": "Efficacité main-d'œuvre"
       }
-    }
+    },
+    "metricsNote": "Fourchettes indicatives utilisées par le modèle ci-dessous."
   },
   "whoItsFor": {
     "badge": "Conçu pour le métier",
@@ -567,22 +584,22 @@
       "multiBranch": {
         "title": "Groupes de Restaurants",
         "desc": "Centralisez l'intelligence de mise en place. Un tableau de bord, toutes les cuisines alignées.",
-        "stat": "Gère 6+ établissements"
+        "stat": "Tous les sites d'un coup d'œil"
       },
       "brands": {
         "title": "Marques en Croissance",
         "desc": "Augmentez la production sans augmenter les pertes. Laissez les données piloter votre débit.",
-        "stat": "Croissance 2x plus rapide"
+        "stat": "Produire plus, gaspiller autant"
       },
       "chefs": {
         "title": "Chefs Axés Données",
         "desc": "Prenez des décisions basées sur des données réelles, pas sur la mémoire. Gardez le contrôle.",
-        "stat": "92 % de précision moy."
+        "stat": "Une mise en place validée, pas devinée"
       },
       "ops": {
         "title": "Responsables Opés",
         "desc": "Suivez l'impact coût et la précision quotidiennement. Localisez les fuites de marge.",
-        "stat": "Visibilité temps réel"
+        "stat": "Visibilité quotidienne sur les coûts"
       }
     }
   },
@@ -664,14 +681,20 @@
       "marginImpact": "Impact marge",
       "itemsTracked": "Produits suivis"
     },
-    "stats": {
-      "margin": "Hausse marge moy.",
-      "waste": "Pertes réseau évitées",
-      "accuracy": "Précision prévision",
-      "allBranches": "sur tout le réseau",
-      "networkWide": "global réseau",
-      "weightedAvg": "moyenne pondérée"
-    }
+    "capabilities": [
+      {
+        "value": "Par site",
+        "label": "Chaque cuisine a sa prévision, sa mise en place et son planning"
+      },
+      {
+        "value": "Côte à côte",
+        "label": "Comparez précision, pertes et coûts entre cuisines dans une seule vue"
+      },
+      {
+        "value": "Devise locale",
+        "label": "Chaque site garde sa devise ; les totaux groupe sont normalisés"
+      }
+    ]
   },
   "kitchenNetwork": {
     "badge": "Réseau d'Intelligence",
@@ -755,15 +778,27 @@
     }
   },
   "testimonials": {
-    "badge": "Témoignages",
-    "title": "Vu des Cuisines",
-    "subtitle": "Des équipes réelles. Des résultats concrets. Voici ce qu'en disent les restaurateurs.",
-    "stats": {
-      "powered": "Cuisines équipées",
-      "processed": "Repas analysés / semaine",
-      "onboarding": "Déploiement moyen",
-      "accuracy": "Précision prévision"
-    }
+    "badge": "Vu des cuisines",
+    "title": "Dans leurs mots.",
+    "subtitle": "Chaque citation vient d'un restaurateur qui utilise PrepIQ, publiée avec son accord.",
+    "facts": [
+      {
+        "value": "2",
+        "label": "Cuisines qui utilisent PrepIQ chaque jour"
+      },
+      {
+        "value": "Jour 1",
+        "label": "Premier plan de mise en place, sans historique"
+      },
+      {
+        "value": "30 jours",
+        "label": "Pilote gratuit, sans carte bancaire"
+      },
+      {
+        "value": "À vous",
+        "label": "Vos données, exportables à tout moment"
+      }
+    ]
   },
   "pricing": {
     "badge": "Tarification",
@@ -818,7 +853,7 @@
     "footer": "Encore des questions ? <contact>Parler à l'équipe →</contact>"
   },
   "finalCTA": {
-    "badge": "Un seul système pour piloter votre cuisine",
+    "badge": "En service dans de vraies cuisines aujourd'hui",
     "title": "Pilotez demain sur un <gold>plan</gold>, pas une intuition.",
     "subtitle": "Planifiez la mise en place, staffez le service, et laissez chaque service améliorer le suivant. Découvrez PrepIQ sur les chiffres de votre cuisine.",
     "ctaStart": "Essayer gratuitement",

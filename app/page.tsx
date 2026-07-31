@@ -5,6 +5,7 @@ import {
   getActiveNavLinks,
   getActiveFooterLinks,
   getFeaturedBlogPosts,
+  getPublishedTestimonials,
 } from "@/lib/data";
 import { getPublicPlanCatalogs } from "@/lib/plans";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
@@ -20,12 +21,14 @@ const SectionFallback = () => (
 );
 
 export default async function Page() {
-  const [page, navLinks, footerLinks, featuredPosts] = await Promise.all([
-    getPageWithSections("home"),
-    getActiveNavLinks(),
-    getActiveFooterLinks(),
-    getFeaturedBlogPosts(3),
-  ]);
+  const [page, navLinks, footerLinks, featuredPosts, testimonials] =
+    await Promise.all([
+      getPageWithSections("home"),
+      getActiveNavLinks(),
+      getActiveFooterLinks(),
+      getFeaturedBlogPosts(3),
+      getPublishedTestimonials(),
+    ]);
 
   if (!page) return <div>Page not found</div>;
 
@@ -47,6 +50,7 @@ export default async function Page() {
         sections={page.sections}
         featuredPosts={featuredPosts}
         planCatalog={planCatalog}
+        testimonials={testimonials}
       />
 
       <Suspense fallback={<SectionFallback />}>

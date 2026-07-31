@@ -39,6 +39,38 @@ export const getActiveFooterLinks = unstable_cache(
   { tags: ["links"] }
 );
 
+/**
+ * Published customer testimonials, newest-authored last.
+ *
+ * Returns an empty array when we have none — TestimonialsSection is written to
+ * render an honest "no reviews yet" state rather than authored placeholders,
+ * so there is deliberately no fallback here.
+ */
+export const getPublishedTestimonials = unstable_cache(
+  async () => {
+    return prisma.testimonial.findMany({
+      where: { isPublished: true },
+      select: {
+        id: true,
+        quoteEn: true,
+        quoteFr: true,
+        name: true,
+        role: true,
+        company: true,
+        metricEn: true,
+        metricFr: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+    });
+  },
+  ["published-testimonials"],
+  { tags: ["testimonials"] }
+);
+
+export type PublishedTestimonial = Awaited<
+  ReturnType<typeof getPublishedTestimonials>
+>[number];
+
 // Dates are returned as ISO strings (not Date objects) because unstable_cache
 // JSON-serializes cached values — Dates would silently become strings on
 // cache hits anyway.

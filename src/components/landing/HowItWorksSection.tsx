@@ -341,20 +341,34 @@ const HowItWorksSection = ({
   );
 };
 
+/**
+ * Product mockup. The numbers inside are invented sample data used to show the
+ * interface, so the card carries a permanent "Sample data" chip — accuracy and
+ * currency figures in a screenshot are otherwise read as customer results.
+ */
 const PreviewCard = ({
   topBar,
   children,
 }: {
   topBar: React.ReactNode;
   children: React.ReactNode;
-}) => (
-  <div className="rounded-xl sm:rounded-2xl border border-border bg-card overflow-hidden shadow-l2">
-    <div className="flex flex-wrap items-center justify-between gap-2 bg-accent/60 px-4 sm:px-6 py-3 sm:py-3.5 border-b border-border/50">
-      {topBar}
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="rounded-xl sm:rounded-2xl border border-border bg-card overflow-hidden shadow-l2">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-accent/60 px-4 sm:px-6 py-3 sm:py-3.5 border-b border-border/50">
+        {topBar}
+      </div>
+      <div className="p-4 sm:p-6 md:p-7 space-y-4 sm:space-y-5">{children}</div>
+      <div className="border-t border-border/50 px-4 sm:px-6 py-2">
+        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/70">
+          {t("howItWorks.previews.sampleData", "Sample data — an illustration of the interface, not customer results")}
+        </p>
+      </div>
     </div>
-    <div className="p-4 sm:p-6 md:p-7 space-y-4 sm:space-y-5">{children}</div>
-  </div>
-);
+  );
+};
 
 /* ─────────────────────── PLAN PHASE ─────────────────────── */
 const PlanPhase = ({

@@ -29,11 +29,12 @@ export interface HeroContent {
   };
   ctaStart: string;
   ctaDemo: string;
-  stats: {
-    accuracy: string;
-    waste: string;
-    stockouts: string;
-  };
+  /**
+   * Commitments and product behaviour, not outcome averages. We have not run
+   * PrepIQ across enough kitchens to publish a waste or accuracy figure, so the
+   * hero must not imply one.
+   */
+  stats: ProofFact[];
 }
 
 export interface PosSystem {
@@ -161,7 +162,11 @@ export interface BuiltForScaleContent {
   networkTitle: string;
   networkSubtitle: string;
   sidebarTitle: string;
-  stats: { margin: { label: string }; waste: { label: string }; accuracy: { label: string } };
+  /**
+   * Multi-branch capabilities, not network averages. PrepIQ currently runs in a
+   * single group of two kitchens — there is no network to average.
+   */
+  stats: ProofFact[];
   branches: Branch[];
   globalTitle: string;
   globalSubtitle: string;
@@ -190,20 +195,25 @@ export interface ValueContent {
   };
 }
 
-export interface Testimonial {
-  quote: string;
-  name: string;
-  role: string;
-  company: string;
-  metric: string;
+/**
+ * A verifiable claim shown under the testimonials — a commitment we control
+ * (pilot length, data ownership) or a count we can actually stand behind, never
+ * an aggregate outcome we have not measured.
+ */
+export interface ProofFact {
+  value: string;
+  label: string;
 }
 
+/**
+ * Copy around the quotes only. There is no empty-state copy: with no published
+ * testimonials the section is not rendered at all.
+ */
 export interface TestimonialsContent {
   badge: string;
   title: string;
   subtitle: string;
-  items: Testimonial[];
-  stats: { powered: string; processed: string; onboarding: string; accuracy: string };
+  facts: ProofFact[];
 }
 
 export interface PricingPlan {

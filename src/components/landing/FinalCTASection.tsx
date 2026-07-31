@@ -6,16 +6,20 @@ import { FinalCTAContent, SectionContent } from "@/types/cms";
 import { GoldText } from "./GoldText";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
+/*
+ * Each of these is a commitment we control, so it stays true no matter how many
+ * kitchens we have. Nothing here asserts a result measured across customers.
+ */
 const FALLBACK_PROOFS = {
   en: [
     "30-day free pilot — no credit card",
-    "Live in under 48 hours",
-    "Works with any POS system",
+    "Connect your POS, or start from a CSV",
+    "Your data stays yours — export it any time",
   ],
   fr: [
     "Essai gratuit de 30 jours — sans CB",
-    "Opérationnel en moins de 48h",
-    "Compatible avec tout système POS",
+    "Connectez votre POS, ou partez d'un CSV",
+    "Vos données restent les vôtres — export à tout moment",
   ],
 };
 
@@ -28,7 +32,7 @@ const FinalCTASection = ({
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
   const content: FinalCTAContent = dbContent?.[currentLang] || {
-    badge: t("finalCTA.badge", "Trusted by kitchens reducing waste daily"),
+    badge: t("finalCTA.badge", "Running in real kitchens today"),
     title: t("finalCTA.title", "Tomorrow's prep list is *already waiting*."),
     subtitle: t(
       "finalCTA.subtitle",

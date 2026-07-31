@@ -19,11 +19,20 @@
     },
     "ctaStart": "Start Free",
     "ctaDemo": "Book a 10-min Demo",
-    "stats": {
-      "accuracy": "Forecast accuracy",
-      "waste": "Less food waste",
-      "stockouts": "Stockouts a week"
-    }
+    "stats": [
+      {
+        "value": "Day 1",
+        "label": "A prep plan before we have your history"
+      },
+      {
+        "value": "Every service",
+        "label": "The forecast relearns from what actually sold"
+      },
+      {
+        "value": "30 days",
+        "label": "Free pilot, no card required"
+      }
+    ]
   },
   "footer": {
     "description": "Daily prep intelligence for kitchens that take food operations seriously. Predict demand, reduce waste, protect margins.",
@@ -100,29 +109,29 @@
   "problem": {
     "badge": "The Problem",
     "title": "Most kitchens still prep on instinct.",
-    "subtitle": "The result? Predictable losses that compound every day.",
+    "subtitle": "The result? The same three losses, compounding every day — in every kitchen that preps on memory.",
     "cta": "PrepIQ replaces guessing with <gold>daily intelligence</gold>.",
     "items": {
       "overprep": {
         "title": "Overprep",
         "result": "Waste",
         "desc": "Throwing away food and money every single day. Margins bleed silently.",
-        "impact": "$2,400",
-        "impactLabel": "avg. monthly waste"
+        "impact": "Every day",
+        "impactLabel": "prep you paid for, binned"
       },
       "underprep": {
         "title": "Underprep",
         "result": "Stockouts",
         "desc": "Losing revenue when your best items run out at peak. Customers don't come back.",
-        "impact": "14%",
-        "impactLabel": "revenue lost to stockouts"
+        "impact": "At peak",
+        "impactLabel": "when a stockout costs most"
       },
       "spreadsheets": {
         "title": "Manual Spreadsheets",
         "result": "No Learning",
         "desc": "The same guessing game, repeated every morning. Yesterday teaches nothing.",
-        "impact": "0%",
-        "impactLabel": "improvement over time"
+        "impact": "Zero",
+        "impactLabel": "learned from yesterday"
       }
     }
   },
@@ -320,23 +329,29 @@
       "foodCosts": {
         "title": "Rising Food Costs",
         "desc": "Every wasted kilogram hits harder than it did last year.",
-        "label": "avg. cost increase"
+        "label": "input costs"
       },
       "weather": {
         "title": "Weather Shifts Traffic",
         "desc": "A rainy Tuesday behaves nothing like a sunny one.",
-        "label": "demand swing"
+        "label": "daily footfall"
       },
       "events": {
         "title": "Event-Driven Surges",
         "desc": "Holidays and local events spike demand unpredictably.",
-        "label": "peak multiplier"
+        "label": "local events"
       },
       "delivery": {
         "title": "Delivery Demand Spikes",
         "desc": "Online orders add volatility your gut can't track.",
-        "label": "YoY growth"
+        "label": "delivery share"
       }
+    },
+    "metrics": {
+      "foodCosts": "Rising",
+      "weather": "Swings",
+      "events": "Spikes",
+      "delivery": "Growing"
     }
   },
   "whyPrepIQ": {
@@ -449,7 +464,8 @@
         "salmonTrend": "↑ 12% vs last Tue",
         "saladTrend": "Steady",
         "soupTrend": "↓ 5% — rain forecast"
-      }
+      },
+      "sampleData": "Sample data — an illustration of the interface, not customer results"
     },
     "liveFeatures": [
       {
@@ -501,7 +517,7 @@
     "suggested": "Suggested: {{action}}",
     "monthlyProtection": "Monthly Margin Protection",
     "totalProtection": "Total Monthly Protection",
-    "roiNote": "PrepIQ pays for itself in the first 48 hours.",
+    "roiNote": "Illustrative alerts. PrepIQ measures the real figure against your own service data.",
     "alerts": {
       "waste": {
         "type": "Waste Risk",
@@ -528,7 +544,7 @@
   },
   "value": {
     "title": "What Better Prep Means",
-    "subtitle": "Real savings from day one. Not projections — results kitchens using PrepIQ actually see.",
+    "subtitle": "An estimate, not a promise. Move the slider to model what these ranges would mean for your kitchen — then check it against your own numbers in the app.",
     "metrics": {
       "waste": {
         "label": "Waste Reduction",
@@ -545,19 +561,20 @@
     },
     "calculator": {
       "title": "Savings Calculator",
-      "subtitle": "Drag the slider or type a value to see your projected savings",
+      "subtitle": "Drag the slider or type a value to model your potential savings",
       "inputLabel": "Monthly prep waste spend",
       "monthlyRecovery": "Monthly Recovery",
       "annualImpact": "Annual Impact",
       "projection": "6-Month Savings Projection",
       "breakdown": "Monthly Breakdown",
-      "roiNote": "Most kitchens see ROI within the first 2 weeks of using PrepIQ.",
+      "roiNote": "Modelled from published industry ranges for prep waste, stockouts and labour — not from measured PrepIQ customer results. Your actual figures will differ, and PrepIQ reports them on your own data.",
       "categories": {
         "waste": "Waste Saved",
         "stockout": "Stockout Recovery",
         "labor": "Labor Efficiency"
       }
-    }
+    },
+    "metricsNote": "Illustrative ranges used by the model below."
   },
   "whoItsFor": {
     "badge": "Purpose-Built",
@@ -567,22 +584,22 @@
       "multiBranch": {
         "title": "Multi-Branch Restaurants",
         "desc": "Centralize prep intelligence across all locations. One dashboard, every kitchen aligned.",
-        "stat": "6+ locations managed"
+        "stat": "Every branch in one view"
       },
       "brands": {
         "title": "Growing Food Brands",
         "desc": "Scale production without scaling waste. Let data drive your daily output.",
-        "stat": "2× faster scaling"
+        "stat": "Grow output, not waste"
       },
       "chefs": {
         "title": "Data-Aware Chefs",
         "desc": "Make prep decisions backed by real data, not memory. Stay in control, always.",
-        "stat": "92% accuracy avg."
+        "stat": "Prep you review, not guess"
       },
       "ops": {
         "title": "Operations Managers",
         "desc": "See cost impact and forecast accuracy daily. Know exactly where margin leaks.",
-        "stat": "Real-time visibility"
+        "stat": "Daily cost visibility"
       }
     }
   },
@@ -667,14 +684,20 @@
       "marginImpact": "Margin Impact",
       "itemsTracked": "Items Tracked"
     },
-    "stats": {
-      "margin": "Avg. Margin Uplift",
-      "waste": "Monthly Waste Saved",
-      "accuracy": "Forecast Accuracy",
-      "allBranches": "across all branches",
-      "networkWide": "network-wide",
-      "weightedAvg": "weighted average"
-    }
+    "capabilities": [
+      {
+        "value": "Per branch",
+        "label": "Every kitchen gets its own forecast, prep list and staffing plan"
+      },
+      {
+        "value": "Side by side",
+        "label": "Compare accuracy, waste and cost across kitchens in one view"
+      },
+      {
+        "value": "Local currency",
+        "label": "Each branch keeps its own currency; group totals normalise for you"
+      }
+    ]
   },
   "kitchenNetwork": {
     "badge": "Kitchen Intelligence Network",
@@ -758,15 +781,27 @@
     }
   },
   "testimonials": {
-    "badge": "Testimonials",
-    "title": "From the Kitchen",
-    "subtitle": "Real teams. Real results. Here's what operators say after switching to PrepIQ.",
-    "stats": {
-      "powered": "Kitchens powered",
-      "processed": "Meals processed / week",
-      "onboarding": "Average onboarding",
-      "accuracy": "Forecast accuracy"
-    }
+    "badge": "From the kitchen",
+    "title": "In their words.",
+    "subtitle": "Every quote here is from an operator running PrepIQ, published with their permission.",
+    "facts": [
+      {
+        "value": "2",
+        "label": "Kitchens running PrepIQ every day"
+      },
+      {
+        "value": "Day 1",
+        "label": "First prep plan, before we have your history"
+      },
+      {
+        "value": "30 days",
+        "label": "Free pilot, no card required"
+      },
+      {
+        "value": "Yours",
+        "label": "Your data, exportable at any time"
+      }
+    ]
   },
   "pricing": {
     "badge": "Pricing",
@@ -821,7 +856,7 @@
     "footer": "Still have questions? <contact>Talk to our team →</contact>"
   },
   "finalCTA": {
-    "badge": "One system for how your kitchen runs",
+    "badge": "Running in real kitchens today",
     "title": "Run tomorrow on a <gold>plan</gold>, not a guess.",
     "subtitle": "Plan the prep, staff the line, and let every service make the next one sharper. See PrepIQ on your own kitchen's numbers.",
     "ctaStart": "Start Free Pilot",
