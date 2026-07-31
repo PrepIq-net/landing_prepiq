@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,8 @@ import {
   ChatBubbleEmpty,
   CreditCard,
   Wallet,
+  Quote,
+  NavArrowDown,
 } from "iconoir-react";
 
 interface NavItem {
@@ -31,96 +34,102 @@ interface NavItem {
 }
 
 interface NavGroup {
-  /** Sub-heading inside a workspace; omitted for the group's primary items. */
-  title?: string;
-  items: NavItem[];
-}
-
-interface NavWorkspace {
-  /** The two operational halves of the admin: what we publish vs what we run. */
+  id: string;
   title: string;
-  variant: "content" | "operations";
-  /** ADMIN-only workspaces are hidden from editors. */
+  items: NavItem[];
+  /** ADMIN-only groups are hidden from editors. */
   adminOnly?: boolean;
-  groups: NavGroup[];
 }
 
 /**
- * Two workspaces, deliberately: everything that shapes what visitors and
- * customers *see* lives under Content & Growth, and everything that governs how
- * the platform *runs* — what we charge, how we take money, who has access —
- * lives under Platform Operations.
+ * Grouped rather than listed: at ~18 destinations a flat sidebar is a wall of
+ * links you have to read top to bottom. Groups collapse (persisted per browser)
+ * so the sidebar stays roughly one screen tall no matter how much we add.
  */
-const WORKSPACES: NavWorkspace[] = [
+const DASHBOARD: NavItem = {
+  href: "/admin",
+  label: "Dashboard",
+  icon: ViewGrid,
+  exact: true,
+};
+
+const GROUPS: NavGroup[] = [
   {
-    title: "Content & Growth",
-    variant: "content",
-    groups: [
-      {
-        items: [
-          { href: "/admin", label: "Dashboard", icon: ViewGrid, exact: true },
-          { href: "/admin/pages", label: "Page Content", icon: Page },
-          { href: "/admin/blog", label: "Blog Posts", icon: Journal },
-          { href: "/admin/legal", label: "Legal Pages", icon: Shield },
-          { href: "/admin/links", label: "Navigation Links", icon: LinkIcon },
-          { href: "/admin/careers", label: "Careers", icon: Suitcase },
-        ],
-      },
-      {
-        title: "Audience",
-        items: [
-          { href: "/admin/messages", label: "Communications", icon: Mail },
-          { href: "/admin/support", label: "Support", icon: HeadsetHelp },
-          { href: "/admin/concierge", label: "Concierge", icon: ChatBubbleEmpty },
-          { href: "/admin/meetings", label: "Meetings", icon: Calendar },
-        ],
-      },
+    id: "site",
+    title: "Website",
+    items: [
+      { href: "/admin/pages", label: "Page Content", icon: Page },
+      { href: "/admin/links", label: "Navigation & Footer", icon: LinkIcon },
+      { href: "/admin/legal", label: "Legal Pages", icon: Shield },
     ],
   },
   {
-    title: "Platform Operations",
-    variant: "operations",
+    id: "content",
+    title: "Content",
+    items: [
+      { href: "/admin/blog", label: "Blog Posts", icon: Journal },
+      { href: "/admin/testimonials", label: "Testimonials", icon: Quote },
+      { href: "/admin/careers", label: "Careers", icon: Suitcase },
+    ],
+  },
+  {
+    id: "inbox",
+    title: "Inbox",
+    items: [
+      { href: "/admin/messages", label: "Communications", icon: Mail },
+      { href: "/admin/support", label: "Support", icon: HeadsetHelp },
+      { href: "/admin/concierge", label: "Concierge", icon: ChatBubbleEmpty },
+      { href: "/admin/meetings", label: "Meetings", icon: Calendar },
+    ],
+  },
+  {
+    id: "commercial",
+    title: "Commercial",
     adminOnly: true,
-    groups: [
-      {
-        title: "Commercial",
-        items: [
-          { href: "/admin/subscriptions", label: "Subscription Plans", icon: CreditCard },
-          { href: "/admin/payment-gateways", label: "Payment Gateways", icon: Wallet },
-        ],
-      },
-      {
-        title: "PIQ Connector",
-        items: [
-          { href: "/admin/connectors", label: "Machines", icon: Database },
-          { href: "/admin/releases", label: "Releases", icon: CloudDownload },
-          { href: "/admin/installation-tokens", label: "Install Tokens", icon: Key },
-        ],
-      },
-      {
-        title: "System",
-        items: [
-          { href: "/admin/users", label: "Staff", icon: User },
-          { href: "/admin/activity", label: "Activity Log", icon: Clock },
-        ],
-      },
+    items: [
+      { href: "/admin/subscriptions", label: "Subscription Plans", icon: CreditCard },
+      { href: "/admin/payment-gateways", label: "Payment Gateways", icon: Wallet },
+    ],
+  },
+  {
+    id: "connector",
+    title: "PIQ Connector",
+    adminOnly: true,
+    items: [
+      { href: "/admin/connectors", label: "Machines", icon: Database },
+      { href: "/admin/releases", label: "Releases", icon: CloudDownload },
+      { href: "/admin/installation-tokens", label: "Install Tokens", icon: Key },
+    ],
+  },
+  {
+    id: "system",
+    title: "System",
+    adminOnly: true,
+    items: [
+      { href: "/admin/users", label: "Staff", icon: User },
+      { href: "/admin/activity", label: "Activity Log", icon: Clock },
     ],
   },
 ];
 
-function NavLink({ item }: { item: NavItem }) {
-  const pathname = usePathname();
-  const isActive = item.exact
+const STORAGE_KEY = "prepiq.admin.collapsedNavGroups";
+
+function isItemActive(pathname: string, item: NavItem) {
+  return item.exact
     ? pathname === item.href
     : pathname === item.href || pathname.startsWith(`${item.href}/`);
+}
+
+function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   const Icon = item.icon;
 
   return (
     <Link
       href={item.href}
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 text-sm font-medium",
-        isActive
+        "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium",
+        active
           ? "bg-primary/10 text-primary border border-primary/20"
           : "hover:bg-accent hover:text-accent-foreground text-foreground/70",
       )}
@@ -128,7 +137,7 @@ function NavLink({ item }: { item: NavItem }) {
       <Icon
         className={cn(
           "w-4 h-4 flex-shrink-0",
-          isActive ? "opacity-100" : "opacity-60",
+          active ? "opacity-100" : "opacity-60",
         )}
       />
       {item.label}
@@ -136,50 +145,85 @@ function NavLink({ item }: { item: NavItem }) {
   );
 }
 
-function WorkspaceBlock({ workspace }: { workspace: NavWorkspace }) {
-  return (
-    <section className="mt-6 first:mt-0" aria-label={workspace.title}>
-      <h2
-        className={cn(
-          "flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest px-3 mb-2",
-          workspace.variant === "operations"
-            ? "text-primary"
-            : "text-foreground/80",
-        )}
-      >
-        <span
-          className={cn(
-            "h-3 w-0.5 rounded-full",
-            workspace.variant === "operations" ? "bg-primary" : "bg-border",
-          )}
-        />
-        {workspace.title}
-      </h2>
-
-      {workspace.groups.map((group, i) => (
-        <div key={group.title ?? `group-${i}`} className="space-y-0.5">
-          {group.title && (
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-3 mt-3 mb-1.5">
-              {group.title}
-            </div>
-          )}
-          {group.items.map((item) => (
-            <NavLink key={item.href} item={item} />
-          ))}
-        </div>
-      ))}
-    </section>
-  );
-}
-
 export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
-  const workspaces = WORKSPACES.filter((w) => !w.adminOnly || isAdmin);
+  const pathname = usePathname();
+  const groups = useMemo(
+    () => GROUPS.filter((g) => !g.adminOnly || isAdmin),
+    [isAdmin],
+  );
+
+  // Starts empty so the server and first client render agree; the stored
+  // preference is applied after mount.
+  const [collapsed, setCollapsed] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored) setCollapsed(JSON.parse(stored));
+    } catch {
+      // A malformed or unavailable localStorage just means "nothing collapsed".
+    }
+  }, []);
+
+  function toggle(id: string) {
+    setCollapsed((prev) => {
+      const next = prev.includes(id)
+        ? prev.filter((g) => g !== id)
+        : [...prev, id];
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // Preference is a nicety; failing to persist it must not break nav.
+      }
+      return next;
+    });
+  }
 
   return (
-    <nav className="flex-1 p-4 overflow-y-auto">
-      {workspaces.map((workspace) => (
-        <WorkspaceBlock key={workspace.title} workspace={workspace} />
-      ))}
+    <nav className="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1">
+      <NavLink item={DASHBOARD} active={isItemActive(pathname, DASHBOARD)} />
+
+      {groups.map((group) => {
+        const hasActive = group.items.some((i) => isItemActive(pathname, i));
+        // The group holding the current page is always open, whatever was stored.
+        const open = hasActive || !collapsed.includes(group.id);
+
+        return (
+          <div key={group.id} className="pt-3">
+            <button
+              type="button"
+              onClick={() => toggle(group.id)}
+              aria-expanded={open}
+              className="flex w-full items-center gap-1.5 px-3 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <NavArrowDown
+                className={cn(
+                  "h-3 w-3 transition-transform duration-200",
+                  open ? "rotate-0" : "-rotate-90",
+                )}
+              />
+              {group.title}
+              {!open && (
+                <span className="ml-auto text-[10px] font-semibold text-muted-foreground/60">
+                  {group.items.length}
+                </span>
+              )}
+            </button>
+
+            {open && (
+              <div className="space-y-0.5">
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    active={isItemActive(pathname, item)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </nav>
   );
 }
