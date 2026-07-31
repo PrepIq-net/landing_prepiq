@@ -55,6 +55,8 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
     sending,
     hydrated,
     send,
+    animatingId,
+    endAnimation,
     leadOffered,
     leadSubmitted,
     submitLead,
@@ -66,11 +68,23 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const keyboardInset = useKeyboardInset();
 
-  // Lock body scroll while the panel is open so the page behind doesn't move.
+  // Lock body scroll while the mobile sheet is up, since it covers the page.
+  // Never on desktop: the panel only floats in a corner there, and hiding
+  // body overflow takes the scrollbar with it, which reflows the page wider
+  // the moment the widget opens.
   useEffect(() => {
     const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    const desktop = window.matchMedia("(min-width: 640px)");
+    const apply = () => {
+      document.body.style.overflow = desktop.matches ? prev : "hidden";
+    };
+
+    apply();
+    desktop.addEventListener("change", apply);
+    return () => {
+      desktop.removeEventListener("change", apply);
+      document.body.style.overflow = prev;
+    };
   }, []);
 
   useEffect(() => {
@@ -86,6 +100,21 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length, sending, leadOffered, keyboardInset]);
+
+  // A reply grows line by line while it types, which the effect above can't
+  // see — follow it down, unless the visitor has scrolled up to re-read.
+  useEffect(() => {
+    if (!animatingId) return;
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const id = setInterval(() => {
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 120) {
+        el.scrollTop = el.scrollHeight;
+      }
+    }, 80);
+    return () => clearInterval(id);
+  }, [animatingId]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -169,7 +198,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
         aria-live="polite"
       >
         <ConciergeMessage
-          message={{ role: "assistant", content: t("concierge.greeting") }}
+          message={{ id: "greeting", role: "assistant", content: t("concierge.greeting") }}
         />
         {hydrated && messages.length === 0 && (
           <div className="flex flex-wrap gap-2 pt-1">
@@ -184,8 +213,13 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
             ))}
           </div>
         )}
-        {messages.map((message, index) => (
-          <ConciergeMessage key={index} message={message} />
+        {messages.map((message) => (
+          <ConciergeMessage
+            key={message.id}
+            message={message}
+            animateIn={message.id === animatingId}
+            onAnimationDone={() => endAnimation(message.id)}
+          />
         ))}
         {sending && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -202,7 +236,11 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
         )}
         {leadSubmitted && leadThanked && (
           <ConciergeMessage
-            message={{ role: "assistant", content: t("concierge.lead.thanks") }}
+            message={{
+              id: "lead-thanks",
+              role: "assistant",
+              content: t("concierge.lead.thanks"),
+            }}
           />
         )}
       </div>

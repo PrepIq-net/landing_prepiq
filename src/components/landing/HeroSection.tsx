@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "iconoir-react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +24,7 @@ const HeroSection = ({
 }) => {
   const { t, i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   const content: HeroContent = dbContent?.[currentLang] || {
     badge: t("hero.badge", "AI prep planning for professional kitchens"),
@@ -51,14 +54,35 @@ const HeroSection = ({
   return (
     <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-end overflow-hidden">
       {/* Background video */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden bg-[hsl(240_7%_8%)]">
+        {/*
+          The still is frame 0 of hero.mp4 (not a separate photo), so when the
+          video fades in over it there is nothing visible to swap — it just
+          starts moving. object-left below md keeps the chef in frame on
+          portrait screens, where cover crops most of the 16:9 width away.
+        */}
+        <Image
+          src="/images/hero-poster.jpg"
+          alt=""
+          aria-hidden="true"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-left md:object-center"
+          style={{ filter: "saturate(0.92) brightness(0.96)" }}
+        />
         <video
           autoPlay
           muted
           loop
           playsInline
-          poster="/images/hero-kitchen.jpg"
-          className="w-full h-full object-cover object-center"
+          preload="auto"
+          // Only reveal once frames are actually rendering; if autoplay is
+          // blocked this never fires and the still stays as the background.
+          onPlaying={() => setVideoPlaying(true)}
+          className={`absolute inset-0 w-full h-full object-cover object-left md:object-center transition-opacity duration-700 ease-out ${
+            videoPlaying ? "opacity-100" : "opacity-0"
+          }`}
           style={{ filter: "saturate(0.92) brightness(0.96)" }}
         >
           <source src="/images/hero.webm" type="video/webm" />
@@ -72,9 +96,17 @@ const HeroSection = ({
               "linear-gradient(180deg, hsl(240 7% 8% / 0.72) 0%, hsl(240 7% 8% / 0.35) 40%, hsl(240 7% 8% / 0.92) 85%, hsl(240 7% 8%) 100%)",
           }}
         />
-        {/* Left-side gradient */}
+        {/* Left-side gradient — held back below md, where the full-strength
+            wash would sit right on top of the chef the crop is framing. */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 md:hidden"
+          style={{
+            background:
+              "linear-gradient(90deg, hsl(240 7% 8% / 0.32) 0%, transparent 55%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 hidden md:block"
           style={{
             background:
               "linear-gradient(90deg, hsl(240 7% 8% / 0.75) 0%, transparent 60%)",
