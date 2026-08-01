@@ -4,6 +4,9 @@ import {
   Page,
   Link as LinkIcon,
   Mail,
+  Building,
+  MapPin,
+  User,
   CreditCard,
   Wallet,
   Quote,
@@ -14,6 +17,7 @@ import { auth } from "@/auth";
 import { djangoAdminFetch } from "@/lib/django-api";
 import { prisma } from "@/lib/prisma";
 import type { AdminPlanListResponse } from "@/types/admin-plans";
+import type { TenantOverview } from "@/types/admin-tenants";
 
 export const dynamic = "force-dynamic";
 
@@ -41,15 +45,22 @@ export default async function AdminDashboard() {
     ]);
 
   let planCatalog: AdminPlanListResponse | null = null;
+  let tenants: TenantOverview | null = null;
   if (isAdmin) {
-    try {
-      planCatalog = await djangoAdminFetch<AdminPlanListResponse>(
+    // Settled independently: a failure in one Django call should not blank the
+    // other section, and neither should blank the CMS half above.
+    const [planResult, tenantResult] = await Promise.allSettled([
+      djangoAdminFetch<AdminPlanListResponse>(
         "/api/mgmt/subscription-plans/",
         currentUser.email,
-      );
-    } catch {
-      planCatalog = null;
-    }
+      ),
+      djangoAdminFetch<TenantOverview>(
+        "/api/mgmt/tenant-overview/",
+        currentUser.email,
+      ),
+    ]);
+    planCatalog = planResult.status === "fulfilled" ? planResult.value : null;
+    tenants = tenantResult.status === "fulfilled" ? tenantResult.value : null;
   }
 
   const plans = planCatalog?.results ?? [];
@@ -114,6 +125,94 @@ export default async function AdminDashboard() {
           />
         </div>
       </section>
+
+      {isAdmin && tenants && (
+        <section className="space-y-5">
+          <SectionHeading title="Tenants" accent />
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <MetricCard
+              icon={Building}
+              kicker="Customers"
+              value={tenants.organizations.active}
+              label="Active organizations"
+              href="/admin/organizations"
+              status={
+                tenants.organizations.suspended > 0
+                  ? {
+                      text: `${tenants.organizations.suspended} suspended`,
+                      tone: "warning",
+                    }
+                  : {
+                      text: `+${tenants.organizations.new_this_week} this week`,
+                      tone: "neutral",
+                    }
+              }
+            />
+            <MetricCard
+              icon={MapPin}
+              kicker="Locations"
+              value={tenants.branches.active}
+              label="Active branches"
+              href="/admin/branches"
+              status={
+                // Missing hours is the single most common reason a branch
+                // silently produces no live advice, so it earns the slot.
+                tenants.branches.missing_hours > 0
+                  ? {
+                      text: `${tenants.branches.missing_hours} without operating hours`,
+                      tone: "warning",
+                    }
+                  : { text: "All have operating hours", tone: "success" }
+              }
+            />
+            <MetricCard
+              icon={User}
+              kicker="People"
+              value={tenants.users.active}
+              label="Live accounts"
+              href="/admin/accounts"
+              status={
+                tenants.users.suspended > 0
+                  ? { text: `${tenants.users.suspended} suspended`, tone: "warning" }
+                  : {
+                      text: `${tenants.users.unverified} unverified`,
+                      tone: "neutral",
+                    }
+              }
+            />
+          </div>
+
+          {tenants.trials_ending_soon.length > 0 && (
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                Trials ending within 7 days
+              </h3>
+              <ul className="mt-4 space-y-2">
+                {tenants.trials_ending_soon.map((trial) => (
+                  <li
+                    key={trial.branch_id}
+                    className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border/60 pb-2 last:border-0 last:pb-0"
+                  >
+                    <Link
+                      href={`/admin/branches/${trial.branch_id}`}
+                      className="text-sm text-foreground hover:text-primary transition-colors"
+                    >
+                      {trial.organization_name} · {trial.branch_name}
+                    </Link>
+                    <span className="text-xs text-muted-foreground">
+                      {trial.plan_name} ·{" "}
+                      {new Date(trial.trial_ends_at).toLocaleDateString(
+                        "en-GB",
+                        { day: "2-digit", month: "short" },
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       {isAdmin && (
         <section className="space-y-5">
