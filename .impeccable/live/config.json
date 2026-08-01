@@ -1,0 +1,7 @@
+{
+  "files": ["app/layout.tsx"],
+  "exclude": ["public/PrepIQ Landing v2 (Standalone).html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "jsx",
+  "cspChecked": true
+}
