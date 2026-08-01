@@ -3,122 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NavArrowDown, Search } from "iconoir-react";
+
 import { cn } from "@/lib/utils";
 import {
-  ViewGrid,
-  Page,
-  Link as LinkIcon,
-  Mail,
-  Calendar,
-  Database,
-  CloudDownload,
-  Key,
-  User,
-  Clock,
-  Shield,
-  HeadsetHelp,
-  Suitcase,
-  Journal,
-  ChatBubbleEmpty,
-  CreditCard,
-  Wallet,
-  Quote,
-  NavArrowDown,
-} from "iconoir-react";
+  DASHBOARD,
+  isItemActive,
+  visibleWorkspaces,
+  workspaceForPath,
+  type NavItem,
+  type Workspace,
+} from "@/lib/admin-nav";
+import { useAdminPalette } from "@/components/admin/AdminCommandPalette";
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: React.ElementType;
-  exact?: boolean;
-}
-
-interface NavGroup {
-  id: string;
-  title: string;
-  items: NavItem[];
-  /** ADMIN-only groups are hidden from editors. */
-  adminOnly?: boolean;
-}
-
-/**
- * Grouped rather than listed: at ~18 destinations a flat sidebar is a wall of
- * links you have to read top to bottom. Groups collapse (persisted per browser)
- * so the sidebar stays roughly one screen tall no matter how much we add.
- */
-const DASHBOARD: NavItem = {
-  href: "/admin",
-  label: "Dashboard",
-  icon: ViewGrid,
-  exact: true,
-};
-
-const GROUPS: NavGroup[] = [
-  {
-    id: "site",
-    title: "Website",
-    items: [
-      { href: "/admin/pages", label: "Page Content", icon: Page },
-      { href: "/admin/links", label: "Navigation & Footer", icon: LinkIcon },
-      { href: "/admin/legal", label: "Legal Pages", icon: Shield },
-    ],
-  },
-  {
-    id: "content",
-    title: "Content",
-    items: [
-      { href: "/admin/blog", label: "Blog Posts", icon: Journal },
-      { href: "/admin/testimonials", label: "Testimonials", icon: Quote },
-      { href: "/admin/careers", label: "Careers", icon: Suitcase },
-    ],
-  },
-  {
-    id: "inbox",
-    title: "Inbox",
-    items: [
-      { href: "/admin/messages", label: "Communications", icon: Mail },
-      { href: "/admin/support", label: "Support", icon: HeadsetHelp },
-      { href: "/admin/concierge", label: "Concierge", icon: ChatBubbleEmpty },
-      { href: "/admin/meetings", label: "Meetings", icon: Calendar },
-    ],
-  },
-  {
-    id: "commercial",
-    title: "Commercial",
-    adminOnly: true,
-    items: [
-      { href: "/admin/subscriptions", label: "Subscription Plans", icon: CreditCard },
-      { href: "/admin/payment-gateways", label: "Payment Gateways", icon: Wallet },
-    ],
-  },
-  {
-    id: "connector",
-    title: "PIQ Connector",
-    adminOnly: true,
-    items: [
-      { href: "/admin/connectors", label: "Machines", icon: Database },
-      { href: "/admin/releases", label: "Releases", icon: CloudDownload },
-      { href: "/admin/installation-tokens", label: "Install Tokens", icon: Key },
-    ],
-  },
-  {
-    id: "system",
-    title: "System",
-    adminOnly: true,
-    items: [
-      { href: "/admin/users", label: "Staff", icon: User },
-      { href: "/admin/activity", label: "Activity Log", icon: Clock },
-    ],
-  },
-];
-
-const STORAGE_KEY = "prepiq.admin.collapsedNavGroups";
-
-function isItemActive(pathname: string, item: NavItem) {
-  return item.exact
-    ? pathname === item.href
-    : pathname === item.href || pathname.startsWith(`${item.href}/`);
-}
+const GROUP_STORAGE_KEY = "prepiq.admin.collapsedNavGroups";
+const WORKSPACE_STORAGE_KEY = "prepiq.admin.workspace";
 
 function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   const Icon = item.icon;
@@ -129,6 +28,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active
           ? "bg-primary/10 text-primary border border-primary/20"
           : "hover:bg-accent hover:text-accent-foreground text-foreground/70",
@@ -145,12 +45,146 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   );
 }
 
+/**
+ * Switches which half of the admin the sidebar is showing. Rendered as a plain
+ * disclosure rather than a dropdown menu: there are only ever two or three
+ * options, and seeing both descriptions at once is more useful than saving a
+ * few pixels.
+ */
+function WorkspaceSwitcher({
+  workspaces,
+  current,
+  onSelect,
+}: {
+  workspaces: Workspace[];
+  current: Workspace;
+  onSelect: (workspace: Workspace) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const CurrentIcon = current.icon;
+
+  // Only one workspace is visible to editors — a switcher with nothing to
+  // switch to is pure noise, so it collapses to a static label.
+  if (workspaces.length < 2) {
+    return (
+      <div className="px-3 pt-4 pb-1">
+        <div className="flex items-center gap-2.5 px-3 py-2 rounded-md bg-secondary/40 border border-border">
+          <CurrentIcon className="h-4 w-4 text-primary" />
+          <span className="text-sm font-semibold text-foreground">
+            {current.label}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-3 pt-4 pb-1">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className={cn(
+          "flex w-full items-center gap-2.5 px-3 py-2 rounded-md border transition-colors duration-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          open
+            ? "bg-accent border-primary/30"
+            : "bg-secondary/40 border-border hover:bg-accent",
+        )}
+      >
+        <CurrentIcon className="h-4 w-4 text-primary flex-shrink-0" />
+        <span className="flex-1 text-left text-sm font-semibold text-foreground truncate">
+          {current.label}
+        </span>
+        <NavArrowDown
+          className={cn(
+            "h-3.5 w-3.5 text-muted-foreground transition-transform duration-200",
+            open ? "rotate-180" : "rotate-0",
+          )}
+        />
+      </button>
+
+      {open && (
+        <ul className="mt-1 space-y-0.5 rounded-md border border-border bg-card p-1 shadow-l2">
+          {workspaces.map((workspace) => {
+            const Icon = workspace.icon;
+            const selected = workspace.id === current.id;
+            return (
+              <li key={workspace.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onSelect(workspace);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "flex w-full items-start gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors duration-200",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    selected ? "bg-primary/10" : "hover:bg-accent",
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "mt-0.5 h-4 w-4 flex-shrink-0",
+                      selected ? "text-primary" : "text-muted-foreground",
+                    )}
+                  />
+                  <span className="min-w-0">
+                    <span
+                      className={cn(
+                        "block text-sm font-medium",
+                        selected ? "text-primary" : "text-foreground",
+                      )}
+                    >
+                      {workspace.label}
+                    </span>
+                    <span className="block text-xs text-muted-foreground leading-snug">
+                      {workspace.description}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
-  const groups = useMemo(
-    () => GROUPS.filter((g) => !g.adminOnly || isAdmin),
-    [isAdmin],
-  );
+  const openPalette = useAdminPalette();
+  const workspaces = useMemo(() => visibleWorkspaces(isAdmin), [isAdmin]);
+
+  // The URL is the source of truth: navigating to a Platform page from the
+  // palette must switch the sidebar with it. `manual` only decides which
+  // workspace to show on pages that belong to none (the dashboard).
+  const routeWorkspace = workspaceForPath(pathname, workspaces);
+  const [manualId, setManualId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(WORKSPACE_STORAGE_KEY);
+      if (stored) setManualId(stored);
+    } catch {
+      // Preference is a nicety; failing to read it just means the default.
+    }
+  }, []);
+
+  const current =
+    routeWorkspace ??
+    workspaces.find((workspace) => workspace.id === manualId) ??
+    workspaces[0];
+
+  function selectWorkspace(workspace: Workspace) {
+    setManualId(workspace.id);
+    try {
+      window.localStorage.setItem(WORKSPACE_STORAGE_KEY, workspace.id);
+    } catch {
+      // Non-fatal — the switch still applies for this page view.
+    }
+  }
 
   // Starts empty so the server and first client render agree; the stored
   // preference is applied after mount.
@@ -158,20 +192,20 @@ export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
+      const stored = window.localStorage.getItem(GROUP_STORAGE_KEY);
       if (stored) setCollapsed(JSON.parse(stored));
     } catch {
-      // A malformed or unavailable localStorage just means "nothing collapsed".
+      // A malformed or unavailable localStorage means "nothing collapsed".
     }
   }, []);
 
-  function toggle(id: string) {
+  function toggleGroup(id: string) {
     setCollapsed((prev) => {
       const next = prev.includes(id)
         ? prev.filter((g) => g !== id)
         : [...prev, id];
       try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        window.localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(next));
       } catch {
         // Preference is a nicety; failing to persist it must not break nav.
       }
@@ -179,51 +213,86 @@ export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
     });
   }
 
+  if (!current) return null;
+
   return (
-    <nav className="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1">
-      <NavLink item={DASHBOARD} active={isItemActive(pathname, DASHBOARD)} />
+    <div className="flex-1 min-h-0 flex flex-col">
+      <div className="px-3 pt-4 shrink-0">
+        <button
+          type="button"
+          onClick={openPalette}
+          className={cn(
+            "flex w-full items-center gap-2.5 rounded-md border border-border bg-secondary/40 px-3 py-2",
+            "text-sm text-muted-foreground transition-colors duration-200",
+            "hover:bg-accent hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          )}
+        >
+          <Search className="h-4 w-4 opacity-70" />
+          <span className="flex-1 text-left">Jump to…</span>
+          <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-sans text-[10px] font-semibold text-muted-foreground">
+            ⌘K
+          </kbd>
+        </button>
+      </div>
 
-      {groups.map((group) => {
-        const hasActive = group.items.some((i) => isItemActive(pathname, i));
-        // The group holding the current page is always open, whatever was stored.
-        const open = hasActive || !collapsed.includes(group.id);
+      <WorkspaceSwitcher
+        workspaces={workspaces}
+        current={current}
+        onSelect={selectWorkspace}
+      />
 
-        return (
-          <div key={group.id} className="pt-3">
-            <button
-              type="button"
-              onClick={() => toggle(group.id)}
-              aria-expanded={open}
-              className="flex w-full items-center gap-1.5 px-3 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <NavArrowDown
+      <nav className="flex-1 min-h-0 overflow-y-auto px-3 pb-4 space-y-1">
+        <NavLink item={DASHBOARD} active={isItemActive(pathname, DASHBOARD)} />
+
+        {current.groups.map((group) => {
+          const hasActive = group.items.some((item) =>
+            isItemActive(pathname, item),
+          );
+          // The group holding the current page is always open, whatever was stored.
+          const open = hasActive || !collapsed.includes(group.id);
+
+          return (
+            <div key={group.id} className="pt-3">
+              <button
+                type="button"
+                onClick={() => toggleGroup(group.id)}
+                aria-expanded={open}
                 className={cn(
-                  "h-3 w-3 transition-transform duration-200",
-                  open ? "rotate-0" : "-rotate-90",
+                  "flex w-full items-center gap-1.5 px-3 pb-1.5 text-[10px] font-bold uppercase tracking-widest",
+                  "text-muted-foreground hover:text-foreground transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded",
                 )}
-              />
-              {group.title}
-              {!open && (
-                <span className="ml-auto text-[10px] font-semibold text-muted-foreground/60">
-                  {group.items.length}
-                </span>
-              )}
-            </button>
+              >
+                <NavArrowDown
+                  className={cn(
+                    "h-3 w-3 transition-transform duration-200",
+                    open ? "rotate-0" : "-rotate-90",
+                  )}
+                />
+                {group.title}
+                {!open && (
+                  <span className="ml-auto text-[10px] font-semibold text-muted-foreground/60">
+                    {group.items.length}
+                  </span>
+                )}
+              </button>
 
-            {open && (
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <NavLink
-                    key={item.href}
-                    item={item}
-                    active={isItemActive(pathname, item)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </nav>
+              {open && (
+                <div className="space-y-0.5">
+                  {group.items.map((item) => (
+                    <NavLink
+                      key={item.href}
+                      item={item}
+                      active={isItemActive(pathname, item)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </nav>
+    </div>
   );
 }
