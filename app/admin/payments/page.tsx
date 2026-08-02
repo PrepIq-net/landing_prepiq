@@ -8,6 +8,7 @@ import { BackendUnreachable } from "@/components/admin/tenant/shared";
 import type {
   ManualPaymentQueue,
   PaymentInstruction,
+  PaymentMethodSettings,
 } from "@/types/admin-tenants";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +40,7 @@ export default async function PaymentsPage({
 
   let queue: ManualPaymentQueue | null = null;
   let instructions: PaymentInstruction[] = [];
+  let methods: PaymentMethodSettings | null = null;
   let error: string | null = null;
 
   try {
@@ -58,9 +60,26 @@ export default async function PaymentsPage({
     error = e instanceof Error ? e.message : "Failed to load payments";
   }
 
+  // Fetched separately so an older backend without this endpoint costs the
+  // toggles, not the whole review queue.
+  try {
+    methods = await djangoAdminFetch<PaymentMethodSettings>(
+      "/api/mgmt/payment-methods/",
+      session!.user!.email!,
+    );
+  } catch {
+    methods = null;
+  }
+
   if (error || !queue) {
     return <BackendUnreachable title="Offline Payments" error={error ?? ""} />;
   }
 
-  return <ManualPaymentsManager queue={queue} instructions={instructions} />;
+  return (
+    <ManualPaymentsManager
+      queue={queue}
+      instructions={instructions}
+      methods={methods}
+    />
+  );
 }

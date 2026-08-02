@@ -504,6 +504,22 @@ export async function recordManualPayment(
   );
 }
 
+/**
+ * Switch a payment route on or off for every customer at once.
+ *
+ * The backend refuses to leave both off, so a failed result here is a real
+ * message worth showing rather than a generic error.
+ */
+export async function updatePaymentMethods(
+  payload: Record<string, unknown>,
+): Promise<ActionResult> {
+  return mutate(
+    '/api/mgmt/payment-methods/',
+    { method: 'PATCH', body: JSON.stringify(payload) },
+    PAYMENT_ROUTES,
+  );
+}
+
 export async function savePaymentInstruction(
   instructionId: string | null,
   payload: Record<string, unknown>,
