@@ -13,7 +13,7 @@ export interface AdminPlan {
   plan_category: string;
   tagline: string;
   description: string;
-  /** Decimal strings, e.g. "49.00". */
+  /** Decimal strings, e.g. "49.00".  */
   monthly_price: string;
   yearly_price: string;
   yearly_discount_percentage: number;
