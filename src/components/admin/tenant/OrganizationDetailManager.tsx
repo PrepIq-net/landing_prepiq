@@ -26,6 +26,7 @@ import {
 import {
   addOrganizationMember,
   changeMemberRole,
+  createBranch,
   removeOrganizationMember,
   restoreOrganization,
   setOrganizationVerified,
@@ -56,6 +57,7 @@ type DialogKind =
   | "transfer"
   | "addMember"
   | "removeMember"
+  | "addBranch"
   | null;
 
 export function OrganizationDetailManager({
@@ -80,6 +82,37 @@ export function OrganizationDetailManager({
   const [transferTo, setTransferTo] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberRole, setNewMemberRole] = useState("");
+
+  // Currency and timezone default to the organization's rather than being left
+  // blank: a branch created without them silently inherits nothing, and a
+  // branch on the wrong timezone reports the wrong day — the single most
+  // confusing failure a new location can have.
+  const [newBranch, setNewBranch] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    currency: org.currency,
+    timezone: org.timezone,
+  });
+
+  function setBranchField(key: keyof typeof newBranch, value: string) {
+    setNewBranch((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function submitNewBranch() {
+    if (!newBranch.name.trim() || !newBranch.address.trim()) {
+      return Promise.resolve({
+        ok: false,
+        error: "A branch needs a name and an address.",
+      });
+    }
+    return createBranch(org.id, {
+      ...newBranch,
+      name: newBranch.name.trim(),
+      address: newBranch.address.trim(),
+    });
+  }
 
   const [profile, setProfile] = useState({
     name: org.name,
@@ -295,17 +328,23 @@ export function OrganizationDetailManager({
         title="Branches"
         description="Each branch carries its own plan, currency, and forecast readiness."
         actions={
-          <Button asChild size="sm" variant="outline">
-            <Link href={`/admin/branches?organization_id=${org.id}`}>
-              Manage branches
-            </Link>
-          </Button>
+          <>
+            <Button asChild size="sm" variant="outline">
+              <Link href={`/admin/branches?organization_id=${org.id}`}>
+                Manage branches
+              </Link>
+            </Button>
+            <Button size="sm" onClick={() => setDialog("addBranch")}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add branch
+            </Button>
+          </>
         }
       >
         {branches.length === 0 ? (
           <EmptyState
             title="No branches yet"
-            hint="A tenant without a branch cannot forecast anything — create one from the Branches page."
+            hint="A tenant without a branch cannot forecast anything. Add one above."
           />
         ) : (
           <div className="overflow-x-auto">
@@ -564,6 +603,72 @@ export function OrganizationDetailManager({
               </option>
             ))}
           </select>
+        </div>
+      </ActionDialog>
+
+      <ActionDialog
+        open={dialog === "addBranch"}
+        onOpenChange={(open) => {
+          // Reset on close so a second branch does not start pre-filled with
+          // the first one's address.
+          if (!open) {
+            setNewBranch({
+              name: "",
+              address: "",
+              phone: "",
+              email: "",
+              currency: org.currency,
+              timezone: org.timezone,
+            });
+          }
+          setDialog(open ? "addBranch" : null);
+        }}
+        title={`Add a branch to ${org.name}`}
+        description="The first branch of an organization becomes its primary one. Operating hours, plan, and menu are set afterwards on the branch page — without hours it produces no live advice."
+        confirmLabel="Create branch"
+        successMessage="Branch created."
+        onConfirm={submitNewBranch}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            id="new-branch-name"
+            label="Name"
+            value={newBranch.name}
+            onChange={(v) => setBranchField("name", v)}
+          />
+          <Field
+            id="new-branch-address"
+            label="Address"
+            value={newBranch.address}
+            onChange={(v) => setBranchField("address", v)}
+          />
+          <Field
+            id="new-branch-currency"
+            label="Currency"
+            value={newBranch.currency}
+            onChange={(v) => setBranchField("currency", v)}
+            hint="Billing is USD; this is what the branch reports in."
+          />
+          <Field
+            id="new-branch-timezone"
+            label="Timezone"
+            value={newBranch.timezone}
+            onChange={(v) => setBranchField("timezone", v)}
+            hint="IANA, e.g. Africa/Kampala. Decides when its day rolls over."
+          />
+          <Field
+            id="new-branch-phone"
+            label="Phone"
+            value={newBranch.phone}
+            onChange={(v) => setBranchField("phone", v)}
+          />
+          <Field
+            id="new-branch-email"
+            label="Email"
+            type="email"
+            value={newBranch.email}
+            onChange={(v) => setBranchField("email", v)}
+          />
         </div>
       </ActionDialog>
 

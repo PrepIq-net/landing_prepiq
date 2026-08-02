@@ -204,6 +204,20 @@ export function workspaceForPath(
   return best?.workspace ?? null;
 }
 
+/**
+ * Where "switch to this workspace" should land you.
+ *
+ * A workspace is not itself a page, so selecting one has to navigate somewhere.
+ * The first item of the first group is the workspace's front door — Page
+ * Content for Marketing, Organizations for Platform.
+ */
+export function firstDestination(workspace: Workspace): NavItem | null {
+  for (const group of workspace.groups) {
+    if (group.items.length > 0) return group.items[0];
+  }
+  return null;
+}
+
 export interface FlatDestination extends NavItem {
   workspaceId: string;
   workspaceLabel: string;
