@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { NavArrowDown, Search } from "iconoir-react";
 
 import { cn } from "@/lib/utils";
 import {
   DASHBOARD,
+  firstDestination,
   isItemActive,
   visibleWorkspaces,
   workspaceForPath,
@@ -154,6 +155,7 @@ function WorkspaceSwitcher({
 
 export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
   const openPalette = useAdminPalette();
   const workspaces = useMemo(() => visibleWorkspaces(isAdmin), [isAdmin]);
 
@@ -184,6 +186,16 @@ export function AdminNav({ isAdmin }: { isAdmin: boolean }) {
     } catch {
       // Non-fatal — the switch still applies for this page view.
     }
+
+    // Navigating is what makes the switch stick. `current` is derived from the
+    // URL first, so picking Platform while sitting on /admin/pages used to set
+    // a preference the very next render threw away — the sidebar simply
+    // snapped back to Marketing and the switcher looked broken. Sending the
+    // browser to the workspace's front door keeps the URL and the sidebar
+    // saying the same thing.
+    if (workspace.id === routeWorkspace?.id) return;
+    const destination = firstDestination(workspace);
+    if (destination) router.push(destination.href);
   }
 
   // Starts empty so the server and first client render agree; the stored
