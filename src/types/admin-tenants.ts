@@ -341,6 +341,16 @@ export interface PaymentInstruction {
   display_order: number;
 }
 
+/** Which ways of paying checkout offers, platform-wide. */
+export interface PaymentMethodSettings {
+  online_enabled: boolean;
+  offline_enabled: boolean;
+  offline_review_hours: number;
+  offline_note: string;
+  updated_by_email: string;
+  updated_at: string;
+}
+
 export interface ManualPaymentRequest {
   id: string;
   reference_code: string;
