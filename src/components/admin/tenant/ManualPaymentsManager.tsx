@@ -16,16 +16,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
 import {
   approveManualPayment,
   deletePaymentInstruction,
   rejectManualPayment,
   savePaymentInstruction,
+  updatePaymentMethods,
 } from "@/lib/actions/tenant-actions";
 import type {
   ManualPaymentQueue,
   ManualPaymentRequest,
   PaymentInstruction,
+  PaymentMethodSettings,
 } from "@/types/admin-tenants";
 import { ActionDialog, useAction } from "./ActionDialog";
 import {
@@ -49,9 +52,11 @@ const STATUS_TONE: Record<string, Tone> = {
 export function ManualPaymentsManager({
   queue,
   instructions,
+  methods,
 }: {
   queue: ManualPaymentQueue;
   instructions: PaymentInstruction[];
+  methods: PaymentMethodSettings | null;
 }) {
   const { pending, run } = useAction();
   const [reviewing, setReviewing] = useState<{
@@ -75,6 +80,8 @@ export function ManualPaymentsManager({
           ) : undefined
         }
       />
+
+      {methods && <PaymentMethodToggles methods={methods} />}
 
       <TenantFilters
         placeholder="Search by reference, payer, organization, or branch…"
@@ -364,6 +371,153 @@ export function ManualPaymentsManager({
         open={showInstructionForm}
         instruction={editingInstruction}
         onOpenChange={setShowInstructionForm}
+      />
+    </div>
+  );
+}
+
+/**
+ * The two ways a customer can pay, switched on or off for everyone.
+ *
+ * Deliberately at the top of this page: it governs whether anything below it
+ * matters. The backend refuses to have both off, so the second switch stays
+ * locked when it is the last one standing rather than failing on click.
+ */
+function PaymentMethodToggles({ methods }: { methods: PaymentMethodSettings }) {
+  const { pending, run } = useAction();
+  const [reviewHours, setReviewHours] = useState(
+    String(methods.offline_review_hours),
+  );
+  const [note, setNote] = useState(methods.offline_note);
+
+  const dirty =
+    reviewHours !== String(methods.offline_review_hours) ||
+    note !== methods.offline_note;
+
+  return (
+    <SectionCard
+      title="What customers can pay with"
+      description="Both routes are on by default. Turning one off takes effect immediately for every customer and is recorded in the audit trail."
+    >
+      <div className="divide-y divide-border/60">
+        <ToggleRow
+          title="Instant checkout"
+          hint="Card payment through the gateway. The plan activates the moment it clears."
+          checked={methods.online_enabled}
+          disabled={pending || (methods.online_enabled && !methods.offline_enabled)}
+          lockedHint={
+            methods.online_enabled && !methods.offline_enabled
+              ? "Turn pay-by-transfer on first — customers need at least one way to pay."
+              : undefined
+          }
+          onChange={(next) =>
+            run(
+              () => updatePaymentMethods({ online_enabled: next }),
+              next ? "Instant checkout is on." : "Instant checkout is off.",
+            )
+          }
+        />
+        <ToggleRow
+          title="Pay by transfer"
+          hint="Bank transfer or mobile money with proof, reviewed here before the plan activates."
+          checked={methods.offline_enabled}
+          disabled={pending || (methods.offline_enabled && !methods.online_enabled)}
+          lockedHint={
+            methods.offline_enabled && !methods.online_enabled
+              ? "Turn instant checkout on first — customers need at least one way to pay."
+              : undefined
+          }
+          onChange={(next) =>
+            run(
+              () => updatePaymentMethods({ offline_enabled: next }),
+              next ? "Pay by transfer is on." : "Pay by transfer is off.",
+            )
+          }
+        />
+      </div>
+
+      <div className="mt-6 space-y-4 border-t border-border pt-6">
+        <div className="grid gap-4 sm:grid-cols-[10rem_1fr]">
+          <div className="space-y-1.5">
+            <Label htmlFor="review-hours">Review promise (hours)</Label>
+            <Input
+              id="review-hours"
+              type="number"
+              min={1}
+              max={720}
+              value={reviewHours}
+              onChange={(event) => setReviewHours(event.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="offline-note">Note shown at checkout</Label>
+            <Input
+              id="offline-note"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+              placeholder="Optional — e.g. Transfers sent after 4pm are confirmed the next morning."
+            />
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          The hours figure is what customers are told on screen and in the
+          acknowledgement email, so set it to something you can actually keep.
+        </p>
+        <Button
+          size="sm"
+          disabled={pending || !dirty}
+          onClick={() =>
+            run(
+              () =>
+                updatePaymentMethods({
+                  offline_review_hours: Number(reviewHours) || 24,
+                  offline_note: note,
+                }),
+              "Saved.",
+            )
+          }
+        >
+          Save
+        </Button>
+      </div>
+    </SectionCard>
+  );
+}
+
+function ToggleRow({
+  title,
+  hint,
+  checked,
+  disabled,
+  lockedHint,
+  onChange,
+}: {
+  title: string;
+  hint: string;
+  checked: boolean;
+  disabled?: boolean;
+  lockedHint?: string;
+  onChange: (next: boolean) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-start justify-between gap-4 py-4 first:pt-0">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-foreground">{title}</p>
+          <StatusPill tone={checked ? "success" : "neutral"}>
+            {checked ? "On" : "Off"}
+          </StatusPill>
+        </div>
+        <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
+        {lockedHint && (
+          <p className="mt-1 text-xs text-muted-foreground">{lockedHint}</p>
+        )}
+      </div>
+      <Switch
+        checked={checked}
+        disabled={disabled}
+        onCheckedChange={onChange}
+        aria-label={title}
       />
     </div>
   );
