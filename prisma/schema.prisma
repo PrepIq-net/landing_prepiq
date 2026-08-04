@@ -4,7 +4,12 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
+  // App runtime uses the pooled (PgBouncer) connection. Migrations and
+  // introspection use a DIRECT, unpooled connection: Prisma Migrate takes a
+  // session-level advisory lock, which times out (P1002) through Neon's
+  // transaction-mode pooler. DIRECT_URL must point at the non-"-pooler" host.
   url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 
