@@ -375,6 +375,16 @@ export function OrganizationDetailManager({
                         <span className="text-foreground">
                           {branch.subscription.plan_name}
                           {branch.subscription.is_trial && " (trial)"}
+                          {branch.subscription.cancel_at_period_end && (
+                            <span className="ml-1 text-[hsl(var(--warning))]">
+                              (canceling)
+                            </span>
+                          )}
+                          {branch.subscription.is_offline_billing && (
+                            <span className="ml-1 text-muted-foreground">
+                              · offline
+                            </span>
+                          )}
                         </span>
                       ) : (
                         <span className="text-muted-foreground">None</span>

@@ -288,6 +288,8 @@ export const getPublishedBlogPost = unstable_cache(
         seoTitle: true,
         seoDescription: true,
         updatedAt: true,
+        audioUrlEn: true,
+        audioUrlFr: true,
       },
     });
     if (!post) return null;
@@ -302,6 +304,8 @@ export const getPublishedBlogPost = unstable_cache(
       seoTitle,
       seoDescription,
       updatedAt: updatedAt.toISOString(),
+      audioUrlEn: post.audioUrlEn,
+      audioUrlFr: post.audioUrlFr,
     } as BlogPostDetail;
   },
   ["blog-post"],

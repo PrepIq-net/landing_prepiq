@@ -24,6 +24,26 @@ export interface BlogPostDetail extends BlogPostSummary {
   seoTitle: string | null;
   seoDescription: string | null;
   updatedAt: string;
+  // Pre-generated narration URLs; null until an admin generates them. French is
+  // only present when the post has real French body copy.
+  audioUrlEn: string | null;
+  audioUrlFr: string | null;
+}
+
+/**
+ * Resolve which narration track matches the copy actually being displayed.
+ * Mirrors {@link localized}: the French track is only used when the reader is
+ * in French AND both the French body and its narration exist; otherwise the
+ * English track (which matches the English fallback body) is used.
+ */
+export function narrationUrl(
+  lang: Lang,
+  post: Pick<BlogPostDetail, "bodyFr" | "audioUrlEn" | "audioUrlFr">
+): string | null {
+  if (lang === "fr" && post.bodyFr && post.bodyFr.trim()) {
+    return post.audioUrlFr ?? null;
+  }
+  return post.audioUrlEn ?? null;
 }
 
 /**

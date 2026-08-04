@@ -46,6 +46,10 @@ export interface AdminSubscriptionSummary {
   end_date: string | null;
   next_billing_date: string | null;
   price_at_subscription: string;
+  // Cancelled but still active until end_date (grace period).
+  cancel_at_period_end: boolean;
+  // Pays by manual/offline invoice rather than an automated gateway.
+  is_offline_billing: boolean;
 }
 
 // -- Organizations ----------------------------------------------------------

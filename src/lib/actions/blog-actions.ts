@@ -5,7 +5,14 @@ import { revalidatePath } from "next/cache";
 import { revalidateTag } from "@/lib/revalidate";
 import { auth } from "@/auth";
 import { logActivity } from "@/lib/activity-logger";
-import { destroyBlogImage, uploadBlogImage } from "@/lib/cloudinary";
+import {
+  destroyBlogAudio,
+  destroyBlogImage,
+  uploadBlogAudio,
+  uploadBlogImage,
+} from "@/lib/cloudinary";
+import { markdownToSpeech, synthesizeNarration } from "@/lib/blog-narration";
+import type { Lang } from "@/types/blog";
 import { z } from "zod";
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8 MB
@@ -247,6 +254,8 @@ export async function deleteBlogPost(id: string) {
       select: {
         slug: true,
         coverPublicId: true,
+        audioPublicIdEn: true,
+        audioPublicIdFr: true,
         images: { select: { publicId: true } },
       },
     });
@@ -254,6 +263,18 @@ export async function deleteBlogPost(id: string) {
 
     const publicIds = new Set<string>(post.images.map((i) => i.publicId));
     if (post.coverPublicId) publicIds.add(post.coverPublicId);
+
+    // Narration lives under Cloudinary's "video" resource type, so destroy it
+    // separately from the images above.
+    await Promise.all(
+      [post.audioPublicIdEn, post.audioPublicIdFr]
+        .filter((pid): pid is string => Boolean(pid))
+        .map((pid) =>
+          destroyBlogAudio(pid).catch((e) =>
+            console.error(`Failed to destroy narration ${pid}:`, e)
+          )
+        )
+    );
 
     // Destroy the cloud assets before the rows that point at them, otherwise a
     // failure here would leave assets with no record of their existence.
@@ -322,6 +343,113 @@ export async function toggleBlogPostFeatured(id: string, next: boolean) {
     return { success: true };
   } catch (error) {
     console.error("Failed to toggle featured state:", error);
+    return { success: false, message: "Internal error" };
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Narration                                                                  */
+/* -------------------------------------------------------------------------- */
+
+const AUDIO_FIELDS = {
+  en: { url: "audioUrlEn", publicId: "audioPublicIdEn" },
+  fr: { url: "audioUrlFr", publicId: "audioPublicIdFr" },
+} as const;
+
+/**
+ * Generate (or regenerate) neural narration for one language of a post and
+ * store the MP3 in Cloudinary. Runs on demand from the admin editor rather than
+ * on publish, because synthesising a long article takes several seconds.
+ *
+ * The French track is only ever generated when the post has real French body
+ * copy — otherwise the public page reads the English fallback and an English
+ * track already covers it.
+ */
+export async function generatePostNarration(id: string, lang: Lang) {
+  const user = await getSessionUser();
+  if (!user) return { success: false, message: "Not authenticated" };
+
+  try {
+    const post = await prisma.blogPost.findUnique({
+      where: { id },
+      select: {
+        slug: true,
+        bodyEn: true,
+        bodyFr: true,
+        audioPublicIdEn: true,
+        audioPublicIdFr: true,
+      },
+    });
+    if (!post) return { success: false, message: "Post not found" };
+
+    if (lang === "fr" && !(post.bodyFr && post.bodyFr.trim())) {
+      return {
+        success: false,
+        message: "This post has no French body — the English track covers it.",
+      };
+    }
+
+    const source = lang === "fr" ? post.bodyFr! : post.bodyEn;
+    const speech = markdownToSpeech(source);
+    if (!speech) return { success: false, message: "Nothing to narrate" };
+
+    const audio = await synthesizeNarration(speech, lang);
+    const uploaded = await uploadBlogAudio(audio, post.slug, lang);
+
+    const fields = AUDIO_FIELDS[lang];
+    await prisma.blogPost.update({
+      where: { id },
+      data: {
+        [fields.url]: uploaded.url,
+        [fields.publicId]: uploaded.publicId,
+        audioUpdatedAt: new Date(),
+      },
+    });
+
+    await logActivity(
+      user.id,
+      "UPDATE",
+      "BLOG_POST",
+      id,
+      `Generated ${lang.toUpperCase()} narration for ${post.slug}`
+    );
+    revalidateBlog(post.slug);
+    return { success: true, url: uploaded.url };
+  } catch (error) {
+    console.error("Failed to generate narration:", error);
+    return { success: false, message: "Narration failed — please retry." };
+  }
+}
+
+/** Remove the narration for one language of a post. */
+export async function deletePostNarration(id: string, lang: Lang) {
+  const user = await getSessionUser();
+  if (!user) return { success: false, message: "Not authenticated" };
+
+  try {
+    const fields = AUDIO_FIELDS[lang];
+    const post = await prisma.blogPost.findUnique({
+      where: { id },
+      select: { slug: true, audioPublicIdEn: true, audioPublicIdFr: true },
+    });
+    if (!post) return { success: false, message: "Post not found" };
+
+    const publicId =
+      lang === "fr" ? post.audioPublicIdFr : post.audioPublicIdEn;
+    if (publicId) {
+      await destroyBlogAudio(publicId).catch((e) =>
+        console.error(`Failed to destroy narration ${publicId}:`, e)
+      );
+    }
+
+    await prisma.blogPost.update({
+      where: { id },
+      data: { [fields.url]: null, [fields.publicId]: null },
+    });
+    revalidateBlog(post.slug);
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete narration:", error);
     return { success: false, message: "Internal error" };
   }
 }
