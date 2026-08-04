@@ -182,3 +182,4 @@ already-honored practice in the codebase, which future work should preserve:
 - Radix primitives used for keyboard navigation and ARIA rather than hand-rolled
   interactive `div`s.
 - Full English/French parity across marketing, product, and legal surfaces.
+  
