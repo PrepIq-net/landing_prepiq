@@ -362,6 +362,16 @@ model BlogPost {
   coverPublicId String?
   coverAlt      String?
 
+  // Pre-generated neural narration (Microsoft Edge TTS → Cloudinary). Optional
+  // per language and generated on demand from the admin editor, not on every
+  // publish — a long article is minutes of audio and too slow to synthesise
+  // inline. publicId is kept so the asset can be destroyed on replace/delete.
+  audioUrlEn      String?
+  audioPublicIdEn String?
+  audioUrlFr      String?
+  audioPublicIdFr String?
+  audioUpdatedAt  DateTime?
+
   category String   @default("Operations")
   tags     String[] @default([])
 

@@ -1130,6 +1130,11 @@
     "readArticle": "Read article",
     "readTime": "{{minutes}} min read",
     "backToBlog": "All articles",
+    "listen": {
+      "label": "Listen to this article",
+      "play": "Play narration",
+      "pause": "Pause narration"
+    },
     "onThisPage": "On this page",
     "share": "Share",
     "copyLink": "Copy link",

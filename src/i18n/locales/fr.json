@@ -1127,6 +1127,11 @@
     "readArticle": "Lire l'article",
     "readTime": "{{minutes}} min de lecture",
     "backToBlog": "Tous les articles",
+    "listen": {
+      "label": "Écouter cet article",
+      "play": "Lancer la narration",
+      "pause": "Mettre en pause"
+    },
     "onThisPage": "Sur cette page",
     "share": "Partager",
     "copyLink": "Copier le lien",

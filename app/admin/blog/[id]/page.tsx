@@ -4,6 +4,11 @@ import PostForm from "../PostForm";
 
 export const dynamic = "force-dynamic";
 
+// Server Actions invoked from this page (narration generation) run as POSTs to
+// this route, so its segment config governs their timeout. Synthesising a long
+// article can take a couple of minutes; 300s is the Vercel Pro ceiling.
+export const maxDuration = 300;
+
 export default async function EditPostPage({
   params,
 }: {
@@ -39,6 +44,11 @@ export default async function EditPostPage({
         isFeatured: post.isFeatured,
         sortOrder: post.sortOrder,
         publishedAt: post.publishedAt ? post.publishedAt.toISOString() : null,
+        audioUrlEn: post.audioUrlEn,
+        audioUrlFr: post.audioUrlFr,
+        audioUpdatedAt: post.audioUpdatedAt
+          ? post.audioUpdatedAt.toISOString()
+          : null,
       }}
     />
   );

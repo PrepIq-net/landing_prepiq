@@ -7,8 +7,15 @@ import { ArrowLeft, Clock, Calendar, NavArrowDown } from "iconoir-react";
 import BlogMarkdown, { extractHeadings } from "./BlogMarkdown";
 import BlogCard, { formatPostDate } from "./BlogCard";
 import ShareBar from "./ShareBar";
+import PostAudioPlayer from "./PostAudioPlayer";
 import { APP_URL } from "@/lib/constants";
-import { localized, type BlogPostDetail, type BlogPostSummary, type Lang } from "@/types/blog";
+import {
+  localized,
+  narrationUrl,
+  type BlogPostDetail,
+  type BlogPostSummary,
+  type Lang,
+} from "@/types/blog";
 
 /** Thin gold bar showing how far through the article the reader is. */
 function ReadingProgress() {
@@ -181,6 +188,7 @@ export default function PostDetailContent({
   const title = localized(lang, post.titleEn, post.titleFr);
   const excerpt = localized(lang, post.excerptEn, post.excerptFr);
   const body = localized(lang, post.bodyEn, post.bodyFr);
+  const audioSrc = narrationUrl(lang, post);
 
   const headings = useMemo(() => extractHeadings(body), [body]);
   const activeHeading = useActiveHeading(headings);
@@ -276,6 +284,8 @@ export default function PostDetailContent({
                 <ShareBar url={url} title={title} />
               </div>
             </header>
+
+            {audioSrc && <PostAudioPlayer key={audioSrc} src={audioSrc} />}
 
             {post.coverUrl && (
               <div className="mt-10 overflow-hidden rounded-2xl border border-border/60">

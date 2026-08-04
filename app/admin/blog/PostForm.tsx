@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import RichMarkdownEditor from "@/components/admin/RichMarkdownEditor";
 import CoverImageField from "./CoverImageField";
+import NarrationField from "./NarrationField";
 import { createBlogPost, updateBlogPost } from "@/lib/actions/blog-actions";
 import { SITE_URL } from "@/lib/constants";
 import { Globe, OpenNewWindow } from "iconoir-react";
@@ -45,6 +46,9 @@ export interface PostFormValues {
   isFeatured: boolean;
   sortOrder: number;
   publishedAt: string | null;
+  audioUrlEn?: string | null;
+  audioUrlFr?: string | null;
+  audioUpdatedAt?: string | null;
 }
 
 const EMPTY: PostFormValues = {
@@ -444,6 +448,15 @@ export default function PostForm({ post }: { post?: PostFormValues }) {
                 </div>
               </CardContent>
             </Card>
+
+            {isEdit && post?.id && (
+              <NarrationField
+                postId={post.id}
+                hasFrenchBody={Boolean(values.bodyFr && values.bodyFr.trim())}
+                audioUrlEn={values.audioUrlEn}
+                audioUrlFr={values.audioUrlFr}
+              />
+            )}
 
             <Card>
               <CardHeader>

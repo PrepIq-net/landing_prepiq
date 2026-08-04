@@ -138,3 +138,58 @@ export async function destroyBlogImage(publicId: string): Promise<void> {
     invalidate: true,
   });
 }
+
+export type UploadedBlogAudio = {
+  publicId: string;
+  url: string;
+  bytes: number;
+};
+
+/**
+ * Upload a generated narration MP3 into the `blog-audio/` folder. Cloudinary
+ * classifies audio under the "video" resource type, so that type must be used
+ * both here and when destroying the asset later.
+ */
+export async function uploadBlogAudio(
+  buffer: Buffer,
+  slug: string,
+  lang: string
+): Promise<UploadedBlogAudio> {
+  const result = await new Promise<{
+    public_id: string;
+    secure_url: string;
+    bytes: number;
+  }>((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: "blog-audio",
+          resource_type: "video",
+          public_id: `${slug}-${lang}`,
+          // Overwrite the previous narration for this slug+lang rather than
+          // accumulating a new asset on every regeneration.
+          overwrite: true,
+          invalidate: true,
+        },
+        (error, uploadResult) => {
+          if (error || !uploadResult) reject(error ?? new Error("Upload failed"));
+          else resolve(uploadResult);
+        }
+      )
+      .end(buffer);
+  });
+
+  return {
+    publicId: result.public_id,
+    url: result.secure_url,
+    bytes: result.bytes,
+  };
+}
+
+/** Remove a narration asset from Cloudinary. Safe for already-gone assets. */
+export async function destroyBlogAudio(publicId: string): Promise<void> {
+  await cloudinary.uploader.destroy(publicId, {
+    resource_type: "video",
+    invalidate: true,
+  });
+}

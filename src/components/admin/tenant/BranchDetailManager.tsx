@@ -371,6 +371,19 @@ export function BranchDetailManager({
                 <DataRow label="Next billing">
                   {formatDate(branch.subscription.next_billing_date)}
                 </DataRow>
+                <DataRow label="Payment">
+                  {branch.subscription.is_offline_billing
+                    ? "Manual invoice (offline)"
+                    : "Automated gateway"}
+                </DataRow>
+                {branch.subscription.cancel_at_period_end && (
+                  <DataRow label="Canceling">
+                    <StatusPill tone="warning">
+                      Active until {formatDate(branch.subscription.end_date)}, then
+                      lapses
+                    </StatusPill>
+                  </DataRow>
+                )}
               </dl>
             ) : (
               <EmptyState
