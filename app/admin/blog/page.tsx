@@ -15,6 +15,10 @@ import PostRowActions from "./PostRowActions";
 
 export const dynamic = "force-dynamic";
 
+// The publish toggle on this list can backfill narration for a draft going
+// live, which runs as a POST to this route — give synthesis room to finish.
+export const maxDuration = 300;
+
 function formatDate(date: Date | null) {
   if (!date) return "—";
   return date.toLocaleDateString("en-US", {

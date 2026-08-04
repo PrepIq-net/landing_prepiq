@@ -136,8 +136,9 @@ export default function NarrationField({
       <CardHeader>
         <CardTitle className="text-base">Narration</CardTitle>
         <CardDescription>
-          Natural-voice audio read of the article. Save any copy edits first —
-          narration is generated from the saved text.
+          Natural-voice audio read of the article. Generated automatically when
+          you publish; regenerate here if a run failed or you edited the copy
+          after publishing.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">

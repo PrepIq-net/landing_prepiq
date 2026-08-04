@@ -82,6 +82,14 @@ export default async function BlogPostPage({
 
   const url = `${SITE_URL}/blog/${post.slug}`;
 
+  // Advertise the pre-generated narration as schema.org AudioObject(s) so search
+  // engines can surface the article as listenable. One track per generated
+  // language; absent until an editor generates or publishes.
+  const narrationTracks = [
+    post.audioUrlEn ? { lang: "en", url: post.audioUrlEn } : null,
+    post.audioUrlFr ? { lang: "fr", url: post.audioUrlFr } : null,
+  ].filter((t): t is { lang: string; url: string } => t !== null);
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -109,6 +117,17 @@ export default async function BlogPostPage({
       },
     },
     ...(post.coverUrl ? { image: [post.coverUrl] } : {}),
+    ...(narrationTracks.length > 0
+      ? {
+          audio: narrationTracks.map((track) => ({
+            "@type": "AudioObject",
+            contentUrl: track.url,
+            encodingFormat: "audio/mpeg",
+            inLanguage: track.lang,
+            name: `${post.titleEn} — narration`,
+          })),
+        }
+      : {}),
   };
 
   const breadcrumbJsonLd = {
