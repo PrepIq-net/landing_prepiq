@@ -171,6 +171,16 @@ export async function createBlogPost(formData: FormData) {
       post.coverPublicId,
     ]);
 
+    // A post created already-published gets its narration synthesised now, so
+    // the spoken version is live the moment the article is.
+    if (published) {
+      await autoGenerateNarration(post.id, {
+        regenEn: true,
+        regenFr: Boolean(post.bodyFr && post.bodyFr.trim()),
+        dropFr: false,
+      });
+    }
+
     const user = await getSessionUser();
     if (user) {
       await logActivity(user.id, "CREATE", "BLOG_POST", post.id, `Created post ${post.slug}`);
@@ -197,7 +207,15 @@ export async function updateBlogPost(id: string, formData: FormData) {
   try {
     const previous = await prisma.blogPost.findUnique({
       where: { id },
-      select: { slug: true, publishedAt: true, coverPublicId: true },
+      select: {
+        slug: true,
+        publishedAt: true,
+        coverPublicId: true,
+        bodyEn: true,
+        bodyFr: true,
+        audioUrlEn: true,
+        audioUrlFr: true,
+      },
     });
     if (!previous) return { success: false, message: "Post not found" };
 
@@ -230,6 +248,21 @@ export async function updateBlogPost(id: string, formData: FormData) {
       post.bodyFr,
       post.coverPublicId,
     ]);
+
+    // Keep narration in step with the copy: for a published post, (re)generate
+    // a language whose body changed or has no track yet, and drop the French
+    // track if French copy was removed. Skipped entirely for drafts so audio is
+    // only ever synthesised for articles that are actually live.
+    if (published) {
+      const nowHasFr = Boolean(post.bodyFr && post.bodyFr.trim());
+      await autoGenerateNarration(post.id, {
+        regenEn: post.bodyEn !== previous.bodyEn || !previous.audioUrlEn,
+        regenFr:
+          nowHasFr &&
+          (post.bodyFr !== previous.bodyFr || !previous.audioUrlFr),
+        dropFr: !nowHasFr && Boolean(previous.audioUrlFr),
+      });
+    }
 
     const user = await getSessionUser();
     if (user) {
@@ -305,7 +338,12 @@ export async function toggleBlogPostPublished(id: string, next: boolean) {
   try {
     const current = await prisma.blogPost.findUnique({
       where: { id },
-      select: { publishedAt: true },
+      select: {
+        publishedAt: true,
+        bodyFr: true,
+        audioUrlEn: true,
+        audioUrlFr: true,
+      },
     });
     const post = await prisma.blogPost.update({
       where: { id },
@@ -315,6 +353,19 @@ export async function toggleBlogPostPublished(id: string, next: boolean) {
           current?.publishedAt ?? (next ? new Date() : null),
       },
     });
+
+    // Publishing a draft (e.g. one saved unpublished, then flipped live here)
+    // fills in any narration it never got. Existing tracks are left untouched —
+    // this path has no way to know the body changed, so it only backfills gaps.
+    if (next && current) {
+      const hasFr = Boolean(current.bodyFr && current.bodyFr.trim());
+      await autoGenerateNarration(id, {
+        regenEn: !current.audioUrlEn,
+        regenFr: hasFr && !current.audioUrlFr,
+        dropFr: false,
+      });
+    }
+
     const user = await getSessionUser();
     if (user) {
       await logActivity(
@@ -356,10 +407,97 @@ const AUDIO_FIELDS = {
   fr: { url: "audioUrlFr", publicId: "audioPublicIdFr" },
 } as const;
 
+type NarratablePost = { id: string; slug: string; bodyEn: string; bodyFr: string | null };
+
 /**
- * Generate (or regenerate) neural narration for one language of a post and
- * store the MP3 in Cloudinary. Runs on demand from the admin editor rather than
- * on publish, because synthesising a long article takes several seconds.
+ * Synthesise one language of a post and store the MP3 URL. Shared by the manual
+ * admin button and the on-publish auto-generation; the caller owns auth and
+ * cache revalidation. Returns the stored URL, or null when there is nothing to
+ * narrate (e.g. a French track requested with no French body).
+ */
+async function synthesizeAndStore(
+  post: NarratablePost,
+  lang: Lang
+): Promise<string | null> {
+  const source = lang === "fr" ? post.bodyFr : post.bodyEn;
+  if (!source || !source.trim()) return null;
+
+  const speech = markdownToSpeech(source);
+  if (!speech) return null;
+
+  const audio = await synthesizeNarration(speech, lang);
+  const uploaded = await uploadBlogAudio(audio, post.slug, lang);
+
+  const fields = AUDIO_FIELDS[lang];
+  await prisma.blogPost.update({
+    where: { id: post.id },
+    data: {
+      [fields.url]: uploaded.url,
+      [fields.publicId]: uploaded.publicId,
+      audioUpdatedAt: new Date(),
+    },
+  });
+  return uploaded.url;
+}
+
+/**
+ * (Re)generate narration for a post that was just saved in a published state.
+ * Called from create/update/publish flows so an admin never has to click a
+ * button. Deliberately non-fatal: a synthesis failure logs and leaves the
+ * manual "Regenerate" control on the editor as a fallback rather than blocking
+ * the publish itself.
+ *
+ * `regenEn`/`regenFr` say which languages are stale (body changed) or missing a
+ * track; `dropFr` clears an orphaned French track when French copy was removed.
+ */
+async function autoGenerateNarration(
+  id: string,
+  opts: { regenEn: boolean; regenFr: boolean; dropFr: boolean }
+): Promise<void> {
+  try {
+    if (opts.dropFr) {
+      const existing = await prisma.blogPost.findUnique({
+        where: { id },
+        select: { audioPublicIdFr: true },
+      });
+      if (existing?.audioPublicIdFr) {
+        await destroyBlogAudio(existing.audioPublicIdFr).catch((e) =>
+          console.error("Failed to destroy orphaned FR narration:", e)
+        );
+      }
+      await prisma.blogPost.update({
+        where: { id },
+        data: { audioUrlFr: null, audioPublicIdFr: null },
+      });
+    }
+
+    if (!opts.regenEn && !opts.regenFr) return;
+
+    const post = await prisma.blogPost.findUnique({
+      where: { id },
+      select: { id: true, slug: true, bodyEn: true, bodyFr: true },
+    });
+    if (!post) return;
+
+    if (opts.regenEn) {
+      await synthesizeAndStore(post, "en").catch((e) =>
+        console.error("Auto EN narration failed:", e)
+      );
+    }
+    if (opts.regenFr && post.bodyFr && post.bodyFr.trim()) {
+      await synthesizeAndStore(post, "fr").catch((e) =>
+        console.error("Auto FR narration failed:", e)
+      );
+    }
+  } catch (error) {
+    console.error("autoGenerateNarration failed:", error);
+  }
+}
+
+/**
+ * Manually generate (or regenerate) neural narration for one language of a
+ * post. Auto-generation covers the normal publish flow; this stays as a fallback
+ * for retrying a failed run or refreshing audio after a post-publish edit.
  *
  * The French track is only ever generated when the post has real French body
  * copy — otherwise the public page reads the English fallback and an English
@@ -372,13 +510,7 @@ export async function generatePostNarration(id: string, lang: Lang) {
   try {
     const post = await prisma.blogPost.findUnique({
       where: { id },
-      select: {
-        slug: true,
-        bodyEn: true,
-        bodyFr: true,
-        audioPublicIdEn: true,
-        audioPublicIdFr: true,
-      },
+      select: { id: true, slug: true, bodyEn: true, bodyFr: true },
     });
     if (!post) return { success: false, message: "Post not found" };
 
@@ -389,22 +521,8 @@ export async function generatePostNarration(id: string, lang: Lang) {
       };
     }
 
-    const source = lang === "fr" ? post.bodyFr! : post.bodyEn;
-    const speech = markdownToSpeech(source);
-    if (!speech) return { success: false, message: "Nothing to narrate" };
-
-    const audio = await synthesizeNarration(speech, lang);
-    const uploaded = await uploadBlogAudio(audio, post.slug, lang);
-
-    const fields = AUDIO_FIELDS[lang];
-    await prisma.blogPost.update({
-      where: { id },
-      data: {
-        [fields.url]: uploaded.url,
-        [fields.publicId]: uploaded.publicId,
-        audioUpdatedAt: new Date(),
-      },
-    });
+    const url = await synthesizeAndStore(post, lang);
+    if (!url) return { success: false, message: "Nothing to narrate" };
 
     await logActivity(
       user.id,
@@ -414,7 +532,7 @@ export async function generatePostNarration(id: string, lang: Lang) {
       `Generated ${lang.toUpperCase()} narration for ${post.slug}`
     );
     revalidateBlog(post.slug);
-    return { success: true, url: uploaded.url };
+    return { success: true, url };
   } catch (error) {
     console.error("Failed to generate narration:", error);
     return { success: false, message: "Narration failed — please retry." };
