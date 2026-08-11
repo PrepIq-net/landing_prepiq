@@ -887,6 +887,26 @@
       "nigeria": "Nigeria"
     }
   },
+  "notFound": {
+    "ticketLabel": "Kitchen Ticket",
+    "route": "Route",
+    "headline": "404",
+    "headlineSuffix": "Out of Stock",
+    "stamp": "Item Not Found",
+    "subtitle": "We checked the walk-in cooler, audited the pantry, and cross-referenced the demand forecast. This URL isn't on today's menu.",
+    "suggestionsTitle": "Today's Special",
+    "suggestionsSubtitle": "A few things that are always in stock:",
+    "suggestions": {
+      "home": "Home Base",
+      "forecast": "Demand Forecast",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "blog": "Blog"
+    },
+    "cta": "Return to Kitchen Base",
+    "goBack": "Or go back a page",
+    "footerNote": "No refunds issued on 404s."
+  },
   "privacy": {
     "title": "Privacy Policy"
   },
