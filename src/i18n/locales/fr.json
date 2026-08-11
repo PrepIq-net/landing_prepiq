@@ -884,6 +884,26 @@
       "nigeria": "Nigeria"
     }
   },
+  "notFound": {
+    "ticketLabel": "Ticket de cuisine",
+    "route": "Route",
+    "headline": "404",
+    "headlineSuffix": "Rupture de stock",
+    "stamp": "Article introuvable",
+    "subtitle": "Nous avons fouillé la chambre froide, audité le garde-manger et vérifié les prévisions de la demande. Cette adresse ne figure pas au menu aujourd'hui.",
+    "suggestionsTitle": "Suggestion du jour",
+    "suggestionsSubtitle": "Quelques valeurs sûres, toujours disponibles :",
+    "suggestions": {
+      "home": "Base Cuisine",
+      "forecast": "Prévision de la demande",
+      "howItWorks": "Comment ça marche",
+      "pricing": "Tarifs",
+      "blog": "Blog"
+    },
+    "cta": "Retour à la base cuisine",
+    "goBack": "Ou revenir en arrière",
+    "footerNote": "Aucun remboursement sur les 404."
+  },
   "privacy": {
     "title": "Politique de confidentialité"
   },
