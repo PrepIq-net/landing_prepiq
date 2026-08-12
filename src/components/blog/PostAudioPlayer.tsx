@@ -15,14 +15,20 @@ function formatTime(seconds: number): string {
 /**
  * Compact "listen to this article" bar backed by a pre-generated narration MP3.
  * Rendered only when a track exists for the language the reader is viewing, so
- * it never appears empty.
+ * it never appears empty. Once the bar scrolls out of the viewport it docks to
+ * the bottom of the screen so playback always stays reachable, and slides back
+ * into its original spot as soon as that spot re-enters view. The space bar
+ * toggles play/pause unless focus sits on an interactive control.
  */
 export default function PostAudioPlayer({ src }: { src: string }) {
   const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement>(null);
+  const inPlaceRef = useRef<HTMLDivElement>(null);
+  const dockedRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [docked, setDocked] = useState(false);
 
   // A language switch swaps `src`; reset the transport so the readout doesn't
   // show the previous track's position against the new clip.
@@ -31,6 +37,75 @@ export default function PostAudioPlayer({ src }: { src: string }) {
     setCurrent(0);
     setDuration(0);
   }, [src]);
+
+  // While the reader scrolls, mirror the in-place bar's visibility: as soon as
+  // it leaves the viewport dock it at the bottom, and undock the moment its
+  // original spot is visible again.
+  useEffect(() => {
+    const el = inPlaceRef.current;
+    if (!el) return;
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = el.getBoundingClientRect();
+      setDocked(rect.bottom <= 0 || rect.top >= window.innerHeight);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Reserve space under the fold while docked so the fixed bar never covers
+  // the footer or the related posts.
+  useEffect(() => {
+    const el = dockedRef.current;
+    document.body.style.paddingBottom =
+      docked && el ? `${el.offsetHeight}px` : "";
+    return () => {
+      document.body.style.paddingBottom = "";
+    };
+  }, [docked]);
+
+  // Space toggles playback unless focus is on an interactive control (inputs,
+  // buttons, links…) where the browser already consumes the key.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || e.repeat) return;
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const node = e.target as HTMLElement | null;
+      if (
+        node &&
+        (node.isContentEditable ||
+          node.closest(
+            "input, textarea, select, button, a, [role='button'], [contenteditable='true']",
+          ))
+      ) {
+        return;
+      }
+      const el = audioRef.current;
+      if (!el) return;
+      e.preventDefault();
+      if (el.paused) {
+        void el.play();
+      } else {
+        el.pause();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const toggle = () => {
     const el = audioRef.current;
@@ -52,8 +127,8 @@ export default function PostAudioPlayer({ src }: { src: string }) {
 
   const progress = duration > 0 ? (current / duration) * 100 : 0;
 
-  return (
-    <div className="mt-8 flex items-center gap-4 rounded-xl border border-border/60 bg-card/60 px-4 py-3">
+  const bar = (
+    <div className="flex items-center gap-4 rounded-xl border border-border/60 bg-card/60 px-4 py-3">
       <button
         type="button"
         onClick={toggle}
@@ -92,6 +167,35 @@ export default function PostAudioPlayer({ src }: { src: string }) {
           </span>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      <div
+        ref={inPlaceRef}
+        className={`overflow-hidden transition-opacity duration-200 ${
+          docked ? "h-0 opacity-0" : "mt-8 opacity-100"
+        }`}
+      >
+        {bar}
+      </div>
+
+      <div
+        ref={dockedRef}
+        aria-hidden={!docked}
+        className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out ${
+          docked
+            ? "translate-y-0"
+            : "pointer-events-none invisible translate-y-full"
+        }`}
+      >
+        <div className="border-t border-border/60 bg-background/95 backdrop-blur">
+          <div className="section-container max-w-6xl pb-[env(safe-area-inset-bottom)]">
+            <div className="pt-3 pb-3">{bar}</div>
+          </div>
+        </div>
+      </div>
 
       <audio
         ref={audioRef}
@@ -103,6 +207,6 @@ export default function PostAudioPlayer({ src }: { src: string }) {
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
       />
-    </div>
+    </>
   );
 }
