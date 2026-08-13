@@ -269,6 +269,18 @@
   }
 }
 
+/* Touch devices: collapse the burger's cascade to an instant swap so
+   it feels native on tap, and give the button a comfier hit target. */
+@media (hover: none) and (pointer: coarse) {
+  .nav-burger * {
+    transition-duration: 0ms !important;
+  }
+  .nav-burger path,
+  .nav-burger g {
+    transition-delay: 0ms !important;
+  }
+}
+
 /* The logo's breathing gold halo. */
 @keyframes logo-breathe {
   0%,

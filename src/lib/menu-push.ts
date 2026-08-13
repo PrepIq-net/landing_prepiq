@@ -12,7 +12,7 @@
  * the navbar in the layout, but the navbar renders deep inside `children`,
  * so passing state down would require lifting the menu out of every page.
  */
-export const MENU_HEIGHT = "72dvh";
+export const MENU_HEIGHT = "60dvh";
 
 let open = false;
 let height = MENU_HEIGHT;
