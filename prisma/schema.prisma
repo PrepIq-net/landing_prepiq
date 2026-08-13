@@ -12,7 +12,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-
 enum Role {
   ADMIN
   EDITOR
@@ -44,17 +43,18 @@ enum EntityType {
   CONCIERGE_CONVERSATION
   CONCIERGE_LEAD
   TESTIMONIAL
+  KITCHEN_CALCULATOR_LEAD
 }
 
 model User {
-  id            String        @id @default(cuid())
-  email         String        @unique
-  passwordHash  String
-  role          Role          @default(EDITOR)
-  isActive      Boolean       @default(true)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  activities    ActivityLog[]
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  role         Role          @default(EDITOR)
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  activities   ActivityLog[]
 }
 
 model ActivityLog {
@@ -68,18 +68,17 @@ model ActivityLog {
   createdAt DateTime   @default(now())
 }
 
-
 model Page {
-  id                 String    @id @default(cuid())
-  slug               String    @unique
-  titleEn            String
-  titleFr            String
-  isActive           Boolean   @default(true)
-  sortOrder          Int       @default(0)
-  metaDescriptionEn  String?
-  metaDescriptionFr  String?
-  configJson         Json?     @default("{}") // Global page configuration
-  sections           Section[]
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  titleEn           String
+  titleFr           String
+  isActive          Boolean   @default(true)
+  sortOrder         Int       @default(0)
+  metaDescriptionEn String?
+  metaDescriptionFr String?
+  configJson        Json?     @default("{}") // Global page configuration
+  sections          Section[]
 
   @@index([isActive])
   @@index([slug, isActive])
@@ -139,7 +138,7 @@ model Link {
   labelEn   String
   labelFr   String
   url       String
-  type      String  // 'nav' or 'footer'
+  type      String // 'nav' or 'footer'
   category  String? // for grouping footer links
   isActive  Boolean @default(true)
   sortOrder Int     @default(0)
@@ -152,7 +151,7 @@ model Link {
 /// table means an empty (honest) section. Add rows here as real customers give
 /// us permission to quote them.
 model Testimonial {
-  id      String @id @default(cuid())
+  id      String  @id @default(cuid())
   quoteEn String
   /// Optional: an untranslated quote is shown as-is to French visitors rather
   /// than being dropped, since a real quote in the wrong language still beats
@@ -263,8 +262,8 @@ model SupportAttachment {
 
   // Cloudinary identifiers — publicId + resourceType are required to destroy
   // the cloud asset when an admin deletes the attachment or its request.
-  publicId     String @unique
-  resourceType String @default("image") // "image" | "raw" | "video"
+  publicId     String  @unique
+  resourceType String  @default("image") // "image" | "raw" | "video"
   url          String
   filename     String
   format       String?
@@ -302,33 +301,33 @@ enum ApplicationStatus {
 }
 
 model JobRole {
-  id             String         @id @default(cuid())
-  slug           String         @unique
+  id             String           @id @default(cuid())
+  slug           String           @unique
   titleEn        String
   titleFr        String
   department     String // e.g. "Engineering", "Design", "Sales"
   location       String // e.g. "Remote", "Kampala, Uganda"
-  employmentType EmploymentType @default(FULL_TIME)
+  employmentType EmploymentType   @default(FULL_TIME)
   // Short one-line summary shown on cards / listings.
   summaryEn      String
   summaryFr      String
   // Full role description — Markdown, rendered on the detail page.
   bodyEn         String
   bodyFr         String
-  isPublished    Boolean        @default(false)
-  sortOrder      Int            @default(0)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  isPublished    Boolean          @default(false)
+  sortOrder      Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
   applications   JobApplication[]
 
   @@index([isPublished, sortOrder])
 }
 
 model JobApplication {
-  id          String            @id @default(cuid())
-  refNo       Int               @unique @default(autoincrement()) // displayed as "APP-{refNo}"
-  roleId      String
-  role        JobRole           @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  id     String  @id @default(cuid())
+  refNo  Int     @unique @default(autoincrement()) // displayed as "APP-{refNo}"
+  roleId String
+  role   JobRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   name        String
   email       String
@@ -337,11 +336,11 @@ model JobApplication {
   linkedinUrl String?
   coverNote   String?
 
-  status      ApplicationStatus @default(NEW)
-  adminNotes  String?
+  status     ApplicationStatus @default(NEW)
+  adminNotes String?
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([roleId, status])
   @@index([createdAt])
@@ -414,7 +413,7 @@ model BlogImage {
   postId String?
   post   BlogPost? @relation(fields: [postId], references: [id], onDelete: SetNull)
 
-  publicId String @unique
+  publicId String  @unique
   url      String
   filename String
   format   String?
@@ -518,4 +517,83 @@ model ConciergeLead {
 
   // Future: qualification score, plan interest, handled-by markers.
   meta Json?
+}
+
+// Kitchen Intelligence Calculator (landing-page lead-gen tool, /kitchen-intelligence-calculator).
+// Inputs are the visitor's own answers; the "Deterministic engine output" block
+// is always recomputed server-side from those answers (never trusted from the
+// client) via src/lib/kitchen-calculator/engine.ts. `explanation` is a
+// best-effort LLM narrative over that output — null if the provider chain was
+// unavailable, since a failed narrative must never block lead capture.
+model KitchenCalculatorLead {
+  id    String @id @default(cuid())
+  refNo Int    @unique @default(autoincrement()) // displayed as "KIC-{refNo}"
+
+  locale    String  @default("en")
+  visitorId String?
+
+  // Step 1 — operation
+  weeklyRevenuePerLocation Float
+  currency                 String // "USD" | "EUR" | "UGX" | "KES" | "RWF" | "OTHER"
+  locations                Int
+
+  // Step 2 — kitchen
+  operatingDays  Int
+  planningMethod String // "intuition" | "spreadsheet" | "pos_reports" | "forecasting"
+
+  // Step 3 — optional refinement (visitor may skip)
+  wasteEstimate     String? // "lt2" | "2to5" | "5to10" | "gt10" | "unknown"
+  stockoutFrequency String? // "rarely" | "sometimes" | "frequently" | "unknown"
+
+  // Step 4 — lead
+  email          String
+  restaurantName String?
+
+  // Deterministic engine output
+  weeklyNetworkRevenue       Float
+  annualRevenue              Float
+  wasteExposureLow           Float
+  wasteExposureHigh          Float
+  stockoutExposureLow        Float
+  stockoutExposureHigh       Float
+  annualImpactLow            Float
+  annualImpactHigh           Float
+  forecastUncertaintyLow     Float
+  forecastUncertaintyHigh    Float
+  intelligenceScore          Int
+  planningMaturityScore      Int
+  forecastingMaturityScore   Int
+  // Null when the visitor skipped the optional step-3 refinement.
+  wasteVisibilityScore       Int?
+  operationalVisibilityScore Int?
+  primaryOpportunity         String
+  // Copy-selection key for the snapshot email — persisted so an admin resend
+  // reproduces the exact email the visitor originally received, even if the
+  // engine's key-selection logic changes later.
+  primaryOpportunityKey      String
+
+  // LLM narrative (best-effort)
+  explanation     String?
+  explanationMeta Json?
+
+  ipHash    String?
+  userAgent String?
+
+  // Post-submission "Kitchen Intelligence Snapshot" follow-up email — sent
+  // best-effort right after the lead is created. Null until a send has
+  // succeeded; emailError holds the last failure reason so admin can retry.
+  emailSentAt DateTime?
+  emailError  String?
+
+  handled   Boolean   @default(false)
+  handledBy String?
+  handledAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  meta Json? // headroom for future fields without a migration
+
+  @@index([createdAt])
+  @@index([email])
 }
