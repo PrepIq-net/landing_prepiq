@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
-import Navbar from "@/components/landing/Navbar";
-import { getPageWithSections, getActiveNavLinks, getActiveFooterLinks } from "@/lib/data";
+import { getPageWithSections, getActiveFooterLinks } from "@/lib/data";
 import { getPublicPlanCatalogs } from "@/lib/plans";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
@@ -46,9 +45,8 @@ const SectionFallback = () => (
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [page, navLinks, footerLinks] = await Promise.all([
+  const [page, footerLinks] = await Promise.all([
     getPageWithSections(slug),
-    getActiveNavLinks(),
     getActiveFooterLinks(),
   ]);
 
@@ -65,7 +63,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar links={navLinks} />
       <ConciergeWidget />
       <CookieConsent />
 

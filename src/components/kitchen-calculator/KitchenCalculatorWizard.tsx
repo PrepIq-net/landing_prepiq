@@ -127,80 +127,83 @@ export function KitchenCalculatorWizard() {
   const isResult = phase === "result";
 
   return (
-    <div className={isResult ? "max-w-[880px] mx-auto" : "max-w-[760px] mx-auto"}>
-      {!isResult && (
-        <div className="mb-10 sm:mb-12">
-          <div className="flex items-center">
-            {FORM_PHASES.map((p, i) => {
-              const Icon = STEP_ICONS[i];
-              const done = i < currentStepIndex;
-              const current = i === currentStepIndex;
-              return (
-                <Fragment key={p}>
-                  <div className="flex shrink-0 flex-col items-center gap-2">
-                    <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-300 ${
-                        done
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : current
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border text-muted-foreground/50"
-                      }`}
-                    >
-                      {done ? <Check className="h-4 w-4" aria-hidden /> : <Icon className="h-4 w-4" aria-hidden />}
-                    </div>
-                    <span
-                      className={`hidden text-center text-[10px] font-medium uppercase tracking-wider sm:block ${
-                        current ? "text-foreground" : "text-muted-foreground/50"
-                      }`}
-                    >
-                      {stepLabels[i]}
-                    </span>
-                  </div>
-                  {i < FORM_PHASES.length - 1 && (
-                    <div
-                      className={`h-px flex-1 transition-colors duration-300 ${
-                        i < currentStepIndex ? "bg-primary" : "bg-secondary"
-                      }`}
-                    />
-                  )}
-                </Fragment>
-              );
-            })}
-          </div>
-          <p className="mt-3 text-center text-xs font-medium text-muted-foreground sm:hidden">
-            {t("kitchenCalculator.progress.step", {
-              current: currentStepIndex + 1,
-              total: FORM_PHASES.length,
-            })}
-          </p>
-        </div>
-      )}
-
-      <AnimatePresence mode="wait">
-        {isResult && result ? (
+    <div className="mx-auto max-w-[880px]">
+      {isResult && result ? (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <SnapshotResult
+            currency={data.currency}
+            locations={Number(data.locations) || 1}
+            metrics={result.metrics}
+            explanation={result.explanation}
+            onRestart={restart}
+          />
+        </motion.div>
+      ) : (
+        <div className="rounded-2xl border border-border bg-card shadow-l2 px-5 sm:px-10 py-8 sm:py-12">
           <motion.div
-            key="result"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
+            className="mb-10 border-b border-border pb-8 sm:pb-10"
           >
-            <SnapshotResult
-              currency={data.currency}
-              locations={Number(data.locations) || 1}
-              metrics={result.metrics}
-              explanation={result.explanation}
-              onRestart={restart}
-            />
+            <div className="flex items-center">
+              {FORM_PHASES.map((p, i) => {
+                const Icon = STEP_ICONS[i];
+                const done = i < currentStepIndex;
+                const current = i === currentStepIndex;
+                return (
+                  <Fragment key={p}>
+                    <div className="flex shrink-0 flex-col items-center gap-1.5">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors duration-300 ${
+                          done
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : current
+                            ? "border-primary bg-transparent text-primary"
+                            : "border-border text-muted-foreground/40"
+                        }`}
+                      >
+                        {done ? <Check className="h-4 w-4" aria-hidden /> : <Icon className="h-4 w-4" aria-hidden />}
+                      </div>
+                      <span
+                        className={`hidden text-center text-[10px] font-medium uppercase tracking-wider sm:block ${
+                          current ? "text-foreground" : "text-muted-foreground/50"
+                        }`}
+                      >
+                        {stepLabels[i]}
+                      </span>
+                    </div>
+                    {i < FORM_PHASES.length - 1 && (
+                      <div
+                        className={`h-px flex-1 transition-colors duration-300 ${
+                          i < currentStepIndex ? "bg-primary" : "bg-border"
+                        }`}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-center text-xs font-medium text-muted-foreground sm:hidden">
+              {t("kitchenCalculator.progress.step", {
+                current: currentStepIndex + 1,
+                total: FORM_PHASES.length,
+              })}
+            </p>
           </motion.div>
-        ) : (
-          <motion.div
-            key={phase}
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.2 }}
-          >
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={phase}
+              initial={{ opacity: 0, x: 12 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.2 }}
+            >
               {phase === "operation" && (
                 <OperationStep
                   weeklyRevenuePerLocation={data.weeklyRevenuePerLocation}
@@ -244,9 +247,10 @@ export function KitchenCalculatorWizard() {
                   onSubmit={handleSubmit}
                 />
               )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

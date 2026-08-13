@@ -7,6 +7,7 @@ import { ArrowRight } from "iconoir-react";
 import BlogCard from "@/components/blog/BlogCard";
 import { GoldText } from "./GoldText";
 import { SeamAccent } from "./motion-primitives";
+import { Button } from "@/components/ui/button";
 import type { SectionContent } from "@/types/cms";
 import type { BlogPostSummary } from "@/types/blog";
 
@@ -38,7 +39,7 @@ const BlogTeaserSection = ({
   if (!content || posts.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden border-t border-border/50 py-20 md:py-28">
+    <section className="relative overflow-hidden border-t border-border/50 py-24 md:py-32 section-band">
       <SeamAccent />
       <div className="section-container">
         <motion.div
@@ -48,25 +49,27 @@ const BlogTeaserSection = ({
           transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
           className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between"
         >
-          <div className="max-w-xl">
-            <span className="mb-5 block text-xs font-medium uppercase tracking-[0.25em] text-primary/80">
-              {content.badge}
-            </span>
-            <h2 className="text-2xl font-semibold leading-tight text-foreground sm:text-3xl md:text-4xl">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3.5 mb-6">
+              <div className="w-10 h-px bg-primary" />
+              <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                {content.badge}
+              </span>
+            </div>
+            <h2 className="font-display text-3xl md:text-5xl lg:text-[52px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-5 text-balance">
               <GoldText text={content.title} />
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+            <p className="text-sm md:text-lg text-muted-foreground leading-relaxed">
               {content.subtitle}
             </p>
           </div>
 
-          <Link
-            href="/blog"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-all duration-200 hover:border-primary/30 hover:text-primary"
-          >
-            {content.cta}
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
+          <Button variant="hero-outline" size="lg" asChild className="group shrink-0">
+            <Link href="/blog">
+              {content.cta}
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden />
+            </Link>
+          </Button>
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

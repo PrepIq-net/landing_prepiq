@@ -2,11 +2,9 @@ import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/landing/Navbar";
 import RoleDetailContent from "@/components/careers/RoleDetailContent";
 import {
   getPublishedJobRole,
-  getActiveNavLinks,
   getActiveFooterLinks,
 } from "@/lib/data";
 
@@ -47,9 +45,8 @@ export default async function RolePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [role, navLinks, footerLinks] = await Promise.all([
+  const [role, footerLinks] = await Promise.all([
     getPublishedJobRole(slug),
-    getActiveNavLinks(),
     getActiveFooterLinks(),
   ]);
 
@@ -77,7 +74,6 @@ export default async function RolePage({
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar links={navLinks} />
       <RoleDetailContent role={role} />
       <Suspense fallback={null}>
         <Footer links={footerLinks} />

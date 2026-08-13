@@ -5,7 +5,12 @@
     "pricing": "Tarification",
     "integrations": "Intégrations",
     "logIn": "Connexion",
-    "startFree": "Essayer Gratuitement"
+    "startFree": "Essayer Gratuitement",
+    "menuEyebrow": "À la carte",
+    "menuSpecial": "Plat du jour",
+    "menuDescHowItWorks": "Suivez une journée dans une cuisine PrepIQ — du plan du matin au service en direct.",
+    "menuDescPricing": "Trois forfaits, chacun conçu pour récupérer plus de marge qu'il n'en coûte.",
+    "menuDescContact": "Parlez directement à l'équipe derrière PrepIQ."
   },
   "hero": {
     "badge": "L'intelligence cuisine, de bout en bout",
@@ -554,7 +559,12 @@
     },
     "progress": {
       "step": "Étape {{current}} sur {{total}}",
-      "steps": ["Votre exploitation", "Votre cuisine", "Vos priorités", "Votre évaluation"]
+      "steps": [
+        "Votre exploitation",
+        "Votre cuisine",
+        "Vos priorités",
+        "Votre évaluation"
+      ]
     },
     "steps": {
       "operation": {
@@ -586,7 +596,12 @@
       "building": {
         "title": "Nous construisons le profil de votre cuisine…",
         "subtitle": "Comparaison de votre exploitation aux tendances courantes du secteur.",
-        "lines": ["Prévision de la demande", "Exposition de mise en place", "Risque de pertes", "Exposition aux ruptures"]
+        "lines": [
+          "Prévision de la demande",
+          "Exposition de mise en place",
+          "Risque de pertes",
+          "Exposition aux ruptures"
+        ]
       },
       "email": {
         "title": "Votre évaluation est prête.",
@@ -680,9 +695,18 @@
     "title": "Découvrez le <gold>potentiel caché</gold> de votre cuisine",
     "subtitle": "Répondez à quelques questions sur votre exploitation. Nous estimerons où une meilleure prévision et intelligence opérationnelle feraient la plus grande différence — pas de métriques obscures, juste ce que vous savez déjà.",
     "points": [
-      { "icon": "forecast", "label": "Exposition à la demande sur tous vos sites" },
-      { "icon": "waste", "label": "Risque de surproduction, estimé chaque semaine" },
-      { "icon": "stockout", "label": "Exposition aux ruptures sur les articles populaires" }
+      {
+        "icon": "forecast",
+        "label": "Exposition à la demande sur tous vos sites"
+      },
+      {
+        "icon": "waste",
+        "label": "Risque de surproduction, estimé chaque semaine"
+      },
+      {
+        "icon": "stockout",
+        "label": "Exposition aux ruptures sur les articles populaires"
+      }
     ],
     "cta": "Essayer le Calculateur d'Intelligence Cuisine",
     "disclaimer": "Gratuit, sans inscription — environ deux minutes."

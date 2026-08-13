@@ -102,10 +102,13 @@ const OperationsSection = ({
           </p>
         </motion.div>
 
-        {/* Pillars */}
+        {/* Pillars — one connected day: dot + rail sequence, the live middle
+            phase elevated, features as hairline rows (same language as the
+            Cost-of-Guessing and Intelligence rows). */}
         <div className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden border border-border">
           {pillars.map((pillar, i) => {
             const Icon = ICONS[pillar.icon] || Calendar;
+            const isLive = i === 1;
             return (
               <motion.div
                 key={pillar.title}
@@ -114,33 +117,57 @@ const OperationsSection = ({
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="group relative flex flex-col bg-card p-8 lg:p-10 transition-colors hover:bg-accent/30"
+                className={`group relative flex flex-col p-6 sm:p-8 lg:p-10 ${
+                  isLive ? "bg-primary/[0.03]" : "bg-card"
+                }`}
               >
                 {/* Step index */}
-                <span className="absolute top-8 right-8 lg:right-10 font-display text-sm font-semibold text-muted-foreground/40 tabular-nums">
+                <span className="absolute top-6 right-6 lg:top-10 lg:right-10 font-display text-[13px] font-semibold text-muted-foreground/40 tabular-nums">
                   0{i + 1}
                 </span>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" />
+                {/* Timeline rail: dot + connector running across the three cards
+                    (connector only on desktop — the rail is a single column on
+                    mobile, so a trailing line would float off the edge). */}
+                <div className="flex items-center gap-2 mb-8">
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${
+                      isLive ? "bg-primary ring-4 ring-primary/15" : "bg-primary/60"
+                    }`}
+                    aria-hidden
+                  />
+                  {i < pillars.length - 1 && (
+                    <span className="hidden md:block h-px flex-1 bg-primary/25" aria-hidden />
+                  )}
                 </div>
 
-                <span className="mt-6 text-[0.6rem] md:text-[0.65rem] uppercase tracking-[0.22em] text-primary/80 font-medium">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/15 group-hover:bg-primary/15 group-hover:border-primary/25 transition-colors duration-200">
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+
+                <span className="mt-6 inline-flex items-center gap-2 text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                  {isLive && (
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-60 animate-ping" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+                    </span>
+                  )}
                   {pillar.phase}
                 </span>
-                <h3 className="mt-2 font-display text-2xl font-semibold text-foreground tracking-[-0.01em]">
+                <h3 className="mt-2 font-display text-2xl font-semibold text-foreground tracking-[-0.02em]">
                   {pillar.title}
                 </h3>
                 <p className="mt-3 text-sm md:text-[15px] text-muted-foreground leading-relaxed">
                   {pillar.body}
                 </p>
 
-                <ul className="mt-7 flex flex-col gap-3 border-t border-border pt-7">
+                <ul className="mt-7 border-t border-border">
                   {(pillar.features || []).map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                        <Check className="h-3 w-3" strokeWidth={2.5} />
-                      </span>
+                    <li
+                      key={feature}
+                      className="flex items-start gap-3 border-b border-border/50 py-3 last:border-b-0"
+                    >
+                      <Check className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" strokeWidth={2.5} aria-hidden />
                       <span className="text-[13px] md:text-sm text-foreground/85 leading-snug">
                         {feature}
                       </span>

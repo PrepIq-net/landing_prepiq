@@ -42,10 +42,10 @@ export function ChoiceGroup({
             <RadioGroupItem value={opt.value} id={id} className="peer sr-only" />
             <Label
               htmlFor={id}
-              className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-4 sm:px-5 sm:py-4 text-sm cursor-pointer transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background ${
+              className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-4 sm:px-5 sm:py-4 text-sm cursor-pointer transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background ${
                 selected
-                  ? "border-primary bg-primary/[0.06] text-foreground"
-                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  ? "border-primary bg-primary/5 text-foreground shadow-l1"
+                  : "border-border bg-card/80 text-muted-foreground hover:border-primary/25 hover:bg-card hover:text-foreground hover:shadow-l2"
               }`}
             >
               <span className="font-medium">{opt.label}</span>

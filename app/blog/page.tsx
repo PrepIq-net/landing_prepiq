@@ -1,11 +1,9 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
-import Navbar from "@/components/landing/Navbar";
 import BlogIndexContent from "@/components/blog/BlogIndexContent";
 import { SITE_URL } from "@/lib/constants";
 import {
   getPublishedBlogPosts,
-  getActiveNavLinks,
   getActiveFooterLinks,
 } from "@/lib/data";
 
@@ -41,9 +39,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  const [posts, navLinks, footerLinks] = await Promise.all([
+  const [posts, footerLinks] = await Promise.all([
     getPublishedBlogPosts(),
-    getActiveNavLinks(),
     getActiveFooterLinks(),
   ]);
 
@@ -74,7 +71,6 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar links={navLinks} />
       <BlogIndexContent posts={posts} />
       <Suspense fallback={null}>
         <Footer links={footerLinks} />

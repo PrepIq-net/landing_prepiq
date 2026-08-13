@@ -3,6 +3,7 @@
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, Cutlery } from "iconoir-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ChoiceGroup } from "../ChoiceGroup";
 import { StepHeader } from "../StepHeader";
 import { PLANNING_METHODS, type PlanningMethod } from "@/lib/kitchen-calculator/engine";
@@ -43,7 +44,7 @@ export function KitchenStep({
 
       <div>
         <label className={fieldLabel}>{t("kitchenCalculator.steps.kitchen.daysLabel")}</label>
-        <input
+        <Input
           type="number"
           min={1}
           max={7}
@@ -51,7 +52,7 @@ export function KitchenStep({
           inputMode="numeric"
           value={operatingDays}
           onChange={(e) => onChange({ operatingDays: e.target.value })}
-          className="w-full sm:w-48 lg:w-56 h-14 rounded-xl border border-border bg-card px-4 text-base font-display font-semibold text-foreground focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-colors duration-200"
+          className="h-14 rounded-xl border-border bg-card text-base font-display font-semibold w-full sm:w-48 lg:w-56 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
         />
       </div>
 

@@ -4,10 +4,9 @@ import {
   Phone,
   ArrowRight,
   CheckCircle,
-  Building,
-  User,
 } from "iconoir-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -121,12 +120,18 @@ const ContactSection = ({
   };
 
   const inputClasses =
-    "w-full rounded-xl border border-border bg-background/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-background transition-colors duration-200";
+    "h-14 rounded-xl border-border bg-card text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card transition-colors duration-200";
+
+  const textareaClasses =
+    "w-full min-h-[140px] rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card transition-colors duration-200 resize-none";
+
+  const fieldLabel =
+    "block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3";
 
   return (
     <section
       id="contact"
-      className="relative py-20 md:py-32 border-t border-border/50 section-band scroll-mt-20"
+      className="relative py-24 md:py-32 border-t border-border/50 section-band scroll-mt-20"
     >
       <SeamAccent />
       <div className="section-container">
@@ -139,13 +144,16 @@ const ContactSection = ({
             className="lg:col-span-2 space-y-8 lg:space-y-10"
           >
             <div>
-              <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
-                {content.getInTouch}
-              </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-semibold text-foreground mb-4 sm:mb-5 leading-tight lg:leading-[1.15]">
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="w-10 h-px bg-primary" />
+                <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.3em] text-primary font-medium">
+                  {content.getInTouch}
+                </span>
+              </div>
+              <h2 className="font-display text-3xl md:text-5xl lg:text-[52px] font-semibold text-foreground leading-[1.06] tracking-[-0.02em] mb-5 text-balance">
                 <GoldText text={content.title} />
               </h2>
-              <p className="text-muted-foreground max-w-md leading-relaxed text-sm sm:text-base">
+              <p className="text-sm md:text-lg text-muted-foreground max-w-md leading-relaxed">
                 {content.subtitle}
               </p>
             </div>
@@ -170,7 +178,7 @@ const ContactSection = ({
                   className="flex items-center gap-3 sm:gap-4 rounded-2xl border border-border bg-card/60 px-4 sm:px-5 py-3.5 sm:py-4 group hover:border-primary/25 hover:shadow-l2 transition-[border-color,box-shadow] duration-200"
                 >
                   <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-primary/10 border border-primary/15 group-hover:bg-primary/15 group-hover:border-primary/25 transition-colors duration-200 shrink-0">
-                    <item.icon className="h-4.5 w-4.5 text-primary" />
+                    <item.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-muted-foreground/50 mb-0.5">
@@ -202,13 +210,15 @@ const ContactSection = ({
           >
             <div className="rounded-2xl border border-border bg-card/80 overflow-hidden shadow-l2">
               <div className="px-5 sm:px-8 md:px-10 py-4 sm:py-5 border-b border-border/50 bg-accent/30 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-                  <span className="text-sm font-medium text-foreground">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 border border-primary/15 shrink-0">
+                    <Mail className="h-4 w-4 text-primary" aria-hidden />
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">
                     {content.formHeader}
                   </span>
                 </div>
-                <span className="text-[10px] sm:text-xs text-muted-foreground/40 hidden sm:inline">
+                <span className="text-[10px] sm:text-xs text-muted-foreground/50 hidden sm:inline">
                   {content.optionalEmail}
                 </span>
               </div>
@@ -218,12 +228,11 @@ const ContactSection = ({
                 className="p-5 sm:p-8 md:p-10 space-y-5 sm:space-y-6"
               >
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <div className="space-y-2.5">
-                    <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
-                      <User className="h-3 w-3" />
+                  <div>
+                    <label className={fieldLabel}>
                       {content.name}
                     </label>
-                    <input
+                    <Input
                       name="name"
                       type="text"
                       placeholder={content.placeholderName}
@@ -233,13 +242,12 @@ const ContactSection = ({
                       className={inputClasses}
                     />
                   </div>
-                  <div className="space-y-2.5">
-                    <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
-                      <Mail className="h-3 w-3" />
+                  <div>
+                    <label className={fieldLabel}>
                       {content.contactInfo.email}{" "}
                       <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       name="email"
                       type="email"
                       placeholder={content.placeholderEmail}
@@ -252,12 +260,11 @@ const ContactSection = ({
                   </div>
                 </div>
 
-                <div className="space-y-2.5">
-                  <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
-                    <Building className="h-3 w-3" />
+                <div>
+                  <label className={fieldLabel}>
                     {content.company}
                   </label>
-                  <input
+                  <Input
                     name="company"
                     type="text"
                     placeholder={content.placeholderCompany}
@@ -268,8 +275,8 @@ const ContactSection = ({
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
+                <div>
+                  <label className={fieldLabel}>
                     {content.locations}
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
@@ -278,10 +285,10 @@ const ContactSection = ({
                         key={opt}
                         type="button"
                         onClick={() => setSelectedLocations(opt)}
-                        className={`flex items-center justify-center rounded-xl border px-3 py-2.5 sm:py-3 text-sm font-medium cursor-pointer transition-colors duration-200 ${
+                        className={`flex items-center justify-center rounded-xl border px-3 py-2.5 sm:py-3 text-sm font-medium cursor-pointer transition-all duration-200 ${
                           selectedLocations === opt
-                            ? "border-primary/40 bg-primary/5 text-primary"
-                            : "border-border bg-background/50 text-muted-foreground/60 hover:border-primary/20 hover:text-foreground"
+                            ? "border-primary bg-primary/5 text-foreground shadow-l1"
+                            : "border-border bg-card/80 text-muted-foreground hover:border-primary/25 hover:bg-card hover:text-foreground hover:shadow-l1"
                         }`}
                       >
                         {opt}
@@ -290,8 +297,8 @@ const ContactSection = ({
                   </div>
                 </div>
 
-                <div className="space-y-2.5">
-                  <label className="text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
+                <div>
+                  <label className={fieldLabel}>
                     {content.message}
                   </label>
                   <textarea
@@ -301,7 +308,7 @@ const ContactSection = ({
                     maxLength={1000}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className={`${inputClasses} resize-none`}
+                    className={textareaClasses}
                   />
                 </div>
 
@@ -312,7 +319,7 @@ const ContactSection = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="rounded-xl bg-[hsl(var(--success)/.08)] border border-[hsl(var(--success)/.15)] p-5 text-center"
+                      className="rounded-2xl bg-[hsl(var(--success)/.08)] border border-[hsl(var(--success)/.15)] p-5 text-center"
                     >
                       <CheckCircle className="h-6 w-6 text-[hsl(var(--success))] mx-auto mb-2" />
                       <p className="text-sm font-medium text-foreground">
@@ -349,7 +356,7 @@ const ContactSection = ({
                           )}
                         </span>
                       </Button>
-                      <p className="text-[11px] text-muted-foreground/30 text-center mt-3">
+                      <p className="text-xs text-muted-foreground/50 text-center mt-3">
                         {content.noSpam}
                       </p>
                     </motion.div>

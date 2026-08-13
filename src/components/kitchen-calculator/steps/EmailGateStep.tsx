@@ -1,12 +1,12 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, Mail, SendMail, WarningTriangle } from "iconoir-react";
+import { ArrowLeft, SendMail, WarningTriangle } from "iconoir-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { StepHeader } from "../StepHeader";
 
-const inputClasses =
-  "w-full h-14 rounded-xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card transition-colors duration-200";
+const fieldLabel = "block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3";
 
 export function EmailGateStep({
   email,
@@ -46,33 +46,32 @@ export function EmailGateStep({
       />
 
       <div>
-        <label className="block text-xs font-medium text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5 mb-3">
-          <Mail className="h-3 w-3" aria-hidden />
+        <label className={fieldLabel}>
           {t("kitchenCalculator.steps.email.emailLabel")}
           <span className="text-destructive">*</span>
         </label>
-        <input
+        <Input
           type="email"
           required
           maxLength={320}
           placeholder={t("kitchenCalculator.steps.email.emailPlaceholder") ?? ""}
           value={email}
           onChange={(e) => onChange({ email: e.target.value })}
-          className={inputClasses}
+          className="h-14 rounded-xl border-border bg-card text-sm focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-muted-foreground/60 uppercase tracking-widest mb-3">
+        <label className={fieldLabel}>
           {t("kitchenCalculator.steps.email.restaurantLabel")}
         </label>
-        <input
+        <Input
           type="text"
           maxLength={200}
           placeholder={t("kitchenCalculator.steps.email.restaurantPlaceholder") ?? ""}
           value={restaurantName}
           onChange={(e) => onChange({ restaurantName: e.target.value })}
-          className={inputClasses}
+          className="h-14 rounded-xl border-border bg-card text-sm focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card"
         />
       </div>
 

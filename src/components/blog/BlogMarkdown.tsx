@@ -22,14 +22,14 @@ export function slugifyHeading(children: React.ReactNode): string {
  */
 export default function BlogMarkdown({ body }: { body: string }) {
   return (
-    <div className="text-[17px] leading-[1.75] text-muted-foreground">
+    <div className="text-[17px] leading-[1.75] text-foreground/85">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
             <h2
               id={slugifyHeading(children)}
-              className="scroll-mt-28 font-display text-2xl font-semibold tracking-tight text-foreground mt-14 mb-4 first:mt-0"
+              className="scroll-mt-28 font-display text-2xl md:text-[1.75rem] font-semibold leading-[1.2] tracking-[-0.02em] text-foreground mt-14 mb-4 first:mt-0"
             >
               {children}
             </h2>
@@ -37,7 +37,7 @@ export default function BlogMarkdown({ body }: { body: string }) {
           h2: ({ children }) => (
             <h2
               id={slugifyHeading(children)}
-              className="scroll-mt-28 font-display text-2xl font-semibold tracking-tight text-foreground mt-14 mb-4 first:mt-0"
+              className="scroll-mt-28 font-display text-2xl md:text-[1.75rem] font-semibold leading-[1.2] tracking-[-0.02em] text-foreground mt-14 mb-4 first:mt-0"
             >
               {children}
             </h2>
@@ -72,7 +72,7 @@ export default function BlogMarkdown({ body }: { body: string }) {
           ),
           em: ({ children }) => <em className="italic">{children}</em>,
           blockquote: ({ children }) => (
-            <blockquote className="my-8 border-l-2 border-primary/50 bg-card/40 py-1 pl-6 pr-4 text-foreground/90 [&>p]:my-3 [&>p]:text-[17px] [&>p]:italic">
+            <blockquote className="my-8 rounded-r-2xl border-l-2 border-primary/50 bg-card/40 py-2 pl-6 pr-5 text-foreground/90 [&>p]:my-3 [&>p]:text-[17px] [&>p]:italic">
               {children}
             </blockquote>
           ),
@@ -100,7 +100,8 @@ export default function BlogMarkdown({ body }: { body: string }) {
                   src={src}
                   alt={alt ?? ""}
                   loading="lazy"
-                  className="w-full rounded-xl border border-border/60"
+                  className="w-full rounded-2xl border border-border/60 shadow-l2"
+                  style={{ filter: "saturate(0.92) brightness(0.96)" }}
                 />
                 {alt ? (
                   <span className="mt-3 block text-center text-sm text-muted-foreground/80">

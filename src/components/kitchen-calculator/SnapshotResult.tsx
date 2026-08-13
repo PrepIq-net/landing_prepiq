@@ -70,10 +70,10 @@ export function SnapshotResult({ currency, locations, metrics, explanation, onRe
       className="space-y-8 sm:space-y-10"
     >
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.06] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-wider text-primary">
-          <Sparks className="h-3.5 w-3.5" aria-hidden />
+        <span className="text-xs uppercase tracking-[0.25em] text-primary/80 font-medium mb-5 block">
+          <Sparks className="h-3.5 w-3.5 inline-block mr-1.5" aria-hidden />
           {t("kitchenCalculator.result.badge")}
-        </div>
+        </span>
         <h2 className="font-display text-2xl sm:text-3xl font-semibold text-foreground">
           {t("kitchenCalculator.result.operationTitle")}
         </h2>
@@ -95,7 +95,7 @@ export function SnapshotResult({ currency, locations, metrics, explanation, onRe
       </div>
 
       {/* Exposure */}
-      <div className="rounded-2xl border border-primary/20 bg-card overflow-hidden shadow-l2">
+      <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-l2">
         <div className="px-5 sm:px-8 py-4 sm:py-5 border-b border-border">
           <p className="text-sm font-semibold text-foreground">{t("kitchenCalculator.result.exposureTitle")}</p>
         </div>

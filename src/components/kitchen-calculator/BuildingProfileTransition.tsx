@@ -32,7 +32,7 @@ export function BuildingProfileTransition({ onComplete }: { onComplete: () => vo
       className="flex flex-col items-center justify-center gap-8 py-10 sm:py-14 text-center"
     >
       <div className="relative flex h-14 w-14 items-center justify-center">
-        <span className="absolute inset-0 rounded-full border-2 border-primary/20" />
+        <span className="absolute inset-0 rounded-full border-2 border-border" />
         <span className="absolute inset-0 rounded-full border-2 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin" />
       </div>
 
