@@ -8,6 +8,8 @@ import {
   getPublishedTestimonials,
 } from "@/lib/data";
 import { getPublicPlanCatalogs } from "@/lib/plans";
+import { getEffectiveFaqItems } from "@/lib/faq";
+import { SITE_URL } from "@/lib/constants";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import CookieConsent from "@/components/CookieConsent";
@@ -40,11 +42,41 @@ export default async function Page() {
   );
   const planCatalog = hasPricingSection ? await getPublicPlanCatalogs() : null;
 
+  // FAQPage schema must mirror the questions the FAQSection actually renders.
+  // Same CMS-override rule, same fallback, English — the language a crawler
+  // without the i18n cookie receives.
+  const faqSection = page.sections.find(
+    (section) => section.componentType === "FAQSection",
+  );
+  const faqDbContent =
+    typeof faqSection?.contentJson === "string"
+      ? JSON.parse(faqSection.contentJson)
+      : faqSection?.contentJson;
+  const faqItems = getEffectiveFaqItems(faqDbContent, "en");
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faq`,
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
       <Navbar links={navLinks} />
       <ConciergeWidget />
       <CookieConsent />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       <DynamicSectionRenderer
         sections={page.sections}
