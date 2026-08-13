@@ -1,8 +1,6 @@
 import { Suspense, lazy } from "react";
-import Navbar from "@/components/landing/Navbar";
 import {
   getPageWithSections,
-  getActiveNavLinks,
   getActiveFooterLinks,
   getFeaturedBlogPosts,
   getPublishedTestimonials,
@@ -23,10 +21,9 @@ const SectionFallback = () => (
 );
 
 export default async function Page() {
-  const [page, navLinks, footerLinks, featuredPosts, testimonials] =
+  const [page, footerLinks, featuredPosts, testimonials] =
     await Promise.all([
       getPageWithSections("home"),
-      getActiveNavLinks(),
       getActiveFooterLinks(),
       getFeaturedBlogPosts(3),
       getPublishedTestimonials(),
@@ -69,7 +66,6 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
-      <Navbar links={navLinks} />
       <ConciergeWidget />
       <CookieConsent />
 

@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
-import Navbar from "@/components/landing/Navbar";
 import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import { KitchenCalculatorHero } from "@/components/kitchen-calculator/KitchenCalculatorHero";
 import { KitchenCalculatorWizard } from "@/components/kitchen-calculator/KitchenCalculatorWizard";
@@ -56,14 +55,12 @@ const breadcrumbJsonLd = {
 };
 
 export default async function KitchenIntelligenceCalculatorPage() {
-  const [navLinks, footerLinks] = await Promise.all([
-    getActiveNavLinks(),
+  const [footerLinks] = await Promise.all([
     getActiveFooterLinks(),
   ]);
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar links={navLinks} />
       <ConciergeWidget />
 
       <main>

@@ -42,13 +42,13 @@ export default function BlogIndexContent({
         transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
         className="max-w-2xl"
       >
-        <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary/80">
+        <span className="block text-xs font-medium uppercase tracking-[0.25em] text-primary/80 mb-5">
           {t("blog.eyebrow")}
         </span>
-        <h1 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
+        <h1 className="font-display text-3xl font-semibold leading-[1.06] tracking-[-0.02em] text-foreground text-balance sm:text-4xl md:text-5xl">
           <GoldText text={t("blog.title")} />
         </h1>
-        <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
+        <p className="mt-5 text-sm md:text-lg text-muted-foreground leading-relaxed">
           {t("blog.subtitle")}
         </p>
       </motion.header>
@@ -74,9 +74,20 @@ export default function BlogIndexContent({
                     src={lead.coverUrl}
                     alt={lead.coverAlt ?? localized(lang, lead.titleEn, lead.titleFr)}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    style={{ filter: "saturate(0.92) brightness(0.96)" }}
                   />
                 ) : (
                   <div className="absolute inset-0 bg-card pattern-grid" />
+                )}
+                {lead.coverUrl && (
+                  <div
+                    className="absolute inset-0"
+                    aria-hidden
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent 60%, hsl(240 7% 8% / 0.5) 100%)",
+                    }}
+                  />
                 )}
               </div>
 

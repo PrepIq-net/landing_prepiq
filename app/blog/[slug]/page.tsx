@@ -1,14 +1,12 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/landing/Navbar";
 import PostDetailContent from "@/components/blog/PostDetailContent";
 import { SITE_URL } from "@/lib/constants";
 import {
   getPublishedBlogPost,
   getPublishedBlogPosts,
   getRelatedBlogPosts,
-  getActiveNavLinks,
   getActiveFooterLinks,
 } from "@/lib/data";
 
@@ -74,9 +72,8 @@ export default async function BlogPostPage({
   const post = await getPublishedBlogPost(slug);
   if (!post) notFound();
 
-  const [related, navLinks, footerLinks] = await Promise.all([
+  const [related, footerLinks] = await Promise.all([
     getRelatedBlogPosts(post.slug, post.category),
-    getActiveNavLinks(),
     getActiveFooterLinks(),
   ]);
 
@@ -142,7 +139,6 @@ export default async function BlogPostPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar links={navLinks} />
       <PostDetailContent post={post} related={related} url={url} />
       <Suspense fallback={null}>
         <Footer links={footerLinks} />

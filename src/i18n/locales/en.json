@@ -5,7 +5,12 @@
     "pricing": "Pricing",
     "integrations": "Integrations",
     "logIn": "Log In",
-    "startFree": "Start Free"
+    "startFree": "Start Free",
+    "menuEyebrow": "À la carte",
+    "menuSpecial": "Today's special",
+    "menuDescHowItWorks": "Follow a day in a PrepIQ kitchen — from the morning plan to live service.",
+    "menuDescPricing": "Three plans, each built to recover more margin than it costs.",
+    "menuDescContact": "Talk directly to the team behind PrepIQ."
   },
   "hero": {
     "badge": "Kitchen intelligence, end to end",
@@ -554,7 +559,12 @@
     },
     "progress": {
       "step": "Step {{current}} of {{total}}",
-      "steps": ["Your operation", "Your kitchen", "Your priorities", "Your assessment"]
+      "steps": [
+        "Your operation",
+        "Your kitchen",
+        "Your priorities",
+        "Your assessment"
+      ]
     },
     "steps": {
       "operation": {
@@ -586,7 +596,12 @@
       "building": {
         "title": "We're building your kitchen profile…",
         "subtitle": "Comparing your operation against common restaurant operating patterns.",
-        "lines": ["Forecasting demand", "Prep exposure", "Waste risk", "Stockout exposure"]
+        "lines": [
+          "Forecasting demand",
+          "Prep exposure",
+          "Waste risk",
+          "Stockout exposure"
+        ]
       },
       "email": {
         "title": "Your assessment is ready.",
@@ -680,9 +695,18 @@
     "title": "Find your kitchen's <gold>hidden opportunity</gold>",
     "subtitle": "Answer a few questions about your operation. We'll estimate where better forecasting and operational intelligence could make the biggest difference — no obscure metrics, just what you already know.",
     "points": [
-      { "icon": "forecast", "label": "Demand exposure across your locations" },
-      { "icon": "waste", "label": "Over-preparation risk, estimated weekly" },
-      { "icon": "stockout", "label": "Stockout exposure on popular items" }
+      {
+        "icon": "forecast",
+        "label": "Demand exposure across your locations"
+      },
+      {
+        "icon": "waste",
+        "label": "Over-preparation risk, estimated weekly"
+      },
+      {
+        "icon": "stockout",
+        "label": "Stockout exposure on popular items"
+      }
     ],
     "cta": "Try the Kitchen Intelligence Calculator",
     "disclaimer": "Free, no signup required — takes about two minutes."

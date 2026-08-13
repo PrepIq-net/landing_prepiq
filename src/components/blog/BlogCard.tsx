@@ -56,11 +56,22 @@ export default function BlogCard({
             alt={post.coverAlt ?? title}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            style={{ filter: "saturate(0.92) brightness(0.96)" }}
           />
         ) : (
           <CoverFallback />
         )}
-        <span className="absolute left-4 top-4 rounded-md border border-border/60 bg-background/85 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-foreground backdrop-blur-sm">
+        {post.coverUrl && (
+          <div
+            className="absolute inset-0"
+            aria-hidden
+            style={{
+              background:
+                "linear-gradient(180deg, transparent 60%, hsl(240 7% 8% / 0.5) 100%)",
+            }}
+          />
+        )}
+        <span className="absolute left-4 top-4 rounded-md border border-primary/20 bg-primary/[0.08] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-primary backdrop-blur-sm">
           {post.category}
         </span>
       </div>

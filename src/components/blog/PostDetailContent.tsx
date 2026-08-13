@@ -8,6 +8,7 @@ import BlogMarkdown, { extractHeadings } from "./BlogMarkdown";
 import BlogCard, { formatPostDate } from "./BlogCard";
 import ShareBar from "./ShareBar";
 import PostAudioPlayer from "./PostAudioPlayer";
+import { Button } from "@/components/ui/button";
 import { APP_URL } from "@/lib/constants";
 import {
   localized,
@@ -99,7 +100,7 @@ function DesktopTableOfContents({
 }) {
   return (
     <nav className="sticky top-28 self-start hidden lg:block">
-      <p className="mb-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-primary/80">
         {label}
       </p>
       <ul className="space-y-2.5 border-l border-border/60">
@@ -248,11 +249,11 @@ export default function PostDetailContent({
                 </span>
               </div>
 
-              <h1 className="mt-6 font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl md:text-[2.6rem]">
+              <h1 className="mt-6 font-display text-3xl sm:text-4xl md:text-[2.75rem] font-semibold text-foreground leading-[1.08] tracking-[-0.02em] text-balance">
                 {title}
               </h1>
 
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+              <p className="mt-6 text-sm md:text-lg leading-relaxed text-muted-foreground">
                 {excerpt}
               </p>
 
@@ -288,11 +289,12 @@ export default function PostDetailContent({
             {audioSrc && <PostAudioPlayer key={audioSrc} src={audioSrc} />}
 
             {post.coverUrl && (
-              <div className="mt-10 overflow-hidden rounded-2xl border border-border/60">
+              <div className="mt-10 overflow-hidden rounded-2xl border border-border/60 shadow-l2">
                 <img
                   src={post.coverUrl}
                   alt={post.coverAlt ?? title}
                   className="w-full object-cover"
+                  style={{ filter: "saturate(0.92) brightness(0.96)" }}
                 />
               </div>
             )}
@@ -331,18 +333,16 @@ export default function PostDetailContent({
                 {t("blog.cta.subtitle")}
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={APP_URL}
-                  className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-[#B8962E] sm:py-2.5 sm:px-5"
-                >
-                  {t("blog.cta.primary")}
-                </a>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-foreground transition-colors duration-200 hover:border-primary/30 hover:text-primary sm:py-2.5 sm:px-5"
-                >
-                  {t("blog.cta.secondary")}
-                </Link>
+                <Button variant="hero" size="lg" asChild>
+                  <a href={APP_URL}>
+                    {t("blog.cta.primary")}
+                  </a>
+                </Button>
+                <Button variant="hero-outline" size="lg" asChild>
+                  <Link href="/contact">
+                    {t("blog.cta.secondary")}
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -350,9 +350,9 @@ export default function PostDetailContent({
       </article>
 
       {related.length > 0 && (
-        <section className="border-t border-border/50 py-20">
+        <section className="border-t border-border/50 py-24">
           <div className="section-container max-w-6xl">
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground">
+            <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-foreground">
               {t("blog.keepReading")}
             </h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
