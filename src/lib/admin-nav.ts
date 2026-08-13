@@ -14,6 +14,7 @@
 
 import {
   Building,
+  Calculator,
   Calendar,
   ChatBubbleEmpty,
   Clock,
@@ -102,6 +103,12 @@ export const WORKSPACES: Workspace[] = [
           { href: '/admin/messages', label: 'Communications', icon: Mail, keywords: ['contact', 'enquiries'] },
           { href: '/admin/support', label: 'Support', icon: HeadsetHelp, keywords: ['tickets', 'piq'] },
           { href: '/admin/concierge', label: 'Concierge', icon: ChatBubbleEmpty, keywords: ['chatbot', 'leads'] },
+          {
+            href: '/admin/kitchen-calculator',
+            label: 'Kitchen Calculator',
+            icon: Calculator,
+            keywords: ['roi', 'assessment', 'leads', 'intelligence score'],
+          },
           { href: '/admin/meetings', label: 'Meetings', icon: Calendar, keywords: ['demos', 'calls'] },
         ],
       },

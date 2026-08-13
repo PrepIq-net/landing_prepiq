@@ -542,39 +542,150 @@
       "drift": "Demand Drift"
     }
   },
-  "value": {
-    "title": "What Better Prep Means",
-    "subtitle": "An estimate, not a promise. Move the slider to model what these ranges would mean for your kitchen — then check it against your own numbers in the app.",
-    "metrics": {
-      "waste": {
-        "label": "Waste Reduction",
-        "desc": "Less food thrown away. Every day."
+  "kitchenCalculator": {
+    "meta": {
+      "title": "Kitchen Intelligence Calculator — Estimate Your Operational Exposure | PrepIQ",
+      "description": "Answer a few questions about your restaurant operation and get an estimated Kitchen Intelligence Snapshot — operational exposure, forecast uncertainty and a maturity score, based on industry operating assumptions."
+    },
+    "hero": {
+      "badge": "Kitchen Intelligence Calculator",
+      "title": "Find Your Kitchen's <gold>Hidden Opportunity</gold>",
+      "subtitle": "Answer a few questions about your operation. We'll estimate where better forecasting and operational intelligence could make the biggest difference."
+    },
+    "progress": {
+      "step": "Step {{current}} of {{total}}",
+      "steps": ["Your operation", "Your kitchen", "Your priorities", "Your assessment"]
+    },
+    "steps": {
+      "operation": {
+        "title": "Your operation",
+        "subtitle": "A couple of numbers you already know.",
+        "revenueLabel": "Average weekly revenue per location",
+        "revenuePlaceholder": "e.g. 50,000,000",
+        "currencyLabel": "Currency",
+        "locationsLabel": "How many locations do you operate?",
+        "next": "Continue"
       },
-      "revenue": {
-        "label": "Revenue Recovery",
-        "desc": "From stockouts you didn't know you had."
+      "kitchen": {
+        "title": "Your kitchen",
+        "subtitle": "How the operation runs day to day.",
+        "daysLabel": "How many days do you operate per week?",
+        "planningLabel": "How would you describe your current prep planning?",
+        "back": "Back",
+        "next": "Continue"
       },
-      "saved": {
-        "label": "Saved Daily",
-        "desc": "No more spreadsheets. No more guessing."
+      "refine": {
+        "title": "Want a more accurate estimate?",
+        "subtitle": "Optional — two quick questions sharpen the numbers below.",
+        "wasteLabel": "How much food waste do you estimate each week?",
+        "stockoutLabel": "How often do you run out of popular items?",
+        "skip": "Skip this step",
+        "back": "Back",
+        "next": "Continue"
+      },
+      "building": {
+        "title": "We're building your kitchen profile…",
+        "subtitle": "Comparing your operation against common restaurant operating patterns.",
+        "lines": ["Forecasting demand", "Prep exposure", "Waste risk", "Stockout exposure"]
+      },
+      "email": {
+        "title": "Your assessment is ready.",
+        "subtitle": "Where should we send your personalized PrepIQ Kitchen Intelligence Report?",
+        "emailLabel": "Email",
+        "emailPlaceholder": "you@restaurant.com",
+        "restaurantLabel": "Restaurant name (optional)",
+        "restaurantPlaceholder": "e.g. Savanna Grill",
+        "consent": "We'll also use this email to follow up about your assessment. No spam.",
+        "submit": "Send me my report",
+        "submitting": "Preparing your report…",
+        "back": "Back",
+        "error": "Something went wrong on our end — please try again."
       }
     },
-    "calculator": {
-      "title": "Savings Calculator",
-      "subtitle": "Drag the slider or type a value to model your potential savings",
-      "inputLabel": "Monthly prep waste spend",
-      "monthlyRecovery": "Monthly Recovery",
-      "annualImpact": "Annual Impact",
-      "projection": "6-Month Savings Projection",
-      "breakdown": "Monthly Breakdown",
-      "roiNote": "Modelled from published industry ranges for prep waste, stockouts and labour — not from measured PrepIQ customer results. Your actual figures will differ, and PrepIQ reports them on your own data.",
-      "categories": {
-        "waste": "Waste Saved",
-        "stockout": "Stockout Recovery",
-        "labor": "Labor Efficiency"
+    "options": {
+      "currency": {
+        "USD": "US Dollar (USD)",
+        "EUR": "Euro (EUR)",
+        "UGX": "Ugandan Shilling (UGX)",
+        "KES": "Kenyan Shilling (KES)",
+        "RWF": "Rwandan Franc (RWF)",
+        "OTHER": "Other currency"
+      },
+      "planningMethod": {
+        "intuition": "Mostly chef intuition",
+        "spreadsheet": "Spreadsheet / manual",
+        "pos_reports": "POS reports + experience",
+        "forecasting": "Already using forecasting software"
+      },
+      "wasteEstimate": {
+        "lt2": "Less than 2%",
+        "2to5": "2–5%",
+        "5to10": "5–10%",
+        "gt10": "More than 10%",
+        "unknown": "I don't know"
+      },
+      "stockoutFrequency": {
+        "rarely": "Rarely",
+        "sometimes": "Sometimes",
+        "frequently": "Frequently",
+        "unknown": "We don't track this"
       }
     },
-    "metricsNote": "Illustrative ranges used by the model below."
+    "promo": {
+      "badge": "PrepIQ",
+      "title": "This estimate is a start. PrepIQ runs the real plan.",
+      "subtitle": "The numbers above are illustrative. Connect your own sales data and PrepIQ replaces the estimate with a daily forecast built from what your kitchen actually sells.",
+      "points": [
+        "A prep plan every morning, before service starts",
+        "Live stockout alerts while service is running",
+        "A nightly learning loop that sharpens tomorrow's plan"
+      ],
+      "cta": "Book a 10 min demo",
+      "ctaSecondary": "Start free",
+      "disclaimer": "Bring your menu and POS data — we'll show it on your own operation."
+    },
+    "result": {
+      "badge": "Kitchen Intelligence Snapshot",
+      "operationTitle": "Your operation",
+      "locationsLabel_one": "{{count}} location",
+      "locationsLabel_other": "{{count}} locations",
+      "weeklyRevenueLabel": "weekly network revenue",
+      "annualRevenueLabel": "~{{value}} annual revenue",
+      "exposureTitle": "Your estimated operational exposure",
+      "exposureNote": "Estimated exposure — an illustrative estimate based on industry operating assumptions, not a measured PrepIQ customer result. Answer the optional refinement step for a sharper number, or check it against your own data inside PrepIQ.",
+      "wasteExposureLabel": "Over-preparation",
+      "wasteExposureNote": "Potential exposure",
+      "stockoutExposureLabel": "Stockouts",
+      "stockoutExposureNote": "Potential missed revenue",
+      "uncertaintyLabel": "Forecast uncertainty",
+      "annualImpactLabel": "Potential annual impact",
+      "perWeek": "/ week",
+      "scoreTitle": "Your Kitchen Intelligence Score",
+      "scoreSubtitle": "How your operation compares across four dimensions of operational maturity.",
+      "planningMaturity": "Planning maturity",
+      "forecastingMaturity": "Forecasting maturity",
+      "wasteVisibility": "Waste visibility",
+      "operationalVisibility": "Operational visibility",
+      "notAssessed": "Not assessed",
+      "opportunityPrefix": "Your biggest opportunity appears to be",
+      "explanationFallback": "Your operation is large enough that relatively small forecasting errors can compound across your locations. Based on your answers, your biggest opportunity is moving from experience-led prep planning toward a system that continuously learns from your actual kitchen performance.",
+      "ctaTitle": "See what PrepIQ would plan for your kitchen",
+      "ctaBody": "Bring your menu and POS data. We'll show you what this looks like using your actual operation.",
+      "ctaButton": "Book a 10 min demo",
+      "restart": "Start over"
+    }
+  },
+  "kitchenCalculatorTeaser": {
+    "badge": "Free tool",
+    "title": "Find your kitchen's <gold>hidden opportunity</gold>",
+    "subtitle": "Answer a few questions about your operation. We'll estimate where better forecasting and operational intelligence could make the biggest difference — no obscure metrics, just what you already know.",
+    "points": [
+      { "icon": "forecast", "label": "Demand exposure across your locations" },
+      { "icon": "waste", "label": "Over-preparation risk, estimated weekly" },
+      { "icon": "stockout", "label": "Stockout exposure on popular items" }
+    ],
+    "cta": "Try the Kitchen Intelligence Calculator",
+    "disclaimer": "Free, no signup required — takes about two minutes."
   },
   "whoItsFor": {
     "badge": "Purpose-Built",

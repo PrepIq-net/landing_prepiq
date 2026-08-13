@@ -542,39 +542,150 @@
       "drift": "Dérive demande"
     }
   },
-  "value": {
-    "title": "L'impact d'une meilleure mise en place",
-    "subtitle": "Une estimation, pas une promesse. Déplacez le curseur pour modéliser ce que ces fourchettes représenteraient pour votre cuisine — puis vérifiez sur vos propres chiffres dans l'application.",
-    "metrics": {
-      "waste": {
-        "label": "Réduction pertes",
-        "desc": "Moins de nourriture jetée. Chaque jour."
+  "kitchenCalculator": {
+    "meta": {
+      "title": "Calculateur d'Intelligence Cuisine — Estimez votre exposition opérationnelle | PrepIQ",
+      "description": "Répondez à quelques questions sur votre restaurant et obtenez un aperçu d'Intelligence Cuisine estimé — exposition opérationnelle, incertitude de prévision et score de maturité, basés sur des hypothèses sectorielles."
+    },
+    "hero": {
+      "badge": "Calculateur d'Intelligence Cuisine",
+      "title": "Découvrez le <gold>potentiel caché</gold> de votre cuisine",
+      "subtitle": "Répondez à quelques questions sur votre exploitation. Nous estimerons où une meilleure prévision et intelligence opérationnelle feraient la plus grande différence."
+    },
+    "progress": {
+      "step": "Étape {{current}} sur {{total}}",
+      "steps": ["Votre exploitation", "Votre cuisine", "Vos priorités", "Votre évaluation"]
+    },
+    "steps": {
+      "operation": {
+        "title": "Votre exploitation",
+        "subtitle": "Quelques chiffres que vous connaissez déjà.",
+        "revenueLabel": "Revenu hebdomadaire moyen par site",
+        "revenuePlaceholder": "ex. 50 000 000",
+        "currencyLabel": "Devise",
+        "locationsLabel": "Combien de sites exploitez-vous ?",
+        "next": "Continuer"
       },
-      "revenue": {
-        "label": "Revenu récupéré",
-        "desc": "Issu des ruptures que vous ignoriez."
+      "kitchen": {
+        "title": "Votre cuisine",
+        "subtitle": "Le fonctionnement au quotidien.",
+        "daysLabel": "Combien de jours par semaine êtes-vous en activité ?",
+        "planningLabel": "Comment décririez-vous votre planification de mise en place actuelle ?",
+        "back": "Retour",
+        "next": "Continuer"
       },
-      "saved": {
-        "label": "Gain de temps",
-        "desc": "Fini les tableurs. Fini les devinettes."
+      "refine": {
+        "title": "Envie d'une estimation plus précise ?",
+        "subtitle": "Facultatif — deux questions rapides affinent les chiffres ci-dessous.",
+        "wasteLabel": "Quel pourcentage de pertes alimentaires estimez-vous chaque semaine ?",
+        "stockoutLabel": "À quelle fréquence manquez-vous d'articles populaires ?",
+        "skip": "Passer cette étape",
+        "back": "Retour",
+        "next": "Continuer"
+      },
+      "building": {
+        "title": "Nous construisons le profil de votre cuisine…",
+        "subtitle": "Comparaison de votre exploitation aux tendances courantes du secteur.",
+        "lines": ["Prévision de la demande", "Exposition de mise en place", "Risque de pertes", "Exposition aux ruptures"]
+      },
+      "email": {
+        "title": "Votre évaluation est prête.",
+        "subtitle": "Où devons-nous envoyer votre rapport d'Intelligence Cuisine personnalisé ?",
+        "emailLabel": "E-mail",
+        "emailPlaceholder": "vous@restaurant.com",
+        "restaurantLabel": "Nom du restaurant (facultatif)",
+        "restaurantPlaceholder": "ex. Savanna Grill",
+        "consent": "Nous utiliserons aussi cet e-mail pour faire un suivi de votre évaluation. Pas de spam.",
+        "submit": "Envoyer mon rapport",
+        "submitting": "Préparation de votre rapport…",
+        "back": "Retour",
+        "error": "Une erreur est survenue de notre côté — veuillez réessayer."
       }
     },
-    "calculator": {
-      "title": "Calculateur d'économies",
-      "subtitle": "Déplacez le curseur ou saisissez une valeur pour modéliser vos économies potentielles",
-      "inputLabel": "Dépense mensuelle en pertes de mise en place",
-      "monthlyRecovery": "Récupération mensuelle",
-      "annualImpact": "Impact annuel",
-      "projection": "Projection d'économies sur 6 mois",
-      "breakdown": "Détail mensuel",
-      "roiNote": "Modélisé à partir de fourchettes sectorielles publiées sur le gaspillage, les ruptures et la main-d'œuvre — et non de résultats mesurés chez des clients PrepIQ. Vos chiffres réels différeront, et PrepIQ les mesure sur vos propres données.",
-      "categories": {
-        "waste": "Pertes évitées",
-        "stockout": "Ruptures récupérées",
-        "labor": "Efficacité main-d'œuvre"
+    "options": {
+      "currency": {
+        "USD": "Dollar américain (USD)",
+        "EUR": "Euro (EUR)",
+        "UGX": "Shilling ougandais (UGX)",
+        "KES": "Shilling kényan (KES)",
+        "RWF": "Franc rwandais (RWF)",
+        "OTHER": "Autre devise"
+      },
+      "planningMethod": {
+        "intuition": "Surtout l'intuition du chef",
+        "spreadsheet": "Tableur / manuel",
+        "pos_reports": "Rapports de caisse + expérience",
+        "forecasting": "Déjà un logiciel de prévision"
+      },
+      "wasteEstimate": {
+        "lt2": "Moins de 2 %",
+        "2to5": "2 à 5 %",
+        "5to10": "5 à 10 %",
+        "gt10": "Plus de 10 %",
+        "unknown": "Je ne sais pas"
+      },
+      "stockoutFrequency": {
+        "rarely": "Rarement",
+        "sometimes": "Parfois",
+        "frequently": "Fréquemment",
+        "unknown": "Nous ne suivons pas cela"
       }
     },
-    "metricsNote": "Fourchettes indicatives utilisées par le modèle ci-dessous."
+    "promo": {
+      "badge": "PrepIQ",
+      "title": "Cette estimation n'est qu'un début. PrepIQ pilote le vrai plan.",
+      "subtitle": "Les chiffres ci-dessus sont indicatifs. Connectez vos propres données de vente et PrepIQ remplace l'estimation par une prévision quotidienne basée sur ce que votre cuisine vend réellement.",
+      "points": [
+        "Un plan de mise en place chaque matin, avant le service",
+        "Des alertes de rupture en direct pendant le service",
+        "Une boucle d'apprentissage nocturne qui affine le plan du lendemain"
+      ],
+      "cta": "Réserver une démo de 10 minutes",
+      "ctaSecondary": "Essai gratuit",
+      "disclaimer": "Apportez votre menu et vos données de caisse — nous vous montrerons cela sur votre propre exploitation."
+    },
+    "result": {
+      "badge": "Aperçu d'Intelligence Cuisine",
+      "operationTitle": "Votre exploitation",
+      "locationsLabel_one": "{{count}} site",
+      "locationsLabel_other": "{{count}} sites",
+      "weeklyRevenueLabel": "revenu hebdomadaire du réseau",
+      "annualRevenueLabel": "~{{value}} de revenu annuel",
+      "exposureTitle": "Votre exposition opérationnelle estimée",
+      "exposureNote": "Exposition estimée — une estimation indicative basée sur des hypothèses sectorielles, pas un résultat mesuré chez des clients PrepIQ. Répondez à l'étape facultative pour affiner ce chiffre, ou vérifiez-le sur vos propres données dans PrepIQ.",
+      "wasteExposureLabel": "Surproduction",
+      "wasteExposureNote": "Exposition potentielle",
+      "stockoutExposureLabel": "Ruptures",
+      "stockoutExposureNote": "Revenu potentiellement manqué",
+      "uncertaintyLabel": "Incertitude de prévision",
+      "annualImpactLabel": "Impact annuel potentiel",
+      "perWeek": "/ semaine",
+      "scoreTitle": "Votre score d'Intelligence Cuisine",
+      "scoreSubtitle": "Comment votre exploitation se situe sur quatre dimensions de maturité opérationnelle.",
+      "planningMaturity": "Maturité de planification",
+      "forecastingMaturity": "Maturité de prévision",
+      "wasteVisibility": "Visibilité des pertes",
+      "operationalVisibility": "Visibilité opérationnelle",
+      "notAssessed": "Non évalué",
+      "opportunityPrefix": "Votre plus grande opportunité semble être",
+      "explanationFallback": "Votre exploitation est assez importante pour que de petites erreurs de prévision se répercutent sur l'ensemble de vos sites. D'après vos réponses, votre plus grande opportunité est de passer d'une planification guidée par l'expérience à un système qui apprend en continu de la performance réelle de votre cuisine.",
+      "ctaTitle": "Découvrez ce que PrepIQ planifierait pour votre cuisine",
+      "ctaBody": "Apportez votre menu et vos données de caisse. Nous vous montrerons à quoi cela ressemble avec votre propre exploitation.",
+      "ctaButton": "Réserver une démo de 10 minutes",
+      "restart": "Recommencer"
+    }
+  },
+  "kitchenCalculatorTeaser": {
+    "badge": "Outil gratuit",
+    "title": "Découvrez le <gold>potentiel caché</gold> de votre cuisine",
+    "subtitle": "Répondez à quelques questions sur votre exploitation. Nous estimerons où une meilleure prévision et intelligence opérationnelle feraient la plus grande différence — pas de métriques obscures, juste ce que vous savez déjà.",
+    "points": [
+      { "icon": "forecast", "label": "Exposition à la demande sur tous vos sites" },
+      { "icon": "waste", "label": "Risque de surproduction, estimé chaque semaine" },
+      { "icon": "stockout", "label": "Exposition aux ruptures sur les articles populaires" }
+    ],
+    "cta": "Essayer le Calculateur d'Intelligence Cuisine",
+    "disclaimer": "Gratuit, sans inscription — environ deux minutes."
   },
   "whoItsFor": {
     "badge": "Conçu pour le métier",

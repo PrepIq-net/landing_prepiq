@@ -295,7 +295,7 @@ function buildContent(loc: any, isFr: boolean) {
       whyPoints: loc.whyPrepIQ.points,
       whyFooter: loc.whyPrepIQ.footer,
     },
-    value: loc.value,
+    kitchenCalculatorTeaser: loc.kitchenCalculatorTeaser,
     builtForScale: {
       badge: loc.whoItsFor.badge,
       title: loc.whoItsFor.title,
@@ -431,9 +431,9 @@ async function main() {
     operations: { componentType: "OperationsSection", titleEn: "What PrepIQ Does", titleFr: "Ce que fait PrepIQ", contentJson: { en: enContent.operations, fr: frContent.operations } },
     integrations: { componentType: "IntegrationsSection", titleEn: "Integrations", titleFr: "Intégrations", contentJson: { en: enContent.integrations, fr: frContent.integrations } },
     costOfGuessing: { componentType: "CostOfGuessingSection", titleEn: "The Cost of Guessing", titleFr: "Le Coût de l'Incertitude", contentJson: { en: enContent.costOfGuessing, fr: frContent.costOfGuessing } },
+    kitchenCalculatorTeaser: { componentType: "KitchenCalculatorTeaserSection", titleEn: "Kitchen Calculator Teaser", titleFr: "Aperçu Calculateur Cuisine", contentJson: { en: enContent.kitchenCalculatorTeaser, fr: frContent.kitchenCalculatorTeaser } },
     howItWorks: { componentType: "HowItWorksSection", titleEn: "How It Works", titleFr: "Comment ça marche", contentJson: { en: enContent.howItWorks, fr: frContent.howItWorks } },
     intelligence: { componentType: "IntelligenceSection", titleEn: "Intelligence & Margin Protection", titleFr: "Intelligence et Protection des Marges", contentJson: { en: enContent.intelligence, fr: frContent.intelligence } },
-    value: { componentType: "ValueSection", titleEn: "Value", titleFr: "Valeur", contentJson: { en: enContent.value, fr: frContent.value } },
     builtForScale: { componentType: "BuiltForScaleSection", titleEn: "Built for Scale", titleFr: "Conçu pour l'Échelle", contentJson: { en: enContent.builtForScale, fr: frContent.builtForScale } },
     testimonials: { componentType: "TestimonialsSection", titleEn: "Testimonials", titleFr: "Témoignages", contentJson: { en: enContent.testimonials, fr: frContent.testimonials } },
     pricing: { componentType: "PricingSection", titleEn: "Pricing", titleFr: "Tarifs", contentJson: { en: enContent.pricing, fr: frContent.pricing } },
@@ -455,7 +455,7 @@ async function main() {
   const marketingPages = [
     {
       slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
-      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.testimonials, SECTIONS.blogTeaser, SECTIONS.explore, SECTIONS.finalCTA],
+      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.kitchenCalculatorTeaser, SECTIONS.testimonials, SECTIONS.blogTeaser, SECTIONS.explore, SECTIONS.finalCTA],
     },
     {
       slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,
@@ -468,7 +468,7 @@ async function main() {
       slug: "pricing", titleEn: "Pricing", titleFr: "Tarification", sortOrder: 2,
       sections: [
         pageHeader("pricing", "Page Header", "En-tête de page"),
-        SECTIONS.value, SECTIONS.pricing, SECTIONS.faq, SECTIONS.finalCTA,
+        SECTIONS.pricing, SECTIONS.faq, SECTIONS.finalCTA,
       ],
     },
     {
@@ -567,6 +567,7 @@ async function main() {
     { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", category: "product", sortOrder: 0 },
     { labelEn: en.navbar.integrations, labelFr: fr.navbar.integrations, url: "/how-it-works#integrations", category: "product", sortOrder: 1 },
     { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", category: "product", sortOrder: 2 },
+    { labelEn: "Kitchen Calculator", labelFr: "Calculateur Cuisine", url: "/kitchen-intelligence-calculator", category: "product", sortOrder: 3 },
     // Every URL below must resolve to a real page — a footer full of "#" is the
     // fastest way to look like a site with nothing behind it. Careers points at
     // the anchored section of /about, since there is no /careers index route.

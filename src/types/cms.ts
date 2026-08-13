@@ -174,27 +174,6 @@ export interface BuiltForScaleContent {
   regions: string[];
 }
 
-export interface ValueContent {
-  title: string;
-  subtitle: string;
-  metrics: {
-    waste: { label: string; desc: string };
-    revenue: { label: string; desc: string };
-    saved: { label: string; desc: string };
-  };
-  calculator: {
-    title: string;
-    subtitle: string;
-    inputLabel: string;
-    monthlyRecovery: string;
-    annualImpact: string;
-    projection: string;
-    breakdown: string;
-    roiNote: string;
-    categories: { waste: string; stockout: string; labor: string };
-  };
-}
-
 /**
  * A verifiable claim shown under the testimonials — a commitment we control
  * (pilot length, data ownership) or a count we can actually stand behind, never
@@ -339,4 +318,18 @@ export interface OperationsContent {
   subtitle: string;
   pillars: OperationsPillar[];
   footer: string;
+}
+
+export interface KitchenCalculatorTeaserPoint {
+  icon: string;
+  label: string;
+}
+
+export interface KitchenCalculatorTeaserContent {
+  badge: string;
+  title: string;
+  subtitle: string;
+  points: KitchenCalculatorTeaserPoint[];
+  cta: string;
+  disclaimer: string;
 }
