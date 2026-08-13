@@ -76,7 +76,12 @@ export const metadata: Metadata = {
     description: SOCIAL_DESCRIPTION,
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
+      { url: "/icon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-16x16.png", type: "image/png", sizes: "16x16" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 };
 
