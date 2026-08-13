@@ -1020,7 +1020,14 @@
       "uae": "UAE",
       "australia": "Australia",
       "nigeria": "Nigeria"
-    }
+    },
+    "cookieNotice": "We use cookies to improve your experience. Read our <link>Privacy Policy</link> for details.",
+    "cookieRequired": "Required",
+    "cookieAnalytics": "Analytics",
+    "cookieMarketing": "Marketing",
+    "cookieRequiredDesc": "Essential for the site to work (session, security, basic preferences). Cannot be disabled.",
+    "cookieAnalyticsDesc": "Help us understand how visitors interact with the site (page views, journeys, performance).",
+    "cookieMarketingDesc": "Used to personalize ads and measure campaign effectiveness."
   },
   "notFound": {
     "ticketLabel": "Kitchen Ticket",

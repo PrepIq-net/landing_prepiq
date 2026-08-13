@@ -118,7 +118,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
       if (!dishes || !check) return;
       const header = scrolled ? 64 : 80;
       const natural = header + dishes.scrollHeight + check.offsetHeight;
-      const fitted = Math.min(natural, window.innerHeight - 96);
+      const fitted = Math.min(natural, window.innerHeight * 0.6);
       const next = `${fitted}px`;
       setSheetHeight(next);
       setMenuHeight(next);
@@ -243,7 +243,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
           </a>
 
           <button
-            className={`group flex h-11 w-11 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-xl border transition-colors active:scale-95 ${
+            className={`group flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors active:scale-95 ${
               mobileOpen
                 ? "border-primary/30 bg-primary/10 text-primary"
                 : "border-border bg-card/60 text-foreground hover:bg-accent hover:border-primary/30"

@@ -1017,7 +1017,14 @@
       "uae": "Émirats Arabes Unis",
       "australia": "Australie",
       "nigeria": "Nigeria"
-    }
+    },
+    "cookieNotice": "Nous utilisons des cookies pour améliorer votre expérience. Consultez notre <link>Politique de confidentialité</link> pour les détails.",
+    "cookieRequired": "Nécessaires",
+    "cookieAnalytics": "Analytiques",
+    "cookieMarketing": "Marketing",
+    "cookieRequiredDesc": "Indispensables au fonctionnement du site (session, sécurité, préférences de base). Impossible à désactiver.",
+    "cookieAnalyticsDesc": "Nous aident à comprendre comment les visiteurs interagissent avec le site (pages vues, parcours, performances).",
+    "cookieMarketingDesc": "Utilisés pour personnaliser les publicités et mesurer l'efficacité des campagnes."
   },
   "notFound": {
     "ticketLabel": "Ticket de cuisine",

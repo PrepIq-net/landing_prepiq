@@ -88,14 +88,14 @@ const KitchenCalculatorTeaserSection = ({
               <div className="border-t border-border" />
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button variant="hero" size="xl" asChild>
-                <Link href="/kitchen-intelligence-calculator">
+            <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+              <Button variant="hero" size="xl" asChild className="w-full sm:w-auto">
+                <Link href="/kitchen-intelligence-calculator" className="inline-flex items-center gap-2">
                   {content.cta}
-                  <ArrowRight className="h-4 w-4" aria-hidden />
+                  <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden />
                 </Link>
               </Button>
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/70">
+              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/70 text-center sm:text-left">
                 <Clock className="h-3.5 w-3.5" aria-hidden />
                 {content.disclaimer}
               </span>
