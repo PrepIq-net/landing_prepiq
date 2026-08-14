@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
-import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import { KitchenCalculatorHero } from "@/components/kitchen-calculator/KitchenCalculatorHero";
 import { KitchenCalculatorWizard } from "@/components/kitchen-calculator/KitchenCalculatorWizard";
 import { KitchenCalculatorPromoSection } from "@/components/kitchen-calculator/KitchenCalculatorPromoSection";
@@ -61,8 +60,6 @@ export default async function KitchenIntelligenceCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <ConciergeWidget />
-
       <main>
         <KitchenCalculatorHero />
         <section className="section-container pt-2 pb-24 md:pt-4 md:pb-32">
