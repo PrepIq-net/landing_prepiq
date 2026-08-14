@@ -46,6 +46,8 @@ interface NavLink {
   labelEn: string;
   labelFr: string;
   url: string;
+  descriptionEn: string | null;
+  descriptionFr: string | null;
 }
 
 const Navbar = ({ links }: { links: NavLink[] }) => {
@@ -155,7 +157,10 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
     setScrolled(latest > 20);
   });
 
-  const menuDesc = (url: string) => {
+  // Admin-editable via the link's descriptionEn/Fr (Link model). The switch
+  // below is only a fallback for older links that predate that field, so
+  // leaving the new field empty on them doesn't blank out their note.
+  const legacyMenuDesc = (url: string) => {
     switch (url) {
       case "/how-it-works":
         return t("navbar.menuDescHowItWorks");
@@ -169,11 +174,14 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
   };
 
   const menuItems = [
-    { id: "home", url: "/", label: currentLang === "fr" ? "Accueil" : "Home" },
+    { id: "home", url: "/", label: currentLang === "fr" ? "Accueil" : "Home", description: "" },
     ...links.map((link) => ({
       id: link.id,
       url: link.url,
       label: currentLang === "fr" ? link.labelFr : link.labelEn,
+      description:
+        (currentLang === "fr" ? link.descriptionFr : link.descriptionEn) ||
+        legacyMenuDesc(link.url),
     })),
   ];
 
@@ -373,7 +381,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                   {menuItems.map((item, i) => {
                     const active =
                       item.id === "home" ? pathname === "/" : isActive(item.url);
-                    const desc = menuDesc(item.url);
+                    const desc = item.description;
                     return (
                       <motion.a
                         key={item.id}

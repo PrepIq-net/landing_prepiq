@@ -539,9 +539,9 @@ async function main() {
 
   // 4. Navigation Links
   const navLinks = [
-    { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", sortOrder: 0 },
-    { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", sortOrder: 1 },
-    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", sortOrder: 2 },
+    { labelEn: en.navbar.howItWorks, labelFr: fr.navbar.howItWorks, url: "/how-it-works", sortOrder: 0, descriptionEn: en.navbar.menuDescHowItWorks, descriptionFr: fr.navbar.menuDescHowItWorks },
+    { labelEn: en.navbar.pricing, labelFr: fr.navbar.pricing, url: "/pricing", sortOrder: 1, descriptionEn: en.navbar.menuDescPricing, descriptionFr: fr.navbar.menuDescPricing },
+    { labelEn: en.footer.links.contact, labelFr: fr.footer.links.contact, url: "/contact", sortOrder: 2, descriptionEn: en.navbar.menuDescContact, descriptionFr: fr.navbar.menuDescContact },
   ];
 
   const currentNavLinks = await prisma.link.findMany({ where: { type: "nav" } });
@@ -549,8 +549,21 @@ async function main() {
     const existing = currentNavLinks.find(l => l.url === link.url);
     const data = { ...link, type: "nav", isActive: true };
     if (existing) {
-      if (existing.labelEn !== link.labelEn || existing.labelFr !== link.labelFr || existing.sortOrder !== link.sortOrder) {
-        await prisma.link.update({ where: { id: existing.id }, data });
+      // Only seed the description onto a link that doesn't have one yet —
+      // once an admin has edited it in /admin/links, re-running this seed
+      // must not clobber their copy back to the built-in default.
+      const { descriptionEn, descriptionFr, ...rest } = data;
+      const patch: typeof data = existing.descriptionEn || existing.descriptionFr
+        ? { ...rest, descriptionEn: existing.descriptionEn, descriptionFr: existing.descriptionFr }
+        : data;
+      if (
+        existing.labelEn !== patch.labelEn ||
+        existing.labelFr !== patch.labelFr ||
+        existing.sortOrder !== patch.sortOrder ||
+        existing.descriptionEn !== patch.descriptionEn ||
+        existing.descriptionFr !== patch.descriptionFr
+      ) {
+        await prisma.link.update({ where: { id: existing.id }, data: patch });
       }
     } else {
       await prisma.link.create({ data });

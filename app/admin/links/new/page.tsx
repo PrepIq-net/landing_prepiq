@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { createLink } from "@/lib/actions/link-actions";
 
 export default function NewLink() {
@@ -25,9 +26,9 @@ export default function NewLink() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 max-w-2xl">
-      <h1 className="text-2xl font-bold mb-6">Add Link</h1>
-      {message && <div className="mb-4 text-red-600">{message}</div>}
+    <div className="bg-card border border-border rounded-xl shadow-l2 p-6 max-w-2xl">
+      <h1 className="text-2xl font-display font-semibold text-foreground mb-6">Add Link</h1>
+      {message && <div className="mb-4 text-destructive text-sm">{message}</div>}
       <form action={handleSubmit} className="space-y-4">
         <div>
           <Label htmlFor="type">Type</Label>
@@ -44,18 +45,35 @@ export default function NewLink() {
         <div>
           <Label htmlFor="labelEn">Label (English)</Label>
           <Input id="labelEn" name="labelEn" placeholder="English label" />
-          {errors.labelEn && <p className="text-red-600 text-sm mt-1">{errors.labelEn[0]}</p>}
+          {errors.labelEn && <p className="text-destructive text-sm mt-1">{errors.labelEn[0]}</p>}
         </div>
         <div>
           <Label htmlFor="labelFr">Label (French)</Label>
           <Input id="labelFr" name="labelFr" placeholder="Label français" />
-          {errors.labelFr && <p className="text-red-600 text-sm mt-1">{errors.labelFr[0]}</p>}
+          {errors.labelFr && <p className="text-destructive text-sm mt-1">{errors.labelFr[0]}</p>}
         </div>
         <div>
           <Label htmlFor="url">URL</Label>
           <Input id="url" name="url" placeholder="/about" />
-          {errors.url && <p className="text-red-600 text-sm mt-1">{errors.url[0]}</p>}
+          {errors.url && <p className="text-destructive text-sm mt-1">{errors.url[0]}</p>}
         </div>
+        {type === "nav" && (
+          <>
+            <div>
+              <Label htmlFor="descriptionEn">Menu note (English)</Label>
+              <Textarea
+                id="descriptionEn"
+                name="descriptionEn"
+                className="min-h-[70px]"
+                placeholder="Shown under this item in the nav sheet. Optional."
+              />
+            </div>
+            <div>
+              <Label htmlFor="descriptionFr">Menu note (French)</Label>
+              <Textarea id="descriptionFr" name="descriptionFr" className="min-h-[70px]" />
+            </div>
+          </>
+        )}
         {type === "footer" && (
           <div>
             <Label htmlFor="category">Category</Label>

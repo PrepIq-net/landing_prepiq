@@ -13,6 +13,8 @@ export const getActiveNavLinks = unstable_cache(
         labelEn: true,
         labelFr: true,
         url: true,
+        descriptionEn: true,
+        descriptionFr: true,
       },
       orderBy: { sortOrder: "asc" },
     });

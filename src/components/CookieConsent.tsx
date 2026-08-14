@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "iconoir-react";
+import { Xmark } from "iconoir-react";
 import { useTranslation, Trans } from "react-i18next";
 import Link from "next/link";
 
@@ -104,39 +104,43 @@ const CookieConsent = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 12, opacity: 0 }}
           transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6 pointer-events-auto"
+          className="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 pointer-events-auto"
         >
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-sm mx-auto">
             {/* Plain div, not motion: animating height from 0 to `undefined`
                 (the "collapsed" state) never resolves in Framer Motion — the
                 value has no target to animate to, so it stays pinned at 0
                 forever and the whole card renders as a sliver. The outer
                 wrapper above already handles the slide/fade entrance. */}
-            <div className="relative rounded-2xl border border-border bg-card/95 backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.25)] overflow-hidden">
-              <div className="p-4 sm:p-6">
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-px bg-border" />
+            <div className="relative rounded-xl border border-border bg-card/95 backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.25)] overflow-hidden">
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-px bg-border" />
                     <span className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground font-medium">
                       {i18n.resolvedLanguage === "fr" ? "Vie privée" : "Privacy"}
                     </span>
                   </div>
+                  {/* Same as Decline: closing without a choice still has to
+                      mean something, and "required cookies only" is the
+                      only reading that doesn't quietly opt the visitor into
+                      analytics/marketing they never agreed to. */}
                   <button
-                    onClick={() => setExpanded(false)}
-                    className="shrink-0 p-1 rounded-lg hover:bg-accent transition-colors"
+                    onClick={declineAll}
+                    className="shrink-0 p-1 -m-1 rounded-lg hover:bg-accent transition-colors"
                     aria-label={i18n.resolvedLanguage === "fr" ? "Fermer" : "Close"}
                   >
-                    <X className="h-5 w-5 text-muted-foreground" />
+                    <Xmark className="h-4 w-4 text-muted-foreground" />
                   </button>
                 </div>
 
-                <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-1">
                   {i18n.resolvedLanguage === "fr"
                     ? "Nous respectons votre vie privée"
                     : "We respect your privacy"}
                 </h3>
 
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
                   <Trans
                     i18nKey="common.cookieNotice"
                     defaults={
@@ -156,77 +160,81 @@ const CookieConsent = () => {
                 </p>
 
                 {!expanded ? (
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col gap-1.5">
                     <button
                       onClick={acceptAll}
-                      className="flex-1 rounded-lg px-5 py-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]"
+                      className="w-full rounded-lg px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]"
                     >
                       {i18n.resolvedLanguage === "fr" ? "Tout accepter" : "Accept all"}
                     </button>
-                    <button
-                      onClick={acceptAnalytics}
-                      className="flex-1 rounded-lg px-5 py-3 text-sm font-semibold border border-border bg-card text-foreground hover:bg-accent hover:border-primary/30 transition-all active:scale-[0.98]"
-                    >
-                      {i18n.resolvedLanguage === "fr" ? "Analytiques seulement" : "Analytics only"}
-                    </button>
-                    <button
-                      onClick={declineAll}
-                      className="flex-1 rounded-lg px-5 py-3 text-sm font-medium text-muted-foreground hover:text-foreground bg-transparent transition-all active:scale-[0.98]"
-                    >
-                      {i18n.resolvedLanguage === "fr" ? "Refuser" : "Decline"}
-                    </button>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={acceptAnalytics}
+                        className="flex-1 rounded-lg px-3 py-2 text-xs font-medium border border-border bg-card text-foreground hover:bg-accent hover:border-primary/30 transition-all active:scale-[0.98]"
+                      >
+                        {i18n.resolvedLanguage === "fr" ? "Analytiques" : "Analytics only"}
+                      </button>
+                      <button
+                        onClick={declineAll}
+                        className="flex-1 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-transparent transition-all active:scale-[0.98]"
+                      >
+                        {i18n.resolvedLanguage === "fr" ? "Refuser" : "Decline"}
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="space-y-3 border-t border-border pt-4">
+                  <div className="space-y-2 border-t border-border pt-3">
                     {categories.map((cat) => (
                       <div
                         key={cat.key}
-                        className="flex items-start gap-4 p-3 rounded-xl bg-background/50 hover:bg-background/80 transition-colors"
+                        className="flex items-start gap-3 p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
                       >
-                        <div className="flex items-center justify-center w-10 h-10 flex-shrink-0 rounded-xl bg-primary/10 border border-primary/20">
+                        <div className="flex items-center justify-center w-7 h-7 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20">
                           {cat.required ? (
-                            <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-primary">REQ</span>
+                            <span className="text-[8px] font-bold uppercase tracking-[0.1em] text-primary">REQ</span>
                           ) : (
                             <input
                               type="checkbox"
                               checked={consent[cat.key]}
                               onChange={() => setConsent((c) => ({ ...c, [cat.key]: !c[cat.key] }))}
-                              className="w-5 h-5 accent-primary rounded border-border bg-background text-primary focus:ring-2 focus:ring-primary/20"
+                              className="w-4 h-4 accent-primary rounded border-border bg-background text-primary focus:ring-2 focus:ring-primary/20"
                               aria-label={cat.label}
                             />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-foreground text-sm">{cat.label}</p>
-                          <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{cat.desc}</p>
+                          <p className="font-medium text-foreground text-xs">{cat.label}</p>
+                          <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{cat.desc}</p>
                         </div>
                       </div>
                     ))}
-                    <div className="flex flex-col sm:flex-row gap-3 pt-2 border-t border-border">
+                    <div className="flex flex-col gap-1.5 pt-1 border-t border-border">
                       <button
                         onClick={() => {
                           setConsent({ required: true, analytics: true, marketing: true });
                           saveConsent("all");
                         }}
-                        className="flex-1 rounded-lg px-5 py-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]"
+                        className="w-full rounded-lg px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]"
                       >
                         {i18n.resolvedLanguage === "fr" ? "Tout accepter" : "Accept all"}
                       </button>
-                      <button
-                        onClick={() => {
-                          setConsent({ required: true, analytics: false, marketing: false });
-                          saveConsent("required");
-                        }}
-                        className="flex-1 rounded-lg px-5 py-3 text-sm font-medium text-muted-foreground hover:text-foreground bg-transparent transition-all active:scale-[0.98]"
-                      >
-                        {i18n.resolvedLanguage === "fr" ? "Refuser les optionnels" : "Decline optional"}
-                      </button>
-                      <button
-                        onClick={() => setExpanded(false)}
-                        className="flex-1 rounded-lg px-5 py-3 text-sm font-medium border border-border bg-card text-foreground hover:bg-accent hover:border-primary/30 transition-all active:scale-[0.98]"
-                      >
-                        {i18n.resolvedLanguage === "fr" ? "Fermer" : "Close"}
-                      </button>
+                      <div className="flex gap-1.5">
+                        <button
+                          onClick={() => {
+                            setConsent({ required: true, analytics: false, marketing: false });
+                            saveConsent("required");
+                          }}
+                          className="flex-1 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-transparent transition-all active:scale-[0.98]"
+                        >
+                          {i18n.resolvedLanguage === "fr" ? "Refuser optionnels" : "Decline optional"}
+                        </button>
+                        <button
+                          onClick={() => setExpanded(false)}
+                          className="flex-1 rounded-lg px-3 py-2 text-xs font-medium border border-border bg-card text-foreground hover:bg-accent hover:border-primary/30 transition-all active:scale-[0.98]"
+                        >
+                          {i18n.resolvedLanguage === "fr" ? "Retour" : "Back"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -234,7 +242,7 @@ const CookieConsent = () => {
                 {!expanded && (
                   <button
                     onClick={() => setExpanded(true)}
-                    className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-foreground font-medium transition-colors"
+                    className="mt-2 w-full text-center text-[11px] text-muted-foreground hover:text-foreground font-medium transition-colors"
                   >
                     {i18n.resolvedLanguage === "fr" ? "Personnaliser les préférences →" : "Customize preferences →"}
                   </button>
