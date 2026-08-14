@@ -118,7 +118,13 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
       if (!dishes || !check) return;
       const header = scrolled ? 64 : 80;
       const natural = header + dishes.scrollHeight + check.offsetHeight;
-      const fitted = Math.min(natural, window.innerHeight * 0.6);
+      // Mobile screens are short and the dish rows are intentionally large
+      // display type, so a 60% cap leaves barely one item visible before the
+      // list has to scroll. Give mobile most of the viewport; desktop keeps
+      // a cap (raised from 0.6) that still leaves a sliver of the pushed
+      // navbar visible below the sheet.
+      const capRatio = window.innerWidth < 640 ? 0.88 : 0.8;
+      const fitted = Math.min(natural, window.innerHeight * capRatio);
       const next = `${fitted}px`;
       setSheetHeight(next);
       setMenuHeight(next);

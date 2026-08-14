@@ -9,8 +9,6 @@ import { getPublicPlanCatalogs } from "@/lib/plans";
 import { getEffectiveFaqItems } from "@/lib/faq";
 import { SITE_URL } from "@/lib/constants";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
-import ConciergeWidget from "@/components/concierge/ConciergeWidget";
-import CookieConsent from "@/components/CookieConsent";
 
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
@@ -66,9 +64,6 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
-      <ConciergeWidget />
-      <CookieConsent />
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}

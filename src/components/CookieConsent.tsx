@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "iconoir-react";
 import { useTranslation, Trans } from "react-i18next";
 import Link from "next/link";
-import { GoldText } from "@/components/landing/GoldText";
 
 const COOKIE_KEY = "prepiq_cookie_consent_v2";
 const COOKIE_EXPIRY_DAYS = 365;
@@ -101,25 +100,24 @@ const CookieConsent = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
+          initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ type: "spring", damping: 28, stiffness: 320 }}
+          exit={{ y: 12, opacity: 0 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
           className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6 pointer-events-auto"
         >
           <div className="max-w-2xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: expanded ? "auto" : undefined }}
-              className="relative rounded-2xl border border-border bg-card/95 backdrop-blur-2xl shadow-[0_-8px_40px_rgba(0,0,0,0.4)] overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-
+            {/* Plain div, not motion: animating height from 0 to `undefined`
+                (the "collapsed" state) never resolves in Framer Motion — the
+                value has no target to animate to, so it stays pinned at 0
+                forever and the whole card renders as a sliver. The outer
+                wrapper above already handles the slide/fade entrance. */}
+            <div className="relative rounded-2xl border border-border bg-card/95 backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.25)] overflow-hidden">
               <div className="p-4 sm:p-6">
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-px bg-primary" />
-                    <span className="text-[0.6rem] uppercase tracking-[0.3em] text-primary font-medium">
+                    <div className="w-10 h-px bg-border" />
+                    <span className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground font-medium">
                       {i18n.resolvedLanguage === "fr" ? "Vie privée" : "Privacy"}
                     </span>
                   </div>
@@ -133,9 +131,9 @@ const CookieConsent = () => {
                 </div>
 
                 <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                  <GoldText text={i18n.resolvedLanguage === "fr"
-                    ? "Nous respectons votre <gold>vie privée</gold>"
-                    : "We respect your <gold>privacy</gold>"} />
+                  {i18n.resolvedLanguage === "fr"
+                    ? "Nous respectons votre vie privée"
+                    : "We respect your privacy"}
                 </h3>
 
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">
@@ -236,13 +234,13 @@ const CookieConsent = () => {
                 {!expanded && (
                   <button
                     onClick={() => setExpanded(true)}
-                    className="mt-4 w-full text-center text-xs text-primary hover:text-primary/70 font-medium transition-colors"
+                    className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-foreground font-medium transition-colors"
                   >
                     {i18n.resolvedLanguage === "fr" ? "Personnaliser les préférences →" : "Customize preferences →"}
                   </button>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
       )}

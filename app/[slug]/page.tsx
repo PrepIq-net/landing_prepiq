@@ -2,8 +2,6 @@ import { Suspense, lazy } from "react";
 import { getPageWithSections, getActiveFooterLinks } from "@/lib/data";
 import { getPublicPlanCatalogs } from "@/lib/plans";
 import DynamicSectionRenderer from "@/components/landing/DynamicSectionRenderer";
-import ConciergeWidget from "@/components/concierge/ConciergeWidget";
-import CookieConsent from "@/components/CookieConsent";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -63,9 +61,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   return (
     <div className="min-h-screen bg-background">
-      <ConciergeWidget />
-      <CookieConsent />
-
       <DynamicSectionRenderer sections={page.sections} planCatalog={planCatalog} />
 
       <Suspense fallback={<SectionFallback />}>

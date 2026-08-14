@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
-import ConciergeWidget from "@/components/concierge/ConciergeWidget";
 import AboutHero from "@/components/about/AboutHero";
 import OurStory from "@/components/about/OurStory";
 import Principles from "@/components/about/Principles";
@@ -58,8 +57,6 @@ export default async function AboutPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <ConciergeWidget />
-
       <main>
         <AboutHero />
         <OurStory />
