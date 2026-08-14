@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { revalidateTag } from "@/lib/revalidate";
 import { z } from "zod";
 
 const LinkSchema = z.object({
@@ -11,7 +12,27 @@ const LinkSchema = z.object({
   type: z.enum(["nav", "footer"]),
   category: z.string().optional(),
   sortOrder: z.coerce.number().int().default(0),
+  // Nav-only "note" shown under the item in the menu sheet (Navbar.tsx).
+  // Empty string coerced to null so an intentionally-cleared field falls
+  // back to the navbar's legacy hardcoded copy instead of rendering blank.
+  descriptionEn: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  descriptionFr: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : null)),
 });
+
+// getActiveNavLinks / getActiveFooterLinks are unstable_cache'd under this
+// tag — revalidatePath alone does not bust that cache, so without this an
+// edit here can silently not appear on the site until the cache expires.
+function revalidateLinks() {
+  revalidateTag("links");
+  revalidatePath("/admin/links");
+  revalidatePath("/");
+}
 
 export async function createLink(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
@@ -22,7 +43,7 @@ export async function createLink(formData: FormData) {
 
   try {
     await prisma.link.create({ data: validated.data });
-    revalidatePath("/admin/links");
+    revalidateLinks();
     return { success: true };
   } catch (error) {
     console.error("Failed to create link:", error);
@@ -39,8 +60,7 @@ export async function updateLink(id: string, formData: FormData) {
 
   try {
     await prisma.link.update({ where: { id }, data: validated.data });
-    revalidatePath("/admin/links");
-    revalidatePath("/");
+    revalidateLinks();
     return { success: true };
   } catch (error) {
     console.error("Failed to update link:", error);
@@ -50,14 +70,12 @@ export async function updateLink(id: string, formData: FormData) {
 
 export async function deleteLink(id: string) {
   await prisma.link.delete({ where: { id } });
-  revalidatePath("/admin/links");
-  revalidatePath("/");
+  revalidateLinks();
 }
 
 export async function toggleLinkActive(id: string) {
   const link = await prisma.link.findUnique({ where: { id } });
   if (!link) return;
   await prisma.link.update({ where: { id }, data: { isActive: !link.isActive } });
-  revalidatePath("/admin/links");
-  revalidatePath("/");
+  revalidateLinks();
 }

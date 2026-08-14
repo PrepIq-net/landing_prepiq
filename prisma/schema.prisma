@@ -142,6 +142,13 @@ model Link {
   category  String? // for grouping footer links
   isActive  Boolean @default(true)
   sortOrder Int     @default(0)
+  /// The one-line note shown under a dish in the mobile/desktop nav sheet
+  /// (Navbar.tsx). Nav-only — footer links render as a plain list and never
+  /// read this. Null means the navbar falls back to its own hardcoded copy
+  /// for the handful of routes that still have one, so leaving this empty
+  /// on an old link doesn't blank out its description.
+  descriptionEn String?
+  descriptionFr String?
 }
 
 /// Customer testimonials shown on the marketing site.

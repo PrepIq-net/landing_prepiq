@@ -4,9 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { I18nProviderWrapper } from "./I18nProviderWrapper";
 import { PageShell } from "@/components/PageShell";
-import Navbar from "@/components/landing/Navbar";
-import CookieConsent from "@/components/CookieConsent";
-import ConciergeWidget from "@/components/concierge/ConciergeWidget";
+import { SiteChrome } from "@/components/SiteChrome";
 import { getActiveNavLinks } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
 import { getPublicPlanCatalog } from "@/lib/plans";
@@ -193,10 +191,9 @@ export default async function RootLayout({
                 ancestor becomes the containing block for `fixed` descendants,
                 which would let the bar scroll away with the page. Here it is
                 pinned to the viewport, and the menu sheet (portaled to body,
-                z-[70]) covers it while the menu is open. */}
-            <Navbar links={navLinks} />
-            <CookieConsent />
-            <ConciergeWidget />
+                z-[70]) covers it while the menu is open. SiteChrome itself
+                gates all of this off on /admin routes — see its comment. */}
+            <SiteChrome links={navLinks} />
             <PageShell>{children}</PageShell>
           </Providers>
         </I18nProviderWrapper>
