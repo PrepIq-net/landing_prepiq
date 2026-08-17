@@ -56,6 +56,22 @@ because the chef disagrees with it.
 The framing PrepIQ claims: the forecasting discipline airlines and retailers
 already run on, adapted to kitchen operations.
 
+## The Operating Loop
+
+The product is one closed loop, not a dashboard bolted onto a POS:
+
+**Forecast** (what will happen?) → **Plan** (what should we prepare?) →
+**Watch** (what's happening right now?) → **Act** (what should we do?) →
+**Review** (why was today different?) → **Learn** (what should we remember for
+next time?) → back to **Forecast**.
+
+Every stage already exists as a real part of the product (see Operating
+Context below for the detail on each) — this is the naming of a mechanism
+that was already built, not a new one. It's the shape to keep in mind when
+describing PrepIQ: the moat isn't any single stage, it's that the loop
+closes — the chef's override, an unexpected quiet Tuesday, and a stockout at
+7pm all feed the same forecast tomorrow morning.
+
 ## Operating Context
 
 - **The morning decision.** Before service, someone commits to prep quantities.

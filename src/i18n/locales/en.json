@@ -13,10 +13,10 @@
     "menuDescContact": "Talk directly to the team behind PrepIQ."
   },
   "hero": {
-    "badge": "Kitchen intelligence, end to end",
+    "badge": "The operational intelligence layer for professional kitchens",
     "titleLine1": "Plan the day. Run the line.",
     "titleLine2": "Improve every service.",
-    "subtitle": "PrepIQ turns demand into a daily plan — prep, ingredients, and staffing — coordinates the line as service runs, and learns from every shift. One system for how your kitchen actually operates.",
+    "subtitle": "PrepIQ turns demand into a daily plan — prep, ingredients, and staffing — coordinates the line as service runs, and learns from every shift. It doesn't replace your POS or your chef's judgment — it sits above what you already run and turns it into a decision.",
     "proof": {
       "lessWaste": "Less waste",
       "noStockouts": "No stockouts",
@@ -43,6 +43,8 @@
     "description": "Daily prep intelligence for kitchens that take food operations seriously. Predict demand, reduce waste, protect margins.",
     "status": "All systems operational",
     "rights": "All rights reserved.",
+    "playStore": "PrepIQ for Android",
+    "playStoreBeta": "Beta",
     "headings": {
       "product": "Product",
       "company": "Company",
@@ -710,6 +712,27 @@
     ],
     "cta": "Try the Kitchen Intelligence Calculator",
     "disclaimer": "Free, no signup required — takes about two minutes."
+  },
+  "downloadApp": {
+    "testing": {
+      "badge": "Android early access",
+      "title": "PrepIQ, now in <gold>your pocket</gold>",
+      "subtitle": "We're testing the Android app with a small group of kitchens before it opens to everyone. Join the closed beta to run PrepIQ from the floor.",
+      "cta": "Join the Android beta",
+      "disclaimer": "Closed testing on Google Play — you'll need a Google account and the invite link."
+    },
+    "production": {
+      "badge": "Now on Android",
+      "title": "PrepIQ, now in <gold>your pocket</gold>",
+      "subtitle": "Check live pace, close the day, and manage tasks from the kitchen floor — the same forecasts your dashboard runs on.",
+      "cta": "Get it on Google Play",
+      "disclaimer": "Free to download. Requires a PrepIQ account."
+    },
+    "points": [
+      { "icon": "pace", "label": "Live prep pace and demand signals, from the floor" },
+      { "icon": "close", "label": "Close the day and log overrides from your phone" },
+      { "icon": "tasks", "label": "Kitchen task board, synced in real time" }
+    ]
   },
   "whoItsFor": {
     "badge": "Purpose-Built",

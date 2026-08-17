@@ -30,6 +30,7 @@ const COMPONENTS: Record<string, any> = {
   ContactSection: dynamic(() => import("./ContactSection")),
   FinalCTASection: dynamic(() => import("./FinalCTASection")),
   BlogTeaserSection: dynamic(() => import("./BlogTeaserSection")),
+  DownloadAppSection: dynamic(() => import("./DownloadAppSection")),
 };
 
 // Sections whose copy is CMS-managed but whose data comes from elsewhere in the

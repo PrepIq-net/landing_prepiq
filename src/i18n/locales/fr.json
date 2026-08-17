@@ -13,10 +13,10 @@
     "menuDescContact": "Parlez directement à l'équipe derrière PrepIQ."
   },
   "hero": {
-    "badge": "L'intelligence cuisine, de bout en bout",
+    "badge": "Intelligence opérationnelle pour cuisines professionnelles",
     "titleLine1": "Planifiez la journée. Pilotez le service.",
     "titleLine2": "Progressez à chaque service.",
-    "subtitle": "PrepIQ transforme la demande en un plan quotidien — mise en place, ingrédients et personnel —, coordonne le service en direct et apprend de chaque shift. Un seul système pour le fonctionnement réel de votre cuisine.",
+    "subtitle": "PrepIQ transforme la demande en un plan quotidien — mise en place, ingrédients et personnel —, coordonne le service en direct et apprend de chaque shift. Il ne remplace ni votre caisse (POS) ni le jugement de votre chef — il s'appuie sur ce que vous utilisez déjà pour vous renvoyer une décision.",
     "proof": {
       "lessWaste": "Moins de gaspillage",
       "noStockouts": "Pas de ruptures de stock",
@@ -43,6 +43,8 @@
     "description": "Intelligence quotidienne de préparation pour les cuisines qui prennent les opérations alimentaires au sérieux. Prédisez la demande, réduisez le gaspillage, protégez les marges.",
     "status": "Tous les systèmes sont opérationnels",
     "rights": "Tous droits réservés.",
+    "playStore": "PrepIQ sur Android",
+    "playStoreBeta": "Bêta",
     "headings": {
       "product": "Produit",
       "company": "Entreprise",
@@ -710,6 +712,27 @@
     ],
     "cta": "Essayer le Calculateur d'Intelligence Cuisine",
     "disclaimer": "Gratuit, sans inscription — environ deux minutes."
+  },
+  "downloadApp": {
+    "testing": {
+      "badge": "Accès anticipé Android",
+      "title": "PrepIQ, maintenant dans <gold>votre poche</gold>",
+      "subtitle": "Nous testons l'application Android avec un petit groupe de cuisines avant l'ouverture à tous. Rejoignez la bêta fermée pour piloter PrepIQ depuis le terrain.",
+      "cta": "Rejoindre la bêta Android",
+      "disclaimer": "Test fermé sur Google Play — un compte Google et le lien d'invitation sont nécessaires."
+    },
+    "production": {
+      "badge": "Disponible sur Android",
+      "title": "PrepIQ, maintenant dans <gold>votre poche</gold>",
+      "subtitle": "Consultez le rythme en direct, clôturez la journée et gérez les tâches depuis la cuisine — les mêmes prévisions que votre tableau de bord.",
+      "cta": "Télécharger sur Google Play",
+      "disclaimer": "Téléchargement gratuit. Un compte PrepIQ est requis."
+    },
+    "points": [
+      { "icon": "pace", "label": "Rythme de préparation et signaux de demande, en direct" },
+      { "icon": "close", "label": "Clôturez la journée et saisissez les écarts depuis votre téléphone" },
+      { "icon": "tasks", "label": "Tableau des tâches cuisine, synchronisé en temps réel" }
+    ]
   },
   "whoItsFor": {
     "badge": "Conçu pour le métier",
