@@ -100,6 +100,53 @@ const EXPLORE = {
   },
 };
 
+// Mirrors src/i18n/locales/{en,fr}.json's "downloadApp" block — kept in sync by
+// hand since this seed only runs at deploy time, not on every locale edit.
+const DOWNLOAD_APP = {
+  en: {
+    testing: {
+      badge: "Android early access",
+      title: "PrepIQ, now in <gold>your pocket</gold>",
+      subtitle: "We're testing the Android app with a small group of kitchens before it opens to everyone. Join the closed beta to run PrepIQ from the floor.",
+      cta: "Join the Android beta",
+      disclaimer: "Closed testing on Google Play — you'll need a Google account and the invite link.",
+    },
+    production: {
+      badge: "Now on Android",
+      title: "PrepIQ, now in <gold>your pocket</gold>",
+      subtitle: "Check live pace, close the day, and manage tasks from the kitchen floor — the same forecasts your dashboard runs on.",
+      cta: "Get it on Google Play",
+      disclaimer: "Free to download. Requires a PrepIQ account.",
+    },
+    points: [
+      { icon: "pace", label: "Live prep pace and demand signals, from the floor" },
+      { icon: "close", label: "Close the day and log overrides from your phone" },
+      { icon: "tasks", label: "Kitchen task board, synced in real time" },
+    ],
+  },
+  fr: {
+    testing: {
+      badge: "Accès anticipé Android",
+      title: "PrepIQ, maintenant dans <gold>votre poche</gold>",
+      subtitle: "Nous testons l'application Android avec un petit groupe de cuisines avant l'ouverture à tous. Rejoignez la bêta fermée pour piloter PrepIQ depuis le terrain.",
+      cta: "Rejoindre la bêta Android",
+      disclaimer: "Test fermé sur Google Play — un compte Google et le lien d'invitation sont nécessaires.",
+    },
+    production: {
+      badge: "Disponible sur Android",
+      title: "PrepIQ, maintenant dans <gold>votre poche</gold>",
+      subtitle: "Consultez le rythme en direct, clôturez la journée et gérez les tâches depuis la cuisine — les mêmes prévisions que votre tableau de bord.",
+      cta: "Télécharger sur Google Play",
+      disclaimer: "Téléchargement gratuit. Un compte PrepIQ est requis.",
+    },
+    points: [
+      { icon: "pace", label: "Rythme de préparation et signaux de demande, en direct" },
+      { icon: "close", label: "Clôturez la journée et saisissez les écarts depuis votre téléphone" },
+      { icon: "tasks", label: "Tableau des tâches cuisine, synchronisé en temps réel" },
+    ],
+  },
+};
+
 const PAGE_HEADERS = {
   "how-it-works": {
     en: {
@@ -441,6 +488,7 @@ async function main() {
     contact: { componentType: "ContactSection", titleEn: "Contact", titleFr: "Contact", contentJson: { en: enContent.contact, fr: frContent.contact } },
     blogTeaser: { componentType: "BlogTeaserSection", titleEn: "Featured Articles", titleFr: "Articles en vedette", contentJson: { en: BLOG_TEASER.en, fr: BLOG_TEASER.fr } },
     explore: { componentType: "ExploreSection", titleEn: "Explore", titleFr: "Explorer", contentJson: { en: EXPLORE.en, fr: EXPLORE.fr } },
+    downloadApp: { componentType: "DownloadAppSection", titleEn: "Download the App", titleFr: "Télécharger l'app", contentJson: { en: DOWNLOAD_APP.en, fr: DOWNLOAD_APP.fr } },
     finalCTA: { componentType: "FinalCTASection", titleEn: "Final CTA", titleFr: "Appel à l'action final", contentJson: { en: enContent.finalCTA, fr: frContent.finalCTA } },
   };
 
@@ -455,7 +503,7 @@ async function main() {
   const marketingPages = [
     {
       slug: "home", titleEn: "Home", titleFr: "Accueil", sortOrder: 0,
-      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.kitchenCalculatorTeaser, SECTIONS.testimonials, SECTIONS.blogTeaser, SECTIONS.explore, SECTIONS.finalCTA],
+      sections: [SECTIONS.hero, SECTIONS.operations, SECTIONS.costOfGuessing, SECTIONS.kitchenCalculatorTeaser, SECTIONS.testimonials, SECTIONS.blogTeaser, SECTIONS.explore, SECTIONS.downloadApp, SECTIONS.finalCTA],
     },
     {
       slug: "how-it-works", titleEn: "How It Works", titleFr: "Comment ça marche", sortOrder: 1,
