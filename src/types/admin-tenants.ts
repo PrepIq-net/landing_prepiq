@@ -97,6 +97,9 @@ export interface AdminMembership {
   role: AdminRole | null;
   is_active: boolean;
   joined_at: string;
+  /** Ownership is independent of `role` — see organizations/models.py. */
+  is_owner: boolean;
+  is_primary_owner: boolean;
   branch_assignments: {
     branch_id: string;
     branch_name: string;
