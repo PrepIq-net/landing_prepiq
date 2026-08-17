@@ -42,10 +42,13 @@ const HeroSection = ({
   const localized = dbContent?.[currentLang] as Partial<HeroContent> | undefined;
 
   const fallbackContent: HeroContent = {
-    badge: t("hero.badge", "AI prep planning for professional kitchens"),
-    titleLine1: t("hero.titleLine1", "Stop cooking on a hunch."),
-    titleLine2: t("hero.titleLine2", "Prep exactly what tomorrow will sell."),
-    subtitle: t("hero.subtitle", ""),
+    badge: t("hero.badge", "The operational intelligence layer for professional kitchens"),
+    titleLine1: t("hero.titleLine1", "Plan the day. Run the line."),
+    titleLine2: t("hero.titleLine2", "Improve every service."),
+    subtitle: t(
+      "hero.subtitle",
+      "PrepIQ turns demand into a daily plan — prep, ingredients, and staffing — coordinates the line as service runs, and learns from every shift. It doesn't replace your POS or your chef's judgment — it sits above what you already run and turns it into a decision.",
+    ),
     proof: {
       lessWaste: t("hero.proof.lessWaste", "Less waste"),
       noStockouts: t("hero.proof.noStockouts", "No stockouts"),
