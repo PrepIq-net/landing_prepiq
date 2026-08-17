@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { X, Linkedin, Github, Instagram, Facebook, Youtube, Globe, MapPin } from "iconoir-react";
+import { X, Linkedin, Github, Instagram, Facebook, Youtube, Globe, MapPin, GoogleCircle } from "iconoir-react";
+import { PLAY_STORE_CONFIG } from "@/lib/constants";
 
 /**
  * Icon for a social link, matched on its URL host. Anything we don't recognise
@@ -77,6 +78,20 @@ const Footer = ({ links }: { links: FooterLink[] }) => {
               <div className="h-2 w-2 rounded-full bg-success" />
               <span className="text-xs text-muted-foreground">{t("footer.status")}</span>
             </div>
+            <a
+              href={PLAY_STORE_CONFIG.urls[PLAY_STORE_CONFIG.mode]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-lg border border-border/60 px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all duration-200 w-fit"
+            >
+              <GoogleCircle className="h-4 w-4 text-primary shrink-0" aria-hidden />
+              {t("footer.playStore")}
+              {PLAY_STORE_CONFIG.mode === "testing" && (
+                <span className="rounded-full border border-primary/20 bg-primary/[0.08] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
+                  {t("footer.playStoreBeta")}
+                </span>
+              )}
+            </a>
           </div>
 
           {groupedLinks.map((column) => (

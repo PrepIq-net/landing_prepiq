@@ -333,3 +333,31 @@ export interface KitchenCalculatorTeaserContent {
   cta: string;
   disclaimer: string;
 }
+
+export interface DownloadAppPoint {
+  icon: string;
+  label: string;
+}
+
+/**
+ * Copy for both Play Store states (see PLAY_STORE_CONFIG). The seed and the
+ * component fallback both key off `testing` / `production`; only the active
+ * mode's copy is ever shown, so there is no "which one wins" ambiguity.
+ */
+export interface DownloadAppContent {
+  testing: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    cta: string;
+    disclaimer: string;
+  };
+  production: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    cta: string;
+    disclaimer: string;
+  };
+  points: DownloadAppPoint[];
+}
