@@ -76,8 +76,11 @@ const HeroSection = ({
         {/*
           The still is frame 0 of hero.mp4 (not a separate photo), so when the
           video fades in over it there is nothing visible to swap — it just
-          starts moving. object-left below md keeps the chef in frame on
-          portrait screens, where cover crops most of the 16:9 width away.
+          starts moving. Below md the frame holds at ~28% from the left: cover
+          crops most of the 16:9 width away on portrait screens, and the main
+          character (chef) sits just right of the left edge, so full `left`
+          pushes him out of frame — `center` would crop him out the other
+          side. Desktop centers.
         */}
         <Image
           src="/images/hero-poster.jpg"
@@ -86,7 +89,7 @@ const HeroSection = ({
           fill
           priority
           sizes="100vw"
-          className="object-cover object-left md:object-center"
+          className="object-cover object-[17%_center] md:object-[40%_center] lg:object-center"
           style={{ filter: "saturate(0.92) brightness(0.96)" }}
         />
         <video
@@ -98,7 +101,7 @@ const HeroSection = ({
           // Only reveal once frames are actually rendering; if autoplay is
           // blocked this never fires and the still stays as the background.
           onPlaying={() => setVideoPlaying(true)}
-          className={`absolute inset-0 w-full h-full object-cover object-left md:object-center transition-opacity duration-700 ease-out ${
+          className={`absolute inset-0 w-full h-full object-cover object-[17%_center] md:object-[40%_center] lg:object-center transition-opacity duration-700 ease-out ${
             videoPlaying ? "opacity-100" : "opacity-0"
           }`}
           style={{ filter: "saturate(0.92) brightness(0.96)" }}
@@ -133,7 +136,7 @@ const HeroSection = ({
       </div>
 
       {/* Content */}
-      <div className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-20 sm:pt-28 md:pt-40 pb-8 sm:pb-0 flex flex-col justify-end">
+      <div className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-28 sm:pt-32 md:pt-40 pb-8 sm:pb-0 flex flex-col justify-end">
         <motion.div
           initial="hidden"
           whileInView="visible"

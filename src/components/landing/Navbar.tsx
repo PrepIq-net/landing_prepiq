@@ -118,7 +118,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
       const dishes = dishesRef.current;
       const check = checkRef.current;
       if (!dishes || !check) return;
-      const header = scrolled ? 64 : 80;
+      const header = scrolled ? (window.innerWidth < 640 ? 56 : 64) : window.innerWidth < 640 ? 64 : 80;
       const natural = header + dishes.scrollHeight + check.offsetHeight;
       // Mobile screens are short and the dish rows are intentionally large
       // display type, so a 60% cap leaves barely one item visible before the
@@ -193,8 +193,8 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
       <nav
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${
           scrolled
-            ? "h-16 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
-            : "h-20 border-b border-transparent"
+            ? "h-14 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.25)] sm:h-16"
+            : "h-16 border-b border-transparent sm:h-20"
         }`}
         style={{
           backgroundColor: scrolled ? "rgba(10, 10, 12, 0.85)" : "rgba(10, 10, 12, 0.25)",
@@ -229,9 +229,9 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
             {/* On scroll the wordmark dissolves upward and the mark takes
                 over, growing into the space it leaves. */}
             <motion.div
-              className={`relative transition-all duration-500 ease-out ${
-                scrolled ? "h-11 w-11" : "h-8 w-8"
-              }`}
+className={`relative transition-all duration-500 ease-out ${
+              scrolled ? "h-9 w-9 sm:h-11 sm:w-11" : "h-7 w-7 sm:h-8 sm:w-8"
+            }`}
               whileHover={{ scale: 1.06 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
@@ -248,7 +248,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
               />
             </motion.div>
             <span
-              className={`font-display text-lg font-semibold text-foreground transition-all duration-500 ease-out ${
+              className={`font-display text-base font-semibold text-foreground transition-all duration-500 ease-out sm:text-lg ${
                 scrolled ? "opacity-0 translate-y-1.5" : "opacity-100 translate-y-0"
               }`}
             >
@@ -257,9 +257,9 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
           </a>
 
           <button
-            className={`group flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors active:scale-95 ${
+            className={`group flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors active:scale-95 sm:h-12 sm:w-12 ${
               mobileOpen
-                ? "border-primary/30 bg-primary/10 text-primary"
+                ? "border-primary/30 bg-primary/10 text-foreground"
                 : "border-border bg-card/60 text-foreground hover:bg-accent hover:border-primary/30"
             }`}
             onClick={() => (mobileOpen ? closeMenu() : openMenu())}
@@ -275,7 +275,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
                   : "Open menu"
             }
           >
-            <MenuBurgerIcon phase={burgerPhase} className="h-6 w-6" />
+            <MenuBurgerIcon phase={burgerPhase} className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
         </div>
       </nav>

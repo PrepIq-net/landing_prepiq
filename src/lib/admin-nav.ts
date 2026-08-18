@@ -13,6 +13,7 @@
  */
 
 import {
+  Bell,
   Building,
   Calculator,
   Calendar,
@@ -164,6 +165,12 @@ export const WORKSPACES: Workspace[] = [
         title: 'PIQ Connector',
         items: [
           { href: '/admin/connectors', label: 'Machines', icon: Database, keywords: ['pos', 'sync', 'agents'] },
+          {
+            href: '/admin/ops-alerts',
+            label: 'Ops Alerts',
+            icon: Bell,
+            keywords: ['pos sync failed', 'connector offline', 'csv stale', 'infra', 'incidents'],
+          },
           { href: '/admin/releases', label: 'Releases', icon: CloudDownload, keywords: ['versions', 'updates'] },
           { href: '/admin/installation-tokens', label: 'Install Tokens', icon: Key, keywords: ['setup', 'provisioning'] },
         ],

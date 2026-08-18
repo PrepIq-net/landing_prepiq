@@ -1338,17 +1338,22 @@
     "subtitle": "Kitchen intelligence advisor",
     "open": "Open the PrepIQ Assistant",
     "close": "Close chat",
+    "clearChat": "Clear chat",
+    "clearChatConfirm": "Clear this conversation? This can't be undone.",
     "send": "Send message",
-    "greeting": "Hi 👋 I'm the PrepIQ Assistant. I can help you understand how PrepIQ works, explain pricing, or help you book a demo.",
+    "greeting": "Hi 👋 I'm the PrepIQ Assistant. Before we go anywhere — tell me about your kitchen: how many seats, what you serve, where your biggest cost leaks are. The more I know about your business, the more specific I can be about what PrepIQ can save you.",
+    "nudge": "The assistant has a message for you",
     "placeholder": "Ask about PrepIQ…",
     "thinking": "PrepIQ is thinking…",
     "fallbackReply": "I'm having trouble answering right now. Leave your details and our team will follow up personally.",
-    "starters": {
-      "pos": "How does PrepIQ work with my POS?",
-      "price": "What does it cost?",
-      "chef": "Will AI replace my chef?",
-      "demo": "How do I book a demo?"
-    },
+    "queued": "Queued",
+    "cancelQueued": "Cancel",
+"starters": {
+  "pos": "How does PrepIQ work with my POS?",
+  "price": "What does it cost?",
+  "chef": "How much money can PrepIQ save me?",
+  "demo": "How do I book a demo?"
+ },
     "lead": {
       "title": "Want the team to follow up?",
       "subtitle": "Share your details and a PrepIQ specialist will reach out. No spam.",
