@@ -1335,17 +1335,22 @@
     "subtitle": "Conseiller en intelligence de cuisine",
     "open": "Ouvrir l'assistant PrepIQ",
     "close": "Fermer la discussion",
+    "clearChat": "Effacer la conversation",
+    "clearChatConfirm": "Effacer cette conversation ? Cette action est irréversible.",
     "send": "Envoyer le message",
-    "greeting": "Bonjour 👋 Je suis l'assistant PrepIQ. Je peux vous expliquer comment PrepIQ fonctionne, détailler les tarifs ou vous aider à réserver une démo.",
+    "greeting": "Bonjour 👋 Je suis l'assistant PrepIQ. Avant d'aller plus loin — parlez-moi de votre cuisine : combien de couverts, ce que vous servez, où se situent vos plus grosses pertes. Plus j'en sais sur votre établissement, plus je peux être précis sur ce que PrepIQ peut vous faire économiser.",
+    "nudge": "L'assistant a un message pour vous",
     "placeholder": "Une question sur PrepIQ…",
     "thinking": "PrepIQ réfléchit…",
     "fallbackReply": "Je n'arrive pas à répondre pour le moment. Laissez vos coordonnées et notre équipe vous recontactera personnellement.",
-    "starters": {
-      "pos": "Comment PrepIQ fonctionne-t-il avec mon POS ?",
-      "price": "Combien ça coûte ?",
-      "chef": "L'IA va-t-elle remplacer mon chef ?",
-      "demo": "Comment réserver une démo ?"
-    },
+    "queued": "En attente",
+    "cancelQueued": "Annuler",
+"starters": {
+  "pos": "Comment PrepIQ fonctionne-t-il avec mon POS ?",
+  "price": "Combien ça coûte ?",
+  "chef": "Combien d'argent PrepIQ peut-il me faire économiser ?",
+  "demo": "Comment réserver une démo ?"
+ },
     "lead": {
       "title": "Souhaitez-vous être recontacté ?",
       "subtitle": "Partagez vos coordonnées et un spécialiste PrepIQ vous contactera. Sans spam.",

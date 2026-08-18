@@ -14,6 +14,11 @@ import {
 } from "../guards";
 
 export const dynamic = "force-dynamic";
+// conciergeChatFetch below allows the upstream LLM call up to 90s (NVIDIA
+// retries can stack). Without this, Vercel's default function duration cuts
+// the request off well before that timeout ever fires, which reads to the
+// visitor as "AI thinking" forever rather than a clean fallback reply.
+export const maxDuration = 100;
 
 // How much history the LLM sees per turn (persisted history can be longer).
 const HISTORY_WINDOW = 20;

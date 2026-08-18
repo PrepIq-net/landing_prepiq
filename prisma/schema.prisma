@@ -44,6 +44,7 @@ enum EntityType {
   CONCIERGE_LEAD
   TESTIMONIAL
   KITCHEN_CALCULATOR_LEAD
+  OPS_ALERT
 }
 
 model User {
@@ -289,6 +290,66 @@ model SupportVote {
   createdAt  DateTime @default(now())
 
   @@unique([requestId, voterEmail])
+}
+
+// Infra/integration failures the backend detects on a restaurant's behalf
+// (POS sync down, connector offline, ...) — these are PrepIQ's problem to
+// notice and fix, not the restaurant owner's, so they land here instead of
+// as a push notification in web_dashboard/mobile-app. See notifications
+// audit, Finding "infra alerts pushed to the wrong audience".
+enum OpsAlertType {
+  POS_SYNC_FAILED
+  CONNECTOR_OFFLINE
+  CSV_STALE
+}
+
+enum OpsAlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum OpsAlertStatus {
+  NEW
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+model OpsAlert {
+  id    String @id @default(cuid())
+  refNo Int    @unique @default(autoincrement()) // displayed as "OPS-{refNo}"
+
+  alertType OpsAlertType
+  severity  OpsAlertSeverity @default(WARNING)
+  status    OpsAlertStatus   @default(NEW)
+
+  organizationId   String?
+  organizationName String?
+  branchId         String?
+  branchName       String?
+
+  // Whether the branch's own operating hours say it was open at the moment
+  // this fired — a sync failure during a closed branch's dead hours is a
+  // different priority than one mid-service. Null when the branch has no
+  // operating-hours configured yet.
+  branchWasOpen   Boolean?
+  branchLocalTime DateTime?
+
+  // Free-form diagnostics: connector id/provider, error message, last
+  // heartbeat, unmapped-sale count, days-without-upload, etc. Shape varies
+  // by alertType; the detail page renders it as-is.
+  payload Json
+
+  adminNotes String?
+
+  occurredAt DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  resolvedAt DateTime?
+
+  @@index([alertType, status])
+  @@index([createdAt])
+  @@index([organizationId])
 }
 
 enum EmploymentType {

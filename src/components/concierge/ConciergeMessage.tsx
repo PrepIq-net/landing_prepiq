@@ -1,50 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Xmark } from "iconoir-react";
 
 import { cn } from "@/lib/utils";
 import type { ConciergeChatMessage } from "./useConcierge";
-
-// Assistant replies are plain text that may carry markdown links or bare
-// site-relative paths ("/blog/..."). Linkify those two shapes only — no
-// markdown engine for untrusted LLM output.
-const LINK_PATTERN = /\[([^\]]+)\]\(([^)\s]+)\)|(\/blog\/[a-z0-9-]+)/g;
-
-function isSafeHref(href: string): boolean {
-  return href.startsWith("/") || href.startsWith("https://") || href.startsWith("http://");
-}
-
-function renderContent(content: string): React.ReactNode[] {
-  const nodes: React.ReactNode[] = [];
-  let last = 0;
-  let match: RegExpExecArray | null;
-  const pattern = new RegExp(LINK_PATTERN);
-  while ((match = pattern.exec(content)) !== null) {
-    if (match.index > last) nodes.push(content.slice(last, match.index));
-    const [full, label, href, barePath] = match;
-    const url = barePath ?? href;
-    if (url && isSafeHref(url)) {
-      nodes.push(
-        <a
-          key={`${match.index}`}
-          href={url}
-          target={url.startsWith("/") ? undefined : "_blank"}
-          rel="noopener noreferrer"
-          className="text-primary underline underline-offset-2 hover:opacity-80 inline-block py-0.5"
-        >
-          {barePath ?? label}
-        </a>
-      );
-    } else {
-      nodes.push(full);
-    }
-    last = match.index + full.length;
-  }
-  if (last < content.length) nodes.push(content.slice(last));
-  return nodes;
-}
+import { ConciergeMarkdown } from "./ConciergeMarkdown";
 
 /** ~14ms per character ≈ 70 chars/sec, the same cadence as the app assistant. */
 const TYPE_INTERVAL_MS = 14;
@@ -53,10 +16,20 @@ export function ConciergeMessage({
   message,
   animateIn = false,
   onAnimationDone,
+  onCancelQueued,
+  onNavigate,
+  highlight = false,
 }: {
   message: ConciergeChatMessage;
   animateIn?: boolean;
   onAnimationDone?: () => void;
+  /** Only wired for queued user messages — unsends the bubble. */
+  onCancelQueued?: () => void;
+  /** Passed to markdown links; internal links close the chat before
+   *  navigating. */
+  onNavigate?: () => void;
+  /** Prominent treatment for the opening greeting. */
+  highlight?: boolean;
 }) {
   const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
@@ -93,26 +66,42 @@ export function ConciergeMessage({
     return () => clearInterval(id);
   }, [content, typing]);
 
-  // Linkify only once the full text has landed — mid-type, a partial
-  // "[label](/blog/" would render as raw markdown before it resolves.
+  // Render markdown only once the full text has landed — mid-type, a
+  // partial "**bo" or "[label](/blog/" would render as raw syntax before
+  // it resolves.
   const settled = typed.length >= content.length;
-  const rendered = useMemo(
-    () => (isUser || !settled ? [typed] : renderContent(content)),
-    [typed, content, isUser, settled]
-  );
 
   return (
-    <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
+    <div className={cn("flex flex-col", isUser ? "items-end" : "items-start")}>
       <div
         className={cn(
-          "max-w-[85%] whitespace-pre-wrap rounded-xl px-3 py-2 text-sm leading-[22px]",
+          "max-w-[85%] rounded-xl px-3 py-2 text-sm leading-[22px]",
           isUser
-            ? "bg-secondary text-foreground"
-            : "border border-border bg-card text-foreground"
+            ? "bg-secondary text-foreground whitespace-pre-wrap"
+            : highlight
+              ? "border border-border bg-foreground/[0.04] text-foreground"
+              : "border border-border bg-card text-foreground"
         )}
       >
-        {rendered}
+        {isUser || !settled ? (
+          <span className="whitespace-pre-wrap">{typed}</span>
+        ) : (
+          <ConciergeMarkdown content={content} onNavigate={onNavigate} />
+        )}
       </div>
+      {message.queued && (
+        <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
+          <span>{t("concierge.queued")}</span>
+          <button
+            onClick={onCancelQueued}
+            aria-label={t("concierge.cancelQueued")}
+            className="flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Xmark className="h-3 w-3" aria-hidden />
+            {t("concierge.cancelQueued")}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

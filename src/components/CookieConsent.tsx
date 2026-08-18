@@ -104,7 +104,7 @@ const CookieConsent = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 12, opacity: 0 }}
           transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 pointer-events-auto"
+          className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4"
         >
           <div className="max-w-sm mx-auto">
             {/* Plain div, not motion: animating height from 0 to `undefined`
@@ -112,7 +112,7 @@ const CookieConsent = () => {
                 value has no target to animate to, so it stays pinned at 0
                 forever and the whole card renders as a sliver. The outer
                 wrapper above already handles the slide/fade entrance. */}
-            <div className="relative rounded-xl border border-border bg-card/95 backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.25)] overflow-hidden">
+            <div className="pointer-events-auto relative rounded-xl border border-border bg-card/95 backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.25)] overflow-hidden">
               <div className="p-4">
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2">

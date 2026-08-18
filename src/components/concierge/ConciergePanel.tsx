@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { SendDiagonal, Sparks, Xmark } from "iconoir-react";
+import { SendDiagonal, Sparks, Trash, Xmark } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { ConciergeLeadCard } from "./ConciergeLeadCard";
 import { ConciergeMessage } from "./ConciergeMessage";
-import { useConcierge } from "./useConcierge";
+import type { ConciergeController } from "./useConcierge";
 
 const STARTER_KEYS = ["pos", "price", "chef", "demo"] as const;
 
@@ -48,22 +48,30 @@ function useKeyboardInset() {
   return inset;
 }
 
-export function ConciergePanel({ onClose }: { onClose: () => void }) {
+export function ConciergePanel({
+  concierge,
+  onClose,
+}: {
+  /** Hook state held by the widget so it survives closing the panel. */
+  concierge: ConciergeController;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   const {
     messages,
     sending,
     hydrated,
     send,
+    cancelQueued,
     animatingId,
     endAnimation,
     leadOffered,
     leadSubmitted,
     submitLead,
     dismissLead,
-  } = useConcierge();
+    clearChat,
+  } = concierge;
   const [draft, setDraft] = useState("");
-  const [leadThanked, setLeadThanked] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const keyboardInset = useKeyboardInset();
@@ -144,15 +152,9 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
 
   const handleSend = () => {
     const text = draft.trim();
-    if (!text || sending) return;
+    if (!text) return;
     setDraft("");
     void send(text);
-  };
-
-  const handleLeadSubmit = async (fields: Parameters<typeof submitLead>[0]) => {
-    const ok = await submitLead(fields);
-    if (ok) setLeadThanked(true);
-    return ok;
   };
 
   return (
@@ -180,13 +182,27 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
             </p>
           </div>
         </div>
-        <button
-          onClick={onClose}
-          aria-label={t("concierge.close")}
-          className="-mr-1 shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Xmark className="h-5 w-5" aria-hidden />
-        </button>
+        <div className="flex shrink-0 items-center gap-0.5">
+          {messages.length > 0 && (
+            <button
+              onClick={() => {
+                if (window.confirm(t("concierge.clearChatConfirm"))) clearChat();
+              }}
+              aria-label={t("concierge.clearChat")}
+              title={t("concierge.clearChat")}
+              className="rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Trash className="h-4 w-4" aria-hidden />
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            aria-label={t("concierge.close")}
+            className="-mr-1 rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Xmark className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -199,6 +215,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
       >
         <ConciergeMessage
           message={{ id: "greeting", role: "assistant", content: t("concierge.greeting") }}
+          highlight
         />
         {hydrated && messages.length === 0 && (
           <div className="flex flex-wrap gap-2 pt-1">
@@ -219,6 +236,10 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
             message={message}
             animateIn={message.id === animatingId}
             onAnimationDone={() => endAnimation(message.id)}
+            onNavigate={onClose}
+            onCancelQueued={
+              message.queued ? () => cancelQueued(message.id) : undefined
+            }
           />
         ))}
         {sending && (
@@ -231,17 +252,8 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
             {t("concierge.thinking")}
           </div>
         )}
-        {leadOffered && !leadThanked && (
-          <ConciergeLeadCard onSubmit={handleLeadSubmit} onDismiss={dismissLead} />
-        )}
-        {leadSubmitted && leadThanked && (
-          <ConciergeMessage
-            message={{
-              id: "lead-thanks",
-              role: "assistant",
-              content: t("concierge.lead.thanks"),
-            }}
-          />
+        {leadOffered && (
+          <ConciergeLeadCard onSubmit={submitLead} onDismiss={dismissLead} />
         )}
       </div>
 
@@ -284,7 +296,7 @@ export function ConciergePanel({ onClose }: { onClose: () => void }) {
         <Button
           type="submit"
           size="icon"
-          disabled={sending || !draft.trim()}
+          disabled={!draft.trim()}
           aria-label={t("concierge.send")}
           className="h-10 w-10 shrink-0"
         >

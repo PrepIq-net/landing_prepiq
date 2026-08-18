@@ -62,9 +62,7 @@ export function MenuBurgerIcon({
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
-      className={`nav-burger transition-transform duration-300 ease-in-out ${
-        burger ? "group-hover:rotate-[3deg]" : ""
-      } ${className ?? ""}`}
+      className={`nav-burger transition-transform duration-300 ease-in-out ${className ?? ""}`}
     >
       {/* Top bun — straight at rest, domes in the burger wink. */}
       <path
@@ -89,25 +87,29 @@ export function MenuBurgerIcon({
         <circle cx="15" cy="6.8" r="0.5" />
       </g>
 
-      {/* Patty — slides up into gold beneath the dome, folds away in the x. */}
+      {/* Patty — slides up into gold beneath the dome, folds away in the x.
+          The rest offset (translate-y-1) is gated to the lines phase: in the
+          burger phase only translate-y-0 is applied, so no two translate
+          classes ever fight for the same property. */}
       <path
         d="M4 12h16"
-        className={`${PATTY} translate-y-1 ${
-          burger ? "translate-y-0 text-primary" : ""
+        className={`${PATTY} ${lines ? "translate-y-1" : "translate-y-0"} ${
+          burger ? "text-primary" : ""
         } ${
           lines ? "group-hover:translate-y-0 group-hover:text-primary" : ""
         } ${x ? "opacity-0" : "opacity-100"}`}
       />
 
-      {/* Base bun — straight at rest, curls under in the burger wink. */}
+      {/* Base bun — straight at rest, curls under in the burger wink. Same
+          translate gating as the patty: one translate class per phase. */}
       <path
         d="M4 16h16"
         className={`${CURL} ${lines ? "opacity-100" : "opacity-0"} ${lines ? "group-hover:opacity-0" : ""}`}
       />
       <path
         d="M4 16Q12 19.2 20 16"
-        className={`${CURL} translate-y-0.5 ${
-          burger ? "translate-y-0 opacity-100" : "opacity-0"
+        className={`${CURL} ${lines ? "translate-y-0.5" : "translate-y-0"} ${
+          burger ? "opacity-100" : "opacity-0"
         } ${lines ? "group-hover:translate-y-0 group-hover:opacity-100" : ""}`}
       />
 
