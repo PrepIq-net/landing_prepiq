@@ -6,6 +6,8 @@ import {
   Building,
   CheckCircle,
   Plus,
+  ShieldMinus,
+  ShieldPlusIn,
   Trash,
   Undo,
   WarningTriangle,
@@ -27,6 +29,8 @@ import {
   addOrganizationMember,
   changeMemberRole,
   createBranch,
+  demoteCoOwner,
+  promoteCoOwner,
   removeOrganizationMember,
   restoreOrganization,
   setOrganizationVerified,
@@ -79,6 +83,11 @@ export function OrganizationDetailManager({
   // Only members can receive ownership or a role — a dropdown of every account
   // on the platform would be both useless and dangerous here.
   const activeMembers = members.filter((member) => member.is_active);
+  // Co-owners minus the Primary Owner — that seat is shown separately and can
+  // only change hands via Transfer, not the add/remove co-owner toggle.
+  const coOwners = activeMembers.filter(
+    (member) => member.is_owner && !member.is_primary_owner,
+  );
   const [transferTo, setTransferTo] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberRole, setNewMemberRole] = useState("");
@@ -295,6 +304,13 @@ export function OrganizationDetailManager({
               )}
             </DataRow>
             <DataRow label="Owner">{org.owner_email ?? "None"}</DataRow>
+            <DataRow label="Co-owners">
+              {coOwners.length === 0
+                ? "None"
+                : coOwners
+                    .map((member) => member.user.full_name || member.user.email)
+                    .join(", ")}
+            </DataRow>
             <DataRow label="Branches">
               {org.active_branch_count} active / {org.branch_count} total
             </DataRow>
@@ -314,7 +330,7 @@ export function OrganizationDetailManager({
             onClick={() => setDialog("transfer")}
             disabled={pending || activeMembers.length < 2}
           >
-            Transfer ownership
+            Transfer primary ownership
           </Button>
           {activeMembers.length < 2 && (
             <p className="mt-2 text-xs text-muted-foreground">
@@ -440,9 +456,16 @@ export function OrganizationDetailManager({
                 {members.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell>
-                      <DrillLink href={`/admin/accounts/${member.user.id}`}>
-                        {member.user.full_name || member.user.email}
-                      </DrillLink>
+                      <div className="flex items-center gap-2">
+                        <DrillLink href={`/admin/accounts/${member.user.id}`}>
+                          {member.user.full_name || member.user.email}
+                        </DrillLink>
+                        {member.is_primary_owner ? (
+                          <StatusPill tone="info">Owner</StatusPill>
+                        ) : member.is_owner ? (
+                          <StatusPill tone="neutral">Co-owner</StatusPill>
+                        ) : null}
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {member.user.email}
                       </p>
@@ -485,23 +508,63 @@ export function OrganizationDetailManager({
                     </TableCell>
                     <TableCell className="text-right">
                       {member.is_active ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setMemberTarget({
-                              userId: member.user.id,
-                              email: member.user.email,
-                            });
-                            setDialog("removeMember");
-                          }}
-                          disabled={pending}
-                        >
-                          <Trash className="h-4 w-4" />
-                          <span className="sr-only">
-                            Remove {member.user.email}
-                          </span>
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          {/* The Primary Owner seat only moves via Transfer,
+                              above — no toggle for it here. */}
+                          {!member.is_primary_owner &&
+                            (member.is_owner ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  run(
+                                    () => demoteCoOwner(org.id, member.user.id),
+                                    "Co-owner status removed.",
+                                  )
+                                }
+                                disabled={pending}
+                              >
+                                <ShieldMinus className="h-4 w-4" />
+                                <span className="sr-only">
+                                  Remove co-owner status from {member.user.email}
+                                </span>
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  run(
+                                    () => promoteCoOwner(org.id, member.user.id),
+                                    "Granted co-owner status.",
+                                  )
+                                }
+                                disabled={pending}
+                              >
+                                <ShieldPlusIn className="h-4 w-4" />
+                                <span className="sr-only">
+                                  Make {member.user.email} a co-owner
+                                </span>
+                              </Button>
+                            ))}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setMemberTarget({
+                                userId: member.user.id,
+                                email: member.user.email,
+                              });
+                              setDialog("removeMember");
+                            }}
+                            disabled={pending}
+                          >
+                            <Trash className="h-4 w-4" />
+                            <span className="sr-only">
+                              Remove {member.user.email}
+                            </span>
+                          </Button>
+                        </div>
                       ) : (
                         <StatusPill tone="neutral">Removed</StatusPill>
                       )}
@@ -550,8 +613,8 @@ export function OrganizationDetailManager({
       <ActionDialog
         open={dialog === "transfer"}
         onOpenChange={(open) => setDialog(open ? "transfer" : null)}
-        title="Transfer ownership"
-        description="The chosen member becomes the owner; the current owner is demoted to admin rather than removed. Use this when the registered owner has left the company."
+        title="Transfer primary ownership"
+        description="The chosen member becomes the Primary Owner. The current owner keeps their role and access as a co-owner rather than losing them — use this when the registered owner has left the company or handed off day-to-day control."
         confirmLabel="Transfer ownership"
         successMessage="Ownership transferred."
         onConfirm={() => transferOrganizationOwnership(org.id, transferTo)}

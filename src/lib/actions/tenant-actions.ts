@@ -189,6 +189,38 @@ export async function removeOrganizationMember(
   );
 }
 
+/**
+ * Grants co-owner status alongside whatever role the member already holds —
+ * ownership and role are independent axes. Calls the same
+ * `organizations.services.promote_co_owner` the product's own Danger Zone
+ * uses, so support and self-service can never drift on what "co-owner" means.
+ */
+export async function promoteCoOwner(
+  orgId: string,
+  userId: string,
+): Promise<ActionResult<AdminMembership>> {
+  return mutate(
+    `/api/mgmt/organizations/${orgId}/members/${userId}/co-owner/`,
+    { method: 'POST', body: JSON.stringify({}) },
+    [...ORG_ROUTES, `/admin/organizations/${orgId}`, `/admin/accounts/${userId}`],
+  );
+}
+
+/**
+ * Revokes co-owner status. Refused by the backend for the Primary Owner —
+ * that seat can only change hands via `transferOrganizationOwnership`.
+ */
+export async function demoteCoOwner(
+  orgId: string,
+  userId: string,
+): Promise<ActionResult<AdminMembership>> {
+  return mutate(
+    `/api/mgmt/organizations/${orgId}/members/${userId}/co-owner/`,
+    { method: 'DELETE' },
+    [...ORG_ROUTES, `/admin/organizations/${orgId}`, `/admin/accounts/${userId}`],
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Branches
 // ---------------------------------------------------------------------------
