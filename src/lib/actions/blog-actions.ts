@@ -528,6 +528,22 @@ async function autoGenerateNarration(
 }
 
 /**
+ * Turn an unexpected narration failure into a human-readable detail line for
+ * the admin card. Prisma errors ship as multi-line JSON blobs; map the common
+ * schema-drift codes to a plain sentence and truncate whatever else is left.
+ */
+function narrationErrorDetail(error: unknown): string {
+  if (error && typeof error === "object" && "code" in error) {
+    const code = (error as { code?: string }).code;
+    if (code === "P2022" || code === "P2010" || code === "P2021") {
+      return "database schema is out of date — the narration columns are missing (run prisma migrate deploy)";
+    }
+  }
+  const message = error instanceof Error ? error.message : String(error);
+  return message.length > 220 ? `${message.slice(0, 217)}…` : message;
+}
+
+/**
  * Manually generate (or regenerate) neural narration for one language of a
  * post. Auto-generation covers the normal publish flow; this stays as a fallback
  * for retrying a failed run or refreshing audio after a post-publish edit.
@@ -581,7 +597,10 @@ export async function generatePostNarration(
     return { success: true, url };
   } catch (error) {
     console.error("Failed to generate narration:", error);
-    return { success: false, message: "Narration failed — please retry." };
+    return {
+      success: false,
+      message: `Narration failed: ${narrationErrorDetail(error)}`,
+    };
   }
 }
 
