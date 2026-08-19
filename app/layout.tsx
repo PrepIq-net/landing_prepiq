@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import { I18nProviderWrapper } from "./I18nProviderWrapper";
@@ -9,7 +9,15 @@ import { getActiveNavLinks } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
 import { getPublicPlanCatalog } from "@/lib/plans";
 
-const inter = Inter({ subsets: ["latin"] });
+// Self-hosted Inter (variable). `next/font/google` downloads the font from
+// Google's CDN at build time, which fails the whole deploy whenever that fetch
+// is unreachable — several production builds have gone down to it. The variable
+// woff2 lives in the repo, so builds no longer touch the network for fonts.
+const inter = localFont({
+  src: "../src/fonts/InterVariable.woff2",
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -174,7 +182,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={inter.variable}>
         <I18nProviderWrapper>
           <Providers>
             {/* The navbar lives outside PageShell's transform: a transformed

@@ -88,7 +88,9 @@ const config = {
         "pulse-dot": "pulse 2s infinite",
       },
       fontFamily: {
-        sans: ["Inter", "ui-sans-serif", "system-ui"],
+        // var(--font-inter) is set by the self-hosted next/font/local in
+        // app/layout.tsx — Inter must not resolve to the Google-hosted copy.
+        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
         display: ["'Hanken Grotesk'", "ui-sans-serif", "system-ui"],
       },
     },
