@@ -422,7 +422,7 @@ async function synthesizeAndStore(
   const source = lang === "fr" ? post.bodyFr : post.bodyEn;
   if (!source || !source.trim()) return null;
 
-  const speech = markdownToSpeech(source);
+  const speech = markdownToSpeech(source, lang);
   if (!speech) return null;
 
   const audio = await synthesizeNarration(speech, lang);
