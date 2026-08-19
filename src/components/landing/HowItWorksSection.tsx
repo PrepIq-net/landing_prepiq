@@ -69,7 +69,7 @@ const HowItWorksSection = ({
 }: {
   dbContent?: SectionContent<HowItWorksContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [activePhase, setActivePhase] = useState<Phase>("plan");
   const [autoRotate, setAutoRotate] = useState(true);
@@ -86,97 +86,28 @@ const HowItWorksSection = ({
     return () => clearInterval(id);
   }, [autoRotate, inView]);
 
-  const fallbackContent: HowItWorksContent = {
-    badge: t("howItWorks.badge"),
-    title: t("howItWorks.title"),
-    subtitle: t("howItWorks.subtitle"),
-    signalsTitle: t("howItWorks.signalsTitle"),
-    signals: [
-      "sales",
-      "patterns",
-      "hours",
-      "events",
-      "weather",
-      "chef",
-      "stockouts",
-      "trends",
-    ].map((k) => ({ label: t(`howItWorks.signals.${k}`) })),
-    phases: {
-      plan: {
-        label: t("howItWorks.phases.plan.label"),
-        time: t("howItWorks.phases.plan.time"),
-        desc: t("howItWorks.phases.plan.desc"),
-        title: t("howItWorks.phases.plan.title"),
-        body: t("howItWorks.phases.plan.body"),
-      },
-      live: {
-        label: t("howItWorks.phases.live.label"),
-        time: t("howItWorks.phases.live.time"),
-        desc: t("howItWorks.phases.live.desc"),
-        title: t("howItWorks.phases.live.title"),
-        body: t("howItWorks.phases.live.body"),
-      },
-      review: {
-        label: t("howItWorks.phases.review.label"),
-        time: t("howItWorks.phases.review.time"),
-        desc: t("howItWorks.phases.review.desc"),
-        title: t("howItWorks.phases.review.title"),
-        body: t("howItWorks.phases.review.body"),
-      },
-    },
-    chefOverride: {
-      title: t("howItWorks.chefOverride.title"),
-      body: t("howItWorks.chefOverride.body"),
-      simulate: t("howItWorks.previews.simulateOverride"),
-      reset: t("howItWorks.previews.resetSimulation"),
-    },
-    liveFeatures: t("howItWorks.liveFeatures", { returnObjects: true }) as {
-      title: string;
-      desc: string;
-    }[],
-    reviewFeatures: t("howItWorks.reviewFeatures", { returnObjects: true }) as {
-      title: string;
-      desc: string;
-    }[],
-    comparison: {
-      badge:
-        currentLang === "fr"
-          ? "Sans PrepIQ vs Avec PrepIQ"
-          : "Without PrepIQ vs With PrepIQ",
-      withoutLabel: t("kitchenTest.toggleWithout"),
-      withLabel: t("kitchenTest.toggleWith"),
-      dailyMarginLost: t("kitchenTest.dailyMarginLost"),
-      dailyMarginRecovered: t("kitchenTest.dailyMarginRecovered"),
-    },
-  };
+  const localizedContent = dbContent?.[currentLang];
+  // Copy comes from the CMS only. The phases, chef-override card and comparison
+  // strip are structurally required to render — with any missing, the section
+  // is omitted rather than falling back to hardcoded copy.
+  if (
+    !localizedContent ||
+    !localizedContent.phases ||
+    !localizedContent.chefOverride ||
+    !localizedContent.comparison
+  ) {
+    return null;
+  }
 
-  const localizedContent = dbContent?.[currentLang] as
-    | Partial<HowItWorksContent>
-    | undefined;
   const content: HowItWorksContent = {
-    ...fallbackContent,
     ...localizedContent,
-    signals: normalizeSignals(
-      localizedContent?.signals ?? fallbackContent.signals,
-    ),
-    phases: {
-      ...fallbackContent.phases,
-      ...(localizedContent?.phases ?? {}),
-    },
-    chefOverride: {
-      ...fallbackContent.chefOverride,
-      ...(localizedContent?.chefOverride ?? {}),
-    },
-    liveFeatures: Array.isArray(localizedContent?.liveFeatures)
+    signals: normalizeSignals(localizedContent.signals ?? []),
+    liveFeatures: Array.isArray(localizedContent.liveFeatures)
       ? localizedContent.liveFeatures
-      : fallbackContent.liveFeatures,
-    reviewFeatures: Array.isArray(localizedContent?.reviewFeatures)
+      : [],
+    reviewFeatures: Array.isArray(localizedContent.reviewFeatures)
       ? localizedContent.reviewFeatures
-      : fallbackContent.reviewFeatures,
-    comparison: {
-      ...fallbackContent.comparison,
-      ...(localizedContent?.comparison ?? {}),
-    },
+      : [],
   };
 
   const dataSignals = (content.signals ?? []).map((s, i) => ({

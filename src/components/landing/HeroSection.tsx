@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "iconoir-react";
 import { useTranslation } from "react-i18next";
-import { HeroContent, SectionContent, ProofFact } from "@/types/cms";
+import { HeroContent, SectionContent } from "@/types/cms";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
 const fadeUp = {
@@ -21,53 +21,21 @@ const HeroSection = ({
 }: {
   dbContent?: SectionContent<HeroContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [videoPlaying, setVideoPlaying] = useState(false);
 
-  /*
-   * These three are deliberately claims we can keep on day one — what the
-   * product does and what the pilot costs — not averaged results from a
-   * customer base we do not yet have.
-   */
-  const translatedStats = t("hero.stats", { returnObjects: true });
-  const fallbackStats: ProofFact[] = Array.isArray(translatedStats)
-    ? (translatedStats as ProofFact[])
-    : [
-        { value: "Day 1", label: "A prep plan before we have your history" },
-        { value: "Every service", label: "The forecast relearns from what actually sold" },
-        { value: "30 days", label: "Free pilot, no card required" },
-      ];
+  // Copy and stats come from the CMS only. Sections seeded before the stat bar
+  // became a list still hold the old label-only object; ignore it rather than
+  // rendering blanks or hardcoded claims.
+  const localized = dbContent?.[currentLang];
+  if (!localized) return null;
 
-  const localized = dbContent?.[currentLang] as Partial<HeroContent> | undefined;
-
-  const fallbackContent: HeroContent = {
-    badge: t("hero.badge", "The operational intelligence layer for professional kitchens"),
-    titleLine1: t("hero.titleLine1", "Plan the day. Run the line."),
-    titleLine2: t("hero.titleLine2", "Improve every service."),
-    subtitle: t(
-      "hero.subtitle",
-      "PrepIQ turns demand into a daily plan — prep, ingredients, and staffing — coordinates the line as service runs, and learns from every shift. It doesn't replace your POS or your chef's judgment — it sits above what you already run and turns it into a decision.",
-    ),
-    proof: {
-      lessWaste: t("hero.proof.lessWaste", "Less waste"),
-      noStockouts: t("hero.proof.noStockouts", "No stockouts"),
-      betterMargins: t("hero.proof.betterMargins", "Better margins"),
-    },
-    ctaStart: t("hero.ctaStart", "Start Free"),
-    ctaDemo: t("hero.ctaDemo", "Book a 10-min Demo"),
-    stats: fallbackStats,
-  };
-
+  const stats = Array.isArray(localized.stats) ? localized.stats : [];
   const content: HeroContent = {
-    ...fallbackContent,
     ...localized,
-    // Sections seeded before the stat bar became a list still hold the old
-    // label-only object; ignore it rather than rendering blanks.
-    stats: Array.isArray(localized?.stats) ? localized.stats : fallbackStats,
+    stats,
   };
-
-  const stats = content.stats;
 
   return (
     <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-end overflow-hidden">
@@ -201,6 +169,7 @@ const HeroSection = ({
         </motion.div>
 
         {/* Bottom stats bar */}
+        {stats.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -224,6 +193,7 @@ const HeroSection = ({
             </div>
           ))}
         </motion.div>
+        )}
       </div>
     </section>
   );

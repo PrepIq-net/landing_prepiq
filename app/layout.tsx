@@ -90,29 +90,19 @@ export const metadata: Metadata = {
 
 /**
  * Published prices, straight from the backend catalog so structured data can
- * never drift from what /pricing shows. Falls back to the seeded list if the
- * backend is unreachable — omitting offers entirely would lose the rich result.
+ * never drift from what /pricing shows. When the backend is unreachable the
+ * offers are omitted entirely — no seeded prices to go stale.
  */
-const FALLBACK_OFFERS = [
-  { name: "Core", price: "49" },
-  { name: "Intelligence", price: "149" },
-  { name: "Command", price: "349" },
-];
-
 async function buildOffers() {
   const catalog = await getPublicPlanCatalog("en");
-  const source =
-    catalog?.plans?.map((plan) => ({
-      name: plan.name,
-      // Schema.org wants a bare decimal, not "49.00 USD".
-      price: String(Number.parseFloat(plan.monthly_price)),
-    })) ?? FALLBACK_OFFERS;
+  if (!catalog?.plans?.length) return [];
 
-  return source.map((offer) => ({
+  return catalog.plans.map((plan) => ({
     "@type": "Offer",
-    name: offer.name,
-    price: offer.price,
-    priceCurrency: catalog?.currency ?? "USD",
+    name: plan.name,
+    // Schema.org wants a bare decimal, not "49.00 USD".
+    price: String(Number.parseFloat(plan.monthly_price)),
+    priceCurrency: catalog.currency,
     url: `${SITE_URL}/pricing`,
     // Each offer buys one kitchen branch, not an org-wide licence.
     eligibleQuantity: {
@@ -160,7 +150,7 @@ const buildJsonLd = (offers: unknown[]) => ({
       operatingSystem: "Web",
       url: SITE_URL,
       publisher: { "@id": `${SITE_URL}/#organization` },
-      offers,
+      ...(offers.length > 0 ? { offers } : {}),
     },
   ],
 });

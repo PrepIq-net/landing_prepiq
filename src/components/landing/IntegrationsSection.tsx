@@ -9,46 +9,33 @@ const POS_META = [
   { initial: "C", color: "hsl(220 14% 50%)" },
 ];
 
-const TICKER_LOGOS = [
-  "CSV Import",
-  "Loyverse",
-  "Square",
-  "Toast",
-  "Lightspeed",
-  "Clover",
-  "Shopify",
-  "Aloha",
-];
-
 const IntegrationsSection = ({
   dbContent,
 }: {
   dbContent?: SectionContent<IntegrationsContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const isFr = currentLang === "fr";
 
-  const content: IntegrationsContent = dbContent?.[currentLang] || {
-    badge: t("integrations.badge"),
-    titleLine1: isFr ? "Fonctionne avec votre" : "Works with your",
-    titleLine2: isFr ? "système actuel" : "existing stack",
-    body: isFr
-      ? "PrepIQ se connecte directement à votre POS pour récupérer les données de vente automatiquement — sans export manuel, sans tableur. D'autres intégrations arrivent bientôt."
-      : "PrepIQ connects directly to your POS to pull sales data automatically — no manual exports, no spreadsheets. More integrations are on the way.",
-    csvNote: isFr
-      ? "Vous n'utilisez pas encore un POS pris en charge ? Vous pouvez importer vos ventes via CSV ou notre API REST — PrepIQ fonctionne dans les deux cas."
-      : "Not using a supported POS yet? You can import sales via CSV or connect through our REST API — PrepIQ works either way.",
-    posSystems: [
-      { name: "Loyverse", status: "live" },
-      { name: "Square", status: "soon" },
-      { name: "Toast", status: "soon" },
-      { name: "Clover", status: "soon" },
-    ],
-    tickerLabel: t("logoTicker.title"),
-  };
+  // Copy and POS systems come from the CMS only — no hardcoded section copy.
+  const content = dbContent?.[currentLang];
+  if (!content) return null;
 
-  const tripledLogos = [...TICKER_LOGOS, ...TICKER_LOGOS, ...TICKER_LOGOS];
+  // The logo ticker mirrors the CMS posSystems list (plus the CSV import path,
+  // which every kitchen has). It can never drift from what the admin manages.
+  const tickerNames = [
+    "CSV Import",
+    ...(Array.isArray(content.posSystems) ? content.posSystems : []).map(
+      (pos) => pos.name,
+    ),
+  ];
+  const tripledLogos = [...tickerNames, ...tickerNames, ...tickerNames];
+  const isLiveName = (name: string) =>
+    name === "CSV Import" ||
+    content.posSystems?.some(
+      (pos) => pos.name === name && pos.status === "live",
+    );
 
   return (
     <section
@@ -155,7 +142,7 @@ const IntegrationsSection = ({
             style={{ gap: "3rem" }}
           >
             {tripledLogos.map((name, i) => {
-              const isLive = name === "Loyverse" || name === "CSV Import";
+              const isLive = isLiveName(name);
               return (
                 <div
                   key={`${name}-${i}`}

@@ -19,31 +19,18 @@ const DownloadAppSection = ({
 }: {
   dbContent?: SectionContent<DownloadAppContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const mode = PLAY_STORE_CONFIG.mode;
 
-  const fallbackContent: DownloadAppContent = {
-    testing: {
-      badge: t("downloadApp.testing.badge"),
-      title: t("downloadApp.testing.title"),
-      subtitle: t("downloadApp.testing.subtitle"),
-      cta: t("downloadApp.testing.cta"),
-      disclaimer: t("downloadApp.testing.disclaimer"),
-    },
-    production: {
-      badge: t("downloadApp.production.badge"),
-      title: t("downloadApp.production.title"),
-      subtitle: t("downloadApp.production.subtitle"),
-      cta: t("downloadApp.production.cta"),
-      disclaimer: t("downloadApp.production.disclaimer"),
-    },
-    points: (t("downloadApp.points", { returnObjects: true }) as DownloadAppContent["points"]) ?? [],
-  };
-
+  // Copy and points come from the CMS only — no hardcoded section copy. Only
+  // the active Play Store mode's copy is ever shown.
   const localizedContent = dbContent?.[currentLang];
-  const content = localizedContent?.[mode] ?? fallbackContent[mode];
-  const points = localizedContent?.points ?? fallbackContent.points;
+  if (!localizedContent || !localizedContent[mode]) return null;
+  const content = localizedContent[mode];
+  const points = Array.isArray(localizedContent.points)
+    ? localizedContent.points
+    : [];
 
   return (
     <section className="relative py-16 md:py-24 border-t border-border/50">

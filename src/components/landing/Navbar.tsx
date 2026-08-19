@@ -157,22 +157,6 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
     setScrolled(latest > 20);
   });
 
-  // Admin-editable via the link's descriptionEn/Fr (Link model). The switch
-  // below is only a fallback for older links that predate that field, so
-  // leaving the new field empty on them doesn't blank out their note.
-  const legacyMenuDesc = (url: string) => {
-    switch (url) {
-      case "/how-it-works":
-        return t("navbar.menuDescHowItWorks");
-      case "/pricing":
-        return t("navbar.menuDescPricing");
-      case "/contact":
-        return t("navbar.menuDescContact");
-      default:
-        return "";
-    }
-  };
-
   const menuItems = [
     { id: "home", url: "/", label: currentLang === "fr" ? "Accueil" : "Home", description: "" },
     ...links.map((link) => ({
@@ -180,8 +164,7 @@ const Navbar = ({ links }: { links: NavLink[] }) => {
       url: link.url,
       label: currentLang === "fr" ? link.labelFr : link.labelEn,
       description:
-        (currentLang === "fr" ? link.descriptionFr : link.descriptionEn) ||
-        legacyMenuDesc(link.url),
+        (currentLang === "fr" ? link.descriptionFr : link.descriptionEn) || "",
     })),
   ];
 

@@ -18,160 +18,9 @@ import { APP_URL } from "@/lib/constants";
  * fetched server-side and passed in as `catalog`), so a price or feature edited
  * in /admin → Subscription Plans appears here without a deploy.
  *
- * The constants below are the offline fallback used only when that fetch fails
- * — the marketing page must still render a credible price list if the backend
- * is unreachable. They are not the source of truth; if they drift from the
- * seeded plans, the seed wins.
+ * There is no bundled copy to fall back on: if the catalog is unreachable or
+ * empty, the section is omitted rather than showing stale hardcoded prices.
  */
-const FALLBACK_PLAN_META = [
-  {
-    plan_type: "CORE",
-    name: "Core",
-    monthlyPrice: 49,
-    yearlyPrice: 499,
-    trialDays: 0,
-    popular: false,
-    customPricing: false,
-    staffPerBranch: 10,
-  },
-  {
-    plan_type: "INTELLIGENCE",
-    name: "Intelligence",
-    monthlyPrice: 149,
-    yearlyPrice: 1519,
-    trialDays: 30,
-    popular: true,
-    customPricing: false,
-    staffPerBranch: null,
-  },
-  {
-    plan_type: "COMMAND",
-    name: "Command",
-    monthlyPrice: 349,
-    yearlyPrice: 3559,
-    trialDays: 0,
-    popular: false,
-    customPricing: true,
-    staffPerBranch: null,
-  },
-] as const;
-
-const FALLBACK_FEATURES = {
-  en: {
-    core: [
-      "Single-branch operations",
-      "Basic role & permission management",
-      "POS integration + CSV fallback",
-      "Daily prep forecast engine",
-      "Manual override & waste logging",
-      "Manual 86 tracking",
-      "7–14 day variance history",
-    ],
-    intelligence: [
-      "Everything in Core",
-      "POS + inventory auto-reconciliation",
-      "Waste-to-cost attribution",
-      "Staff accountability engine",
-      "Forecast confidence + learning loop",
-      "Predictive drift detection",
-      "Margin protection signals",
-      "30–90 day trend analysis",
-      "6 AM executive PDF report",
-      "CSV & PDF exports",
-    ],
-    command: [
-      "Everything in Intelligence",
-      "Multi-branch rollup & comparison",
-      "Executive command center",
-      "Procurement anomaly detection",
-      "Advanced forecasting & benchmarking",
-      "Audit/compliance exports + API",
-      "Centralized admin controls",
-      "Custom enterprise pricing at scale",
-    ],
-  },
-  fr: {
-    core: [
-      "Gestion d'un seul site",
-      "Rôles et permissions de base",
-      "Intégration POS + import CSV",
-      "Moteur de prévision quotidien",
-      "Ajustements manuels et saisie des pertes",
-      "Suivi manuel des ruptures",
-      "Historique des écarts (7–14 jours)",
-    ],
-    intelligence: [
-      "Tout ce qui est dans Core",
-      "Réconciliation POS + inventaire auto",
-      "Attribution coût des pertes",
-      "Moteur de responsabilité équipe",
-      "Confiance prévision + boucle d'apprentissage",
-      "Détection prédictive de dérive",
-      "Signaux de protection de marge",
-      "Analyse de tendances (30–90 jours)",
-      "Rapport PDF exécutif à 6h00",
-      "Exports CSV et PDF",
-    ],
-    command: [
-      "Tout ce qui est dans Intelligence",
-      "Consolidation et comparaison multi-sites",
-      "Centre de commande exécutif",
-      "Détection d'anomalies d'achats",
-      "Prévisions avancées et benchmarking",
-      "Exports conformité + API",
-      "Contrôles admin centralisés",
-      "Tarification entreprise sur mesure",
-    ],
-  },
-};
-
-const FALLBACK_ADDONS = {
-  en: [
-    {
-      name: "Compliance & Audit Suite",
-      desc: "Generates audit-ready waste logs, HACCP-aligned reports, and timestamped records for regulatory inspections and insurance claims.",
-      price: 59,
-    },
-    {
-      name: "Enterprise SSO",
-      desc: "Single sign-on via SAML/OIDC for your entire org. One login, centralized access control, and automatic provisioning.",
-      price: 99,
-    },
-    {
-      name: "Integration API",
-      desc: "Full REST API access to push forecasts, pull waste data, and integrate PrepIQ into your existing ERP, BI, or procurement systems.",
-      price: 49,
-    },
-    {
-      name: "Kitchen Intelligence Advisor",
-      desc: "A named PrepIQ analyst reviews your data weekly, delivers optimization recommendations, and helps you hit waste-reduction targets.",
-      price: 299,
-    },
-  ],
-  fr: [
-    {
-      name: "Suite Conformité & Audit",
-      desc: "Génère des registres de pertes conformes HACCP et des rapports horodatés pour les inspections et assurances.",
-      price: 59,
-    },
-    {
-      name: "SSO Entreprise",
-      desc: "Connexion unique via SAML/OIDC pour toute l'organisation. Un seul login, accès centralisé.",
-      price: 99,
-    },
-    {
-      name: "API d'Intégration",
-      desc: "Accès complet à l'API REST pour pousser les prévisions et intégrer PrepIQ à vos ERP ou BI existants.",
-      price: 49,
-    },
-    {
-      name: "Conseiller en Intelligence Culinaire",
-      desc: "Un analyste PrepIQ examine vos données chaque semaine et vous aide à atteindre vos objectifs de réduction des pertes.",
-      price: 299,
-    },
-  ],
-};
-
 interface PlanCard {
   key: string;
   name: string;
@@ -202,48 +51,12 @@ const PricingSection = ({
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
   const [annual, setAnnual] = useState(true);
 
-  const content: PricingContent = dbContent?.[currentLang] || {
-    badge: t("pricing.badge"),
-    title: t("pricing.title"),
-    subtitle: t("pricing.subtitle"),
-    monthly: t("pricing.monthly"),
-    annual: t("pricing.annual"),
-    save: t("pricing.save"),
-    perMonth: t("pricing.perMonth"),
-    perYear: t("pricing.perYear"),
-    billedAnnually: t("pricing.billedAnnually"),
-    billedMonthly: t("pricing.billedMonthly"),
-    staff: t("pricing.staff"),
-    mostPopular: t("pricing.mostPopular"),
-    footer: t("pricing.footer"),
-    plans: {
-      core: {
-        name: t("pricing.plans.core.name"),
-        tagline: t("pricing.plans.core.tagline"),
-        cta: t("pricing.plans.core.cta"),
-        features: FALLBACK_FEATURES[currentLang].core,
-      },
-      intelligence: {
-        name: t("pricing.plans.intelligence.name"),
-        tagline: t("pricing.plans.intelligence.tagline"),
-        cta: t("pricing.plans.intelligence.cta"),
-        features: FALLBACK_FEATURES[currentLang].intelligence,
-      },
-      command: {
-        name: t("pricing.plans.command.name"),
-        tagline: t("pricing.plans.command.tagline"),
-        cta: t("pricing.plans.command.cta"),
-        features: FALLBACK_FEATURES[currentLang].command,
-      },
-    },
-    addOns: {
-      title: t("pricing.addOns.title"),
-      subtitle: t("pricing.addOns.subtitle"),
-      items: FALLBACK_ADDONS[currentLang].map(({ name, desc }) => ({ name, desc })),
-    },
-  };
-
+  // Copy is CMS-authored; plans, prices and add-ons come from the backend
+  // catalog. With either missing there is nothing real to quote — the section
+  // hides instead of printing stale hardcoded prices.
+  const content = dbContent?.[currentLang];
   const live: PublicPlanCatalog | null = catalog?.[currentLang] ?? null;
+  if (!content || !live?.plans?.length) return null;
 
   /**
    * Prices are quoted in the backend's billing currency (USD — billing is not
@@ -263,9 +76,9 @@ const PricingSection = ({
 
   /** CMS/i18n copy for a plan, matched on plan_type ("CORE" → content.plans.core). */
   const cmsCopyFor = (planType: string) =>
-    (content.plans as Record<string, { name?: string; tagline?: string; cta?: string; features?: string[] }>)[
-      planType.toLowerCase()
-    ];
+    (content.plans as
+      | Record<string, { name?: string; tagline?: string; cta?: string; features?: string[] }>
+      | undefined)?.[planType.toLowerCase()];
 
   const staffLabelFor = (limit: number | null | undefined) =>
     limit == null ? t("pricing.unlimited") : String(limit);
@@ -277,51 +90,28 @@ const PricingSection = ({
   };
 
   const plans: PlanCard[] = useMemo(() => {
-    if (live?.plans?.length) {
-      return live.plans.map((plan: PublicPlan) => {
-        const copy = cmsCopyFor(plan.plan_type);
-        const customPricing =
-          plan.custom_pricing || plan.pricing?.mode === "CUSTOM_ONLY";
-        return {
-          key: plan.id,
-          // The API is the source of truth for name, tagline, and features;
-          // CMS copy only fills a gap the backend left blank.
-          name: plan.name,
-          tagline: plan.tagline || copy?.tagline || "",
-          cta: ctaFor(customPricing, plan.plan_type),
-          ctaHref: customPricing ? "/contact" : APP_URL,
-          features: plan.features?.length ? plan.features : (copy?.features ?? []),
-          monthlyPrice: toNumber(plan.monthly_price),
-          yearlyPrice: toNumber(plan.yearly_price),
-          trial:
-            plan.trial_days > 0
-              ? t("pricing.trialDays", { days: plan.trial_days })
-              : null,
-          popular: plan.is_popular,
-          customPricing,
-          staffLabel: staffLabelFor(plan.limits?.[LIMIT_MAX_STAFF_PER_BRANCH]),
-        };
-      });
-    }
-
-    return FALLBACK_PLAN_META.map((meta) => {
-      const copy = cmsCopyFor(meta.plan_type);
+    return live.plans.map((plan: PublicPlan) => {
+      const copy = cmsCopyFor(plan.plan_type);
+      const customPricing =
+        plan.custom_pricing || plan.pricing?.mode === "CUSTOM_ONLY";
       return {
-        key: meta.plan_type,
-        name: copy?.name || meta.name,
-        tagline: copy?.tagline || "",
-        cta: ctaFor(meta.customPricing, meta.plan_type),
-        ctaHref: meta.customPricing ? "/contact" : APP_URL,
-        features: copy?.features ?? [],
-        monthlyPrice: meta.monthlyPrice,
-        yearlyPrice: meta.yearlyPrice,
+        key: plan.id,
+        // The API is the source of truth for name, tagline, and features;
+        // CMS copy only fills a gap the backend left blank.
+        name: plan.name,
+        tagline: plan.tagline || copy?.tagline || "",
+        cta: ctaFor(customPricing, plan.plan_type),
+        ctaHref: customPricing ? "/contact" : APP_URL,
+        features: plan.features?.length ? plan.features : (copy?.features ?? []),
+        monthlyPrice: toNumber(plan.monthly_price),
+        yearlyPrice: toNumber(plan.yearly_price),
         trial:
-          meta.trialDays > 0
-            ? t("pricing.trialDays", { days: meta.trialDays })
+          plan.trial_days > 0
+            ? t("pricing.trialDays", { days: plan.trial_days })
             : null,
-        popular: meta.popular,
-        customPricing: meta.customPricing,
-        staffLabel: staffLabelFor(meta.staffPerBranch),
+        popular: plan.is_popular,
+        customPricing,
+        staffLabel: staffLabelFor(plan.limits?.[LIMIT_MAX_STAFF_PER_BRANCH]),
       };
     });
   }, [live, content, currentLang, t]);
@@ -334,15 +124,8 @@ const PricingSection = ({
         price: toNumber(addOn.monthly_price),
       }));
     }
-    // CMS descriptions paired with fallback prices, matched by position.
-    const cmsItems = Array.isArray(content.addOns?.items) ? content.addOns.items : [];
-    const fallback = FALLBACK_ADDONS[currentLang];
-    if (!cmsItems.length) return fallback;
-    return cmsItems.map((item, i) => ({
-      ...item,
-      price: fallback[i]?.price ?? 0,
-    }));
-  }, [live, content, currentLang]);
+    return [];
+  }, [live]);
 
   /**
    * The annual-savings badge is derived from the live prices, never authored.
@@ -593,7 +376,7 @@ const PricingSection = ({
         </div>
 
         {/* Add-ons */}
-        {addOns.length > 0 && (
+        {addOns.length > 0 && content.addOns && (
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
               <p className="text-xs uppercase tracking-[0.2em] text-primary/60 font-medium mb-3">

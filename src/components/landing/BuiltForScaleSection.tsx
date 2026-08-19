@@ -15,89 +15,22 @@ const BuiltForScaleSection = ({
 }: {
   dbContent?: SectionContent<BuiltForScaleContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  /*
-   * The `stat` line names what each role gets out of PrepIQ. It is intentionally
-   * not a number: we do not have a customer base large enough to average
-   * accuracy, waste or locations, and a made-up figure here would be read as one.
-   */
-  const fallbackPersonas = [
-    {
-      title: "Head Chefs",
-      stat: "Prep you review, not guess",
-      desc: "Prep decisions backed by your own sales history, not memory. You stay in control — the AI learns from your overrides.",
-    },
-    {
-      title: "Ops Managers",
-      stat: "Daily cost visibility",
-      desc: "Cost impact and forecast accuracy, measured on your data every day. Know exactly where the margin leaks.",
-    },
-    {
-      title: "Owners & Brands",
-      stat: "Every branch in one view",
-      desc: "Compare kitchens side by side and roll results up. One dashboard, every kitchen aligned.",
-    },
-    {
-      title: "Front of House",
-      stat: "Stock alerts before the table",
-      desc: 'Live stock alerts reach the pass before the table hears "we\'re out."',
-    },
-  ];
+  // Copy, personas and stats come from the CMS only — no hardcoded section
+  // copy. Sections seeded before the stat bar became a list still hold the old
+  // {margin,waste,accuracy} object of network averages — ignore it.
+  const localizedContent = dbContent?.[currentLang];
+  if (!localizedContent) return null;
 
-  const fallbackStats: ProofFact[] = [
-    {
-      value: t("builtForScale.stats.perBranch.value", "Per branch"),
-      label: t("builtForScale.stats.perBranch.label", "Every kitchen gets its own forecast, prep list and staffing plan"),
-    },
-    {
-      value: t("builtForScale.stats.compare.value", "Side by side"),
-      label: t("builtForScale.stats.compare.label", "Compare accuracy, waste and cost across kitchens in one view"),
-    },
-    {
-      value: t("builtForScale.stats.currency.value", "Local currency"),
-      label: t("builtForScale.stats.currency.label", "Each branch keeps its own currency; group totals normalise for you"),
-    },
-  ];
-
-  const fallbackContent: BuiltForScaleContent = {
-    badge: t("builtForScale.badge", "Purpose-Built"),
-    title: t("builtForScale.title", "Built for the whole pass."),
-    subtitle: t(
-      "builtForScale.subtitle",
-      "From the chef calling the prep to the manager watching the margin — everyone works from the same numbers.",
-    ),
-    personas: fallbackPersonas,
-    networkTitle: "",
-    networkSubtitle: "",
-    sidebarTitle: "",
-    stats: fallbackStats,
-    branches: [],
-    globalTitle: "",
-    globalSubtitle: "",
-    globalFeatures: [],
-    regions: [],
-  };
-
-  const localizedContent = dbContent?.[currentLang] as
-    | Partial<BuiltForScaleContent>
-    | undefined;
-  const content: BuiltForScaleContent = {
-    ...fallbackContent,
-    ...localizedContent,
-    personas: Array.isArray(localizedContent?.personas)
-      ? localizedContent.personas
-      : fallbackContent.personas,
-    // Sections seeded before the stat bar became a list still hold the old
-    // {margin,waste,accuracy} object of network averages — ignore it.
-    stats: Array.isArray(localizedContent?.stats)
-      ? localizedContent.stats
-      : fallbackStats,
-  };
-
-  const personas = content.personas ?? fallbackPersonas;
-  const networkStats = content.stats;
+  const content: BuiltForScaleContent = localizedContent;
+  const personas = Array.isArray(localizedContent.personas)
+    ? localizedContent.personas
+    : [];
+  const networkStats = Array.isArray(localizedContent.stats)
+    ? localizedContent.stats
+    : [];
 
   return (
     <section className="relative py-20 sm:py-24 md:py-36 border-t border-border/50">

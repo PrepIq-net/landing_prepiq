@@ -367,7 +367,7 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
     <div className="rounded-xl border border-dashed border-border bg-card/50 p-12 text-center">
       <p className="text-foreground font-medium">No plans yet</p>
       <p className="text-sm text-muted-foreground mt-1 mb-5">
-        The pricing page is showing its built-in fallback copy until a plan
+        The pricing section stays hidden on the site until at least one plan
         exists here.
       </p>
       <Button onClick={onCreate} className="gap-2">
