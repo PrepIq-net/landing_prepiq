@@ -443,6 +443,10 @@ model BlogPost {
   audioUrlFr      String?
   audioPublicIdFr String?
   audioUpdatedAt  DateTime?
+  // Chosen neural voice per language (see blog-narration.ts for the catalog);
+  // null means the language's default voice.
+  voiceEn String?
+  voiceFr String?
 
   category String   @default("Operations")
   tags     String[] @default([])

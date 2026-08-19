@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -15,6 +16,7 @@ import {
   generatePostNarration,
   deletePostNarration,
 } from "@/lib/actions/blog-actions";
+import { NARRATION_VOICES } from "@/lib/narration-voices";
 import type { Lang } from "@/types/blog";
 
 /** One language's generate / regenerate / remove row. */
@@ -23,6 +25,7 @@ function LangRow({
   lang,
   label,
   url,
+  voice,
   disabled,
   disabledHint,
   onChanged,
@@ -31,17 +34,23 @@ function LangRow({
   lang: Lang;
   label: string;
   url: string | null | undefined;
+  voice: string | null | undefined;
   disabled?: boolean;
   disabledHint?: string;
   onChanged: (message: string | null) => void;
 }) {
   const [busy, setBusy] = useState<"gen" | "del" | null>(null);
   const router = useRouter();
+  const voiceRef = useRef<HTMLSelectElement>(null);
 
   async function generate() {
     setBusy("gen");
     onChanged(null);
-    const result = await generatePostNarration(postId, lang);
+    const result = await generatePostNarration(
+      postId,
+      lang,
+      voiceRef.current?.value ?? null
+    );
     setBusy(null);
     if (result.success) router.refresh();
     else onChanged(result.message ?? "Generation failed.");
@@ -74,6 +83,27 @@ function LangRow({
           {url && (
             <audio controls src={url} className="mt-2 h-9 w-full" preload="none" />
           )}
+          <div className="mt-2">
+            <Label
+              htmlFor={`voice-${lang}`}
+              className="text-xs font-medium text-muted-foreground"
+            >
+              Voice
+            </Label>
+            <select
+              id={`voice-${lang}`}
+              ref={voiceRef}
+              defaultValue={voice ?? NARRATION_VOICES[lang][0].id}
+              disabled={busy !== null}
+              className="mt-1 w-full rounded-md border border-border bg-background px-2.5 py-1.5 text-sm outline-none transition-colors focus:border-primary disabled:opacity-50"
+            >
+              {NARRATION_VOICES[lang].map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="mt-2 flex items-center gap-2">
             <Button
               type="button"
@@ -123,11 +153,15 @@ export default function NarrationField({
   hasFrenchBody,
   audioUrlEn,
   audioUrlFr,
+  voiceEn,
+  voiceFr,
 }: {
   postId: string;
   hasFrenchBody: boolean;
   audioUrlEn?: string | null;
   audioUrlFr?: string | null;
+  voiceEn?: string | null;
+  voiceFr?: string | null;
 }) {
   const [message, setMessage] = useState<string | null>(null);
 
@@ -152,6 +186,7 @@ export default function NarrationField({
           lang="en"
           label="English"
           url={audioUrlEn}
+          voice={voiceEn}
           onChanged={setMessage}
         />
         <LangRow
@@ -159,6 +194,7 @@ export default function NarrationField({
           lang="fr"
           label="French"
           url={audioUrlFr}
+          voice={voiceFr}
           disabled={!hasFrenchBody}
           disabledHint="Add French body copy to enable a French track. French readers hear the English narration until then."
           onChanged={setMessage}

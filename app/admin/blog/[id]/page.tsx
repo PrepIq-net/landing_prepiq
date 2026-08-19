@@ -49,6 +49,8 @@ export default async function EditPostPage({
         audioUpdatedAt: post.audioUpdatedAt
           ? post.audioUpdatedAt.toISOString()
           : null,
+        voiceEn: post.voiceEn,
+        voiceFr: post.voiceFr,
       }}
     />
   );
