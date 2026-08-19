@@ -49,6 +49,8 @@ export interface PostFormValues {
   audioUrlEn?: string | null;
   audioUrlFr?: string | null;
   audioUpdatedAt?: string | null;
+  voiceEn?: string | null;
+  voiceFr?: string | null;
 }
 
 const EMPTY: PostFormValues = {
@@ -455,6 +457,8 @@ export default function PostForm({ post }: { post?: PostFormValues }) {
                 hasFrenchBody={Boolean(values.bodyFr && values.bodyFr.trim())}
                 audioUrlEn={values.audioUrlEn}
                 audioUrlFr={values.audioUrlFr}
+                voiceEn={values.voiceEn}
+                voiceFr={values.voiceFr}
               />
             )}
 

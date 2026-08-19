@@ -1,15 +1,7 @@
 import "server-only";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+import { resolveNarrationVoice } from "@/lib/narration-voices";
 import type { Lang } from "@/types/blog";
-
-/**
- * Neural voices used for narration. Both are Microsoft Edge "Neural" voices,
- * which sound natural (not the robotic system TTS) and are free with no key.
- */
-const VOICE: Record<Lang, string> = {
-  en: "en-US-JennyNeural",
-  fr: "fr-FR-DeniseNeural",
-};
 
 /**
  * Spoken cue announcing that the article contains a link, read in the language
@@ -50,17 +42,19 @@ export function markdownToSpeech(
 }
 
 /**
- * Synthesise narration for the given text and return the MP3 bytes. Streams
- * from Microsoft's endpoint and buffers the whole clip — callers should treat
- * this as potentially slow for long articles (see the route's maxDuration).
+ * Synthesise narration for the given text with the chosen neural voice (or the
+ * language default when none is stored) and return the MP3 bytes. Streams from
+ * Microsoft's endpoint and buffers the whole clip — callers should treat this
+ * as potentially slow for long articles (see the route's maxDuration).
  */
 export async function synthesizeNarration(
   text: string,
-  lang: Lang
+  lang: Lang,
+  voiceId?: string | null
 ): Promise<Buffer> {
   const tts = new MsEdgeTTS();
   await tts.setMetadata(
-    VOICE[lang],
+    resolveNarrationVoice(lang, voiceId),
     OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3
   );
 

@@ -403,11 +403,20 @@ export async function toggleBlogPostFeatured(id: string, next: boolean) {
 /* -------------------------------------------------------------------------- */
 
 const AUDIO_FIELDS = {
-  en: { url: "audioUrlEn", publicId: "audioPublicIdEn" },
-  fr: { url: "audioUrlFr", publicId: "audioPublicIdFr" },
+  en: { url: "audioUrlEn", publicId: "audioPublicIdEn", voice: "voiceEn" },
+  fr: { url: "audioUrlFr", publicId: "audioPublicIdFr", voice: "voiceFr" },
 } as const;
 
-type NarratablePost = { id: string; slug: string; bodyEn: string; bodyFr: string | null };
+type NarratablePost = {
+  id: string;
+  slug: string;
+  bodyEn: string;
+  bodyFr: string | null;
+  audioPublicIdEn: string | null;
+  audioPublicIdFr: string | null;
+  voiceEn: string | null;
+  voiceFr: string | null;
+};
 
 /**
  * Synthesise one language of a post and store the MP3 URL. Shared by the manual
@@ -417,7 +426,8 @@ type NarratablePost = { id: string; slug: string; bodyEn: string; bodyFr: string
  */
 async function synthesizeAndStore(
   post: NarratablePost,
-  lang: Lang
+  lang: Lang,
+  voiceId?: string | null
 ): Promise<string | null> {
   const source = lang === "fr" ? post.bodyFr : post.bodyEn;
   if (!source || !source.trim()) return null;
@@ -425,15 +435,29 @@ async function synthesizeAndStore(
   const speech = markdownToSpeech(source, lang);
   if (!speech) return null;
 
-  const audio = await synthesizeNarration(speech, lang);
+  const audio = await synthesizeNarration(speech, lang, voiceId);
   const uploaded = await uploadBlogAudio(audio, post.slug, lang);
 
   const fields = AUDIO_FIELDS[lang];
+
+  // Uploads use a deterministic `blog-audio/<slug>-<lang>` public id with
+  // overwrite, so a same-slug regeneration replaces the old clip in place.
+  // Only a slug change since the last run leaves a stale asset behind —
+  // destroy it in that case so the blob always mirrors the row.
+  const previousPublicId =
+    lang === "fr" ? post.audioPublicIdFr : post.audioPublicIdEn;
+  if (previousPublicId && previousPublicId !== uploaded.publicId) {
+    await destroyBlogAudio(previousPublicId).catch((e) =>
+      console.error(`Failed to destroy superseded narration ${previousPublicId}:`, e)
+    );
+  }
+
   await prisma.blogPost.update({
     where: { id: post.id },
     data: {
       [fields.url]: uploaded.url,
       [fields.publicId]: uploaded.publicId,
+      [fields.voice]: voiceId ?? null,
       audioUpdatedAt: new Date(),
     },
   });
@@ -475,17 +499,26 @@ async function autoGenerateNarration(
 
     const post = await prisma.blogPost.findUnique({
       where: { id },
-      select: { id: true, slug: true, bodyEn: true, bodyFr: true },
+      select: {
+        id: true,
+        slug: true,
+        bodyEn: true,
+        bodyFr: true,
+        audioPublicIdEn: true,
+        audioPublicIdFr: true,
+        voiceEn: true,
+        voiceFr: true,
+      },
     });
     if (!post) return;
 
     if (opts.regenEn) {
-      await synthesizeAndStore(post, "en").catch((e) =>
+      await synthesizeAndStore(post, "en", post.voiceEn).catch((e) =>
         console.error("Auto EN narration failed:", e)
       );
     }
     if (opts.regenFr && post.bodyFr && post.bodyFr.trim()) {
-      await synthesizeAndStore(post, "fr").catch((e) =>
+      await synthesizeAndStore(post, "fr", post.voiceFr).catch((e) =>
         console.error("Auto FR narration failed:", e)
       );
     }
@@ -503,14 +536,27 @@ async function autoGenerateNarration(
  * copy — otherwise the public page reads the English fallback and an English
  * track already covers it.
  */
-export async function generatePostNarration(id: string, lang: Lang) {
+export async function generatePostNarration(
+  id: string,
+  lang: Lang,
+  voiceId?: string | null
+) {
   const user = await getSessionUser();
   if (!user) return { success: false, message: "Not authenticated" };
 
   try {
     const post = await prisma.blogPost.findUnique({
       where: { id },
-      select: { id: true, slug: true, bodyEn: true, bodyFr: true },
+      select: {
+        id: true,
+        slug: true,
+        bodyEn: true,
+        bodyFr: true,
+        audioPublicIdEn: true,
+        audioPublicIdFr: true,
+        voiceEn: true,
+        voiceFr: true,
+      },
     });
     if (!post) return { success: false, message: "Post not found" };
 
@@ -521,7 +567,7 @@ export async function generatePostNarration(id: string, lang: Lang) {
       };
     }
 
-    const url = await synthesizeAndStore(post, lang);
+    const url = await synthesizeAndStore(post, lang, voiceId);
     if (!url) return { success: false, message: "Nothing to narrate" };
 
     await logActivity(
