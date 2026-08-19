@@ -20,23 +20,18 @@ const KitchenCalculatorTeaserSection = ({
 }: {
   dbContent?: SectionContent<KitchenCalculatorTeaserContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const fallbackContent: KitchenCalculatorTeaserContent = {
-    badge: t("kitchenCalculatorTeaser.badge"),
-    title: t("kitchenCalculatorTeaser.title"),
-    subtitle: t("kitchenCalculatorTeaser.subtitle"),
-    points: (t("kitchenCalculatorTeaser.points", { returnObjects: true }) as KitchenCalculatorTeaserContent["points"]) ?? [],
-    cta: t("kitchenCalculatorTeaser.cta"),
-    disclaimer: t("kitchenCalculatorTeaser.disclaimer"),
-  };
+  // Copy and points come from the CMS only — no hardcoded section copy.
+  const localizedContent = dbContent?.[currentLang];
+  if (!localizedContent) return null;
 
-  const localizedContent = dbContent?.[currentLang] as Partial<KitchenCalculatorTeaserContent> | undefined;
   const content: KitchenCalculatorTeaserContent = {
-    ...fallbackContent,
     ...localizedContent,
-    points: localizedContent?.points ?? fallbackContent.points,
+    points: Array.isArray(localizedContent.points)
+      ? localizedContent.points
+      : [],
   };
 
   return (
@@ -133,7 +128,7 @@ const KitchenCalculatorTeaserSection = ({
               />
               <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl backdrop-blur-2xl bg-background/40 border border-white/10 px-4 py-3 w-fit max-w-full">
                 <span className="font-display text-[28px] sm:text-[36px] font-semibold text-foreground tracking-[-0.02em]">
-                  {content.points[0]?.label || "Demand exposure across your locations"}
+                  {content.points[0]?.label}
                 </span>
               </div>
             </div>

@@ -257,21 +257,8 @@ export const getFeaturedBlogPosts = unstable_cache(
       take: limit,
     });
 
-    // A home page with an empty strip looks broken, so fall back to the most
-    // recent posts when nothing has been explicitly featured.
-    if (posts.length < limit) {
-      const filler = await prisma.blogPost.findMany({
-        where: {
-          isPublished: true,
-          slug: { notIn: posts.map((p) => p.slug) },
-        },
-        select: SUMMARY_SELECT,
-        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
-        take: limit - posts.length,
-      });
-      return [...posts, ...filler].map(toSummary);
-    }
-
+    // Explicitly featured posts only — no filler with recent posts. The blog
+    // teaser hides itself when there is nothing featured to show.
     return posts.map(toSummary);
   },
   ["blog-featured"],
@@ -314,7 +301,7 @@ export const getPublishedBlogPost = unstable_cache(
   { tags: ["blog"] }
 );
 
-/** Same-category posts first, topped up with recent ones so the strip is full. */
+/** Same-category posts only. The related strip hides itself when there are none. */
 export const getRelatedBlogPosts = unstable_cache(
   async (slug: string, category: string, limit = 3): Promise<BlogPostSummary[]> => {
     const sameCategory = await prisma.blogPost.findMany({
@@ -324,19 +311,7 @@ export const getRelatedBlogPosts = unstable_cache(
       take: limit,
     });
 
-    if (sameCategory.length >= limit) return sameCategory.map(toSummary);
-
-    const filler = await prisma.blogPost.findMany({
-      where: {
-        isPublished: true,
-        slug: { notIn: [slug, ...sameCategory.map((p) => p.slug)] },
-      },
-      select: SUMMARY_SELECT,
-      orderBy: [{ publishedAt: "desc" }],
-      take: limit - sameCategory.length,
-    });
-
-    return [...sameCategory, ...filler].map(toSummary);
+    return sameCategory.map(toSummary);
   },
   ["blog-related"],
   { tags: ["blog"] }

@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { TestimonialsContent, SectionContent, ProofFact } from "@/types/cms";
+import { TestimonialsContent, SectionContent } from "@/types/cms";
 import type { PublishedTestimonial } from "@/lib/data";
 
 /**
@@ -21,7 +21,7 @@ function gridClassFor(count: number) {
  * Every testimonial comes from the Testimonial table (managed at
  * /admin/testimonials) and only when published. With none published the whole
  * section is omitted — we neither invent quotes nor leave an apologetic empty
- * card on the page.
+ * card on the page. Copy and facts come from the CMS contentJson only.
  */
 const TestimonialsSection = ({
   dbContent,
@@ -30,41 +30,22 @@ const TestimonialsSection = ({
   dbContent?: SectionContent<TestimonialsContent>;
   testimonials?: PublishedTestimonial[];
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
-
-  const translatedFacts = t("testimonials.facts", { returnObjects: true });
-  const fallbackFacts: ProofFact[] = Array.isArray(translatedFacts)
-    ? (translatedFacts as ProofFact[])
-    : [
-        { value: "2", label: "Kitchens running PrepIQ every day" },
-        { value: "Day 1", label: "First prep plan, before we have your history" },
-        { value: "30 days", label: "Free pilot, no card required" },
-        { value: "Yours", label: "Your data, exportable at any time" },
-      ];
 
   const localized = dbContent?.[currentLang] as
     | Partial<TestimonialsContent>
     | undefined;
 
-  const fallbackContent: TestimonialsContent = {
-    badge: t("testimonials.badge", "From the kitchen"),
-    title: t("testimonials.title", "In their words."),
-    subtitle: t("testimonials.subtitle", ""),
-    facts: fallbackFacts,
-  };
+  // No CMS copy for this language or no published quotes: no section.
+  if (!localized || testimonials.length === 0) return null;
 
   const content: TestimonialsContent = {
-    ...fallbackContent,
-    ...localized,
-    facts:
-      Array.isArray(localized?.facts) && localized.facts.length > 0
-        ? localized.facts
-        : fallbackFacts,
+    badge: localized.badge ?? "",
+    title: localized.title ?? "",
+    subtitle: localized.subtitle ?? "",
+    facts: Array.isArray(localized.facts) ? localized.facts : [],
   };
-
-  // No published quotes, no section.
-  if (testimonials.length === 0) return null;
 
   const isSingle = testimonials.length === 1;
 
@@ -164,23 +145,25 @@ const TestimonialsSection = ({
         </div>
 
         {/* Facts we can actually stand behind */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
-          {content.facts.map((fact) => (
-            <div key={fact.label} className="text-center">
-              {/*
-                Rendered as-is, not counted up: these are phrases ("Day 1",
-                "Yours"), and animating from zero turns them into statements
-                that are briefly false — "Day 0", "0 days".
-              */}
-              <p className="font-display text-[26px] font-semibold text-foreground">
-                {fact.value}
-              </p>
-              <p className="text-xs leading-snug text-muted-foreground mt-1.5 max-w-[22ch] mx-auto">
-                {fact.label}
-              </p>
-            </div>
-          ))}
-        </div>
+        {content.facts.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+            {content.facts.map((fact) => (
+              <div key={fact.label} className="text-center">
+                {/*
+                  Rendered as-is, not counted up: these are phrases ("Day 1",
+                  "Yours"), and animating from zero turns them into statements
+                  that are briefly false — "Day 0", "0 days".
+                */}
+                <p className="font-display text-[26px] font-semibold text-foreground">
+                  {fact.value}
+                </p>
+                <p className="text-xs leading-snug text-muted-foreground mt-1.5 max-w-[22ch] mx-auto">
+                  {fact.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

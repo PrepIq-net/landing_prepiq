@@ -20,16 +20,16 @@ export type PlanLang = "en" | "fr";
 export type PlanCatalogByLang = Record<PlanLang, PublicPlanCatalog | null>;
 
 /**
- * Fetches the catalog. Returns null on any failure — the pricing section falls
- * back to its bundled copy rather than rendering an error, because a backend
- * blip must never take down the marketing page.
+ * Fetches the catalog. Returns null on any failure — the pricing section is
+ * omitted entirely rather than showing stale hardcoded prices, so a backend
+ * blip must never let outdated copy onto the marketing page.
  */
 export async function getPublicPlanCatalog(
   lang: PlanLang = "en",
 ): Promise<PublicPlanCatalog | null> {
   const base = process.env.DJANGO_API_URL;
   if (!base) {
-    console.warn("DJANGO_API_URL is not configured — pricing will use fallback copy");
+    console.warn("DJANGO_API_URL is not configured — pricing section will be hidden");
     return null;
   }
 

@@ -38,8 +38,8 @@ export default async function Page() {
   const planCatalog = hasPricingSection ? await getPublicPlanCatalogs() : null;
 
   // FAQPage schema must mirror the questions the FAQSection actually renders.
-  // Same CMS-override rule, same fallback, English — the language a crawler
-  // without the i18n cookie receives.
+  // Same CMS-only rule, English — the language a crawler without the i18n
+  // cookie receives. Emitted only when the CMS has items to quote.
   const faqSection = page.sections.find(
     (section) => section.componentType === "FAQSection",
   );
@@ -64,10 +64,12 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen bg-background" style={{ "--max-width": maxWidth } as React.CSSProperties}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      {faqItems.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <DynamicSectionRenderer
         sections={page.sections}

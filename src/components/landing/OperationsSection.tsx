@@ -10,52 +10,6 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   improve: RefreshDouble,
 };
 
-const FALLBACK: OperationsContent = {
-  badge: "What PrepIQ does",
-  title: "The operating system for your kitchen's day.",
-  subtitle:
-    "Not another forecast tool. PrepIQ runs the whole cycle — it plans the day, coordinates the line through service, and gets sharper every time you cook.",
-  pillars: [
-    {
-      icon: "plan",
-      phase: "Before open",
-      title: "Plan the day",
-      body: "Every morning, PrepIQ turns demand into a plan your team can act on — how much to prep, what to buy, and who's on the line.",
-      features: [
-        "Demand forecast from sales, weather, events & local signals",
-        "Prep quantities with confidence scores — chefs stay in control",
-        "Ingredient requirements & purchasing, calculated automatically",
-        "Labor schedules built to match the day's demand",
-      ],
-    },
-    {
-      icon: "coordinate",
-      phase: "During service",
-      title: "Coordinate the line",
-      body: "Once the plan is locked, PrepIQ turns it into assigned work and watches service live — so nothing slips and everyone knows what's next.",
-      features: [
-        "AI turns the plan into tasks, assigned to staff on shift",
-        "A live board tracks what's to do, doing, and done",
-        "Live alerts when an item is trending toward a stockout",
-        "One place for the team to coordinate — web and mobile",
-      ],
-    },
-    {
-      icon: "improve",
-      phase: "After close, every night",
-      title: "Improve every service",
-      body: "After service, PrepIQ reconciles the plan against what actually happened and learns — so tomorrow starts sharper than today.",
-      features: [
-        "End-of-day variance review — what missed, and why",
-        "Separates demand surprises from operational causes",
-        "Every override and outcome feeds the next forecast",
-        "Waste, accuracy & margin, tracked over time",
-      ],
-    },
-  ],
-  footer: "One loop. Every day your kitchen runs tighter than the last.",
-};
-
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
@@ -72,10 +26,14 @@ const OperationsSection = ({
 }) => {
   const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
-  const content = dbContent?.[currentLang] || FALLBACK;
+
+  // Copy and pillars come from the CMS only — no hardcoded section copy.
+  const content = dbContent?.[currentLang];
+  if (!content) return null;
+
   const pillars: OperationsPillar[] = Array.isArray(content.pillars)
     ? content.pillars
-    : FALLBACK.pillars;
+    : [];
 
   return (
     <section className="relative py-24 md:py-36 border-t border-border">

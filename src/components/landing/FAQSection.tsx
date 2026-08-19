@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Plus, Minus } from "iconoir-react";
 import { useTranslation } from "react-i18next";
 import { FAQContent, SectionContent } from "@/types/cms";
-import { FALLBACK_FAQ_ITEMS } from "@/lib/faq";
 
 const FAQItem = ({
   faq,
@@ -65,21 +64,17 @@ const FAQSection = ({
 }: {
   dbContent?: SectionContent<FAQContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const content: FAQContent = dbContent?.[currentLang] || {
-    badge: t("faq.badge", "Q&A"),
-    title: t("faq.title", "Everything kitchens ask us."),
-    subtitle: t(
-      "faq.subtitle",
-      "From setup to daily operations. Still unsure about something?",
-    ),
-    footer: t("faq.footer", "Talk to our team"),
-    items: FALLBACK_FAQ_ITEMS[currentLang] || FALLBACK_FAQ_ITEMS.en,
-  };
+  const content = dbContent?.[currentLang];
+  // Questions come from the CMS only — no hardcoded list to fall back on. With
+  // no items authored for this language the section is omitted entirely.
+  if (!content || !Array.isArray(content.items) || content.items.length === 0) {
+    return null;
+  }
 
-  const items = Array.isArray(content.items) ? content.items : [];
+  const items = content.items;
 
   return (
     <section className="relative py-24 md:py-32 border-t border-border/50 section-band">

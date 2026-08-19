@@ -6,42 +6,17 @@ import { FinalCTAContent, SectionContent } from "@/types/cms";
 import { GoldText } from "./GoldText";
 import { APP_URL, CALENDLY_URL } from "@/lib/constants";
 
-/*
- * Each of these is a commitment we control, so it stays true no matter how many
- * kitchens we have. Nothing here asserts a result measured across customers.
- */
-const FALLBACK_PROOFS = {
-  en: [
-    "30-day free pilot — no credit card",
-    "Connect your POS, or start from a CSV",
-    "Your data stays yours — export it any time",
-  ],
-  fr: [
-    "Essai gratuit de 30 jours — sans CB",
-    "Connectez votre POS, ou partez d'un CSV",
-    "Vos données restent les vôtres — export à tout moment",
-  ],
-};
-
 const FinalCTASection = ({
   dbContent,
 }: {
   dbContent?: SectionContent<FinalCTAContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const content: FinalCTAContent = dbContent?.[currentLang] || {
-    badge: t("finalCTA.badge", "Running in real kitchens today"),
-    title: t("finalCTA.title", "Tomorrow's prep list is *already waiting*."),
-    subtitle: t(
-      "finalCTA.subtitle",
-      "Stop guessing. Start every morning with a clear, data-backed prep plan that protects your margins.",
-    ),
-    ctaStart: t("finalCTA.ctaStart", "Start Free Pilot"),
-    ctaDemo: t("finalCTA.ctaDemo", "Book a 10-min Demo"),
-    proofs: FALLBACK_PROOFS[currentLang] || FALLBACK_PROOFS.en,
-  };
+  // Copy and proof points come from the CMS only — no hardcoded section copy.
+  const content = dbContent?.[currentLang];
+  if (!content) return null;
 
   const proofs = Array.isArray(content.proofs) ? content.proofs : [];
 

@@ -20,47 +20,14 @@ const ContactSection = ({
 }: {
   dbContent?: SectionContent<ContactContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const fallbackContent: ContactContent = {
-    getInTouch: t("contact.getInTouch"),
-    title: t("contact.title"),
-    subtitle: t("contact.subtitle"),
-    contactInfo: {
-      email: t("contact.email"),
-      phone: t("contact.phone"),
-      office: t("contact.office"),
-    },
-    trustPoint: t("contact.trustPoint"),
-    formHeader: t("contact.formHeader"),
-    optionalEmail: t("contact.optionalEmail"),
-    name: t("contact.name"),
-    placeholderName: t("contact.placeholderName"),
-    placeholderEmail: t("contact.placeholderEmail"),
-    company: t("contact.company"),
-    placeholderCompany: t("contact.placeholderCompany"),
-    locations: t("contact.locations"),
-    message: t("contact.message"),
-    placeholderMessage: t("contact.placeholderMessage"),
-    sent: t("contact.sent"),
-    sentSubtitle: t("contact.sentSubtitle"),
-    sending: t("contact.sending"),
-    send: t("contact.send"),
-    noSpam: t("contact.noSpam"),
-  };
-
-  const localizedContent = dbContent?.[currentLang] as
-    | Partial<ContactContent>
-    | undefined;
-  const content: ContactContent = {
-    ...fallbackContent,
-    ...localizedContent,
-    contactInfo: {
-      ...fallbackContent.contactInfo,
-      ...(localizedContent?.contactInfo ?? {}),
-    },
-  };
+  // Copy comes from the CMS only — no hardcoded section copy. The contact
+  // channels' labels live in contentJson alongside the rest of the form.
+  const localizedContent = dbContent?.[currentLang];
+  if (!localizedContent || !localizedContent.contactInfo) return null;
+  const content: ContactContent = localizedContent;
 
   const contactInfo = [
     {

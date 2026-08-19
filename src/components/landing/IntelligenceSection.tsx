@@ -51,95 +51,16 @@ const IntelligenceSection = ({
 }: {
   dbContent?: SectionContent<IntelligenceContent>;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = (i18n.resolvedLanguage || "en") as "en" | "fr";
 
-  const fallbackContent: IntelligenceContent = {
-    badge: t("intelligence.badge", "Intelligence Layer"),
-    title: t(
-      "intelligence.title",
-      "Six signals. One number your chef can trust.",
-    ),
-    subtitle: t(
-      "intelligence.subtitle",
-      "PrepIQ tracks what no team could follow manually — and folds it into one reliable forecast, every morning.",
-    ),
-    signals: [
-      {
-        label: t("intelligence.signals.sales.label", "Last 30 days of sales"),
-        desc: t(
-          "intelligence.signals.sales.desc",
-          "Every transaction teaches the forecast engine what your kitchen actually sells.",
-        ),
-      },
-      {
-        label: t(
-          "intelligence.signals.patterns.label",
-          "Day-of-week demand patterns",
-        ),
-        desc: t(
-          "intelligence.signals.patterns.desc",
-          "Tuesday lunch ≠ Saturday dinner. PrepIQ knows the difference.",
-        ),
-      },
-      {
-        label: t("intelligence.signals.weather.label", "Weather shifts"),
-        desc: t(
-          "intelligence.signals.weather.desc",
-          "Rain at 2 PM? Soup demand historically rises 18% on wet days.",
-        ),
-      },
-      {
-        label: t(
-          "intelligence.signals.events.label",
-          "Local events & holidays",
-        ),
-        desc: t(
-          "intelligence.signals.events.desc",
-          "A nearby football match tonight means chicken demand spikes.",
-        ),
-      },
-      {
-        label: t("intelligence.signals.stockouts.label", "Recent stockouts"),
-        desc: t(
-          "intelligence.signals.stockouts.desc",
-          "Yesterday's salmon stockout? PrepIQ auto-adjusts so it doesn't repeat.",
-        ),
-      },
-      {
-        label: t("intelligence.signals.chef.label", "Chef adjustments"),
-        desc: t(
-          "intelligence.signals.chef.desc",
-          "Every override a chef makes trains the model to be smarter next time.",
-        ),
-      },
-    ],
-    footer: t(
-      "intelligence.footer",
-      "Signal weights are dynamic — they shift as PrepIQ learns your kitchen's unique patterns.",
-    ),
-    pipelineTitle: "",
-    pipelineSteps: [],
-    alerts: [],
-    atRiskLabel: "",
-    suggestedLabel: "",
-    leakTypes: [],
-    totalProtectionLabel: "",
-    roiNote: "",
-    whyBadge: "",
-    whyPoints: [],
-    whyFooter: "",
-  };
+  // Copy and signals come from the CMS only — no hardcoded section copy.
+  const localizedContent = dbContent?.[currentLang];
+  if (!localizedContent) return null;
 
-  const localizedContent = dbContent?.[currentLang] as
-    | Partial<IntelligenceContent>
-    | undefined;
   const content: IntelligenceContent = {
-    ...fallbackContent,
     ...localizedContent,
-    signals: normalizeSignals(
-      localizedContent?.signals ?? fallbackContent.signals,
-    ),
+    signals: normalizeSignals(localizedContent.signals ?? []),
   };
 
   return (
@@ -224,9 +145,11 @@ const IntelligenceSection = ({
               );
             })}
             <div className="border-t border-border" />
-            <p className="text-[13px] text-muted-foreground/50 mt-6 px-2">
-              {content.footer}
-            </p>
+            {content.footer && (
+              <p className="text-[13px] text-muted-foreground/50 mt-6 px-2">
+                {content.footer}
+              </p>
+            )}
           </div>
         </div>
       </div>
