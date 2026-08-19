@@ -78,14 +78,14 @@ export default function BlogMarkdown({ body }: { body: string }) {
           ),
           hr: () => <hr className="my-12 border-border/50" />,
           a: ({ href, children }) => {
-            const external = Boolean(href && /^https?:\/\//.test(href));
+            // Every article link opens in a new tab; only in-page `#` anchors
+            // (table of contents style links) stay in the reader's tab.
+            const inPage = typeof href === "string" && href.startsWith("#");
             return (
               <a
                 href={href}
                 className="font-medium text-primary underline decoration-primary/30 underline-offset-4 transition-colors hover:decoration-primary"
-                {...(external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
+                {...(inPage ? {} : { target: "_blank", rel: "noopener noreferrer" })}
               >
                 {children}
               </a>
