@@ -409,6 +409,26 @@ export interface LoginCheck {
   blocking: boolean;
 }
 
+export interface SuppressedEmail {
+  id: string;
+  email: string;
+  reason: 'BOUNCED' | 'COMPLAINED' | 'MANUAL';
+  raw_event_type: string;
+  description: string;
+  is_active: boolean;
+  added_by_email: string;
+  first_seen_at: string;
+  last_event_at: string | null;
+  updated_at: string;
+}
+
+export interface SuppressedEmailList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: SuppressedEmail[];
+}
+
 export interface LoginDiagnostics {
   user: { id: string; email: string; full_name: string };
   can_sign_in: boolean;

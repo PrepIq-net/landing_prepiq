@@ -23,6 +23,7 @@ import type {
   AdminSubscriptionSummary,
   AdminUserBundle,
   ImpersonationGrant,
+  SuppressedEmail,
 } from '@/types/admin-tenants';
 
 async function requireAdminEmail(): Promise<string> {
@@ -575,5 +576,28 @@ export async function deletePaymentInstruction(
     `/api/mgmt/payment-instructions/${instructionId}/`,
     { method: 'DELETE' },
     PAYMENT_ROUTES,
+  );
+}
+
+const SUPPRESSED_EMAIL_ROUTES = ['/admin/suppressed-emails', '/admin'];
+
+export async function addSuppressedEmail(
+  email: string,
+  description: string,
+): Promise<ActionResult<SuppressedEmail>> {
+  return mutate(
+    '/api/mgmt/suppressed-emails/',
+    { method: 'POST', body: JSON.stringify({ email, description }) },
+    SUPPRESSED_EMAIL_ROUTES,
+  );
+}
+
+export async function removeSuppressedEmail(
+  suppressedEmailId: string,
+): Promise<ActionResult> {
+  return mutate(
+    `/api/mgmt/suppressed-emails/${suppressedEmailId}/`,
+    { method: 'DELETE' },
+    SUPPRESSED_EMAIL_ROUTES,
   );
 }

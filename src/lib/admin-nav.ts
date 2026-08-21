@@ -28,6 +28,7 @@ import {
   Link as LinkIcon,
   MapPin,
   Mail,
+  ShieldXmark,
   Page,
   Quote,
   MoneySquare,
@@ -181,6 +182,12 @@ export const WORKSPACES: Workspace[] = [
         items: [
           { href: '/admin/users', label: 'Admin Staff', icon: Shield, keywords: ['team', 'editors', 'permissions', 'panel access'] },
           { href: '/admin/activity', label: 'Activity Log', icon: Clock, keywords: ['audit', 'history', 'trail'] },
+          {
+            href: '/admin/suppressed-emails',
+            label: 'Email Deliverability',
+            icon: ShieldXmark,
+            keywords: ['bounce', 'bounced', 'spam', 'complaint', 'suppression', 'blocklist', 'resend', 'undeliverable'],
+          },
         ],
       },
     ],
