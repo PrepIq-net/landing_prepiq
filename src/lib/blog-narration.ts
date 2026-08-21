@@ -12,6 +12,9 @@ const LINK_CUE: Record<Lang, string> = {
   fr: "un lien est disponible dans l'article",
 };
 
+/** Max characters per TTS request (Edge TTS limit ~10k-20k; stay well under). */
+const MAX_CHUNK_CHARS = 8000;
+
 /**
  * Turn article markdown into clean prose a screen reader would speak, dropping
  * anything that reads badly aloud: fenced code, raw URLs, image markup, table
@@ -42,15 +45,53 @@ export function markdownToSpeech(
 }
 
 /**
- * Synthesise narration for the given text with the chosen neural voice (or the
- * language default when none is stored) and return the MP3 bytes. Streams from
- * Microsoft's endpoint and buffers the whole clip — callers should treat this
- * as potentially slow for long articles (see the route's maxDuration).
+ * Split long text into chunks at paragraph boundaries, each under the character
+ * limit. Keeps paragraphs intact so pauses remain natural.
  */
-export async function synthesizeNarration(
+function splitIntoChunks(text: string): string[] {
+  if (text.length <= MAX_CHUNK_CHARS) return [text];
+
+  const paragraphs = text.split("\n\n").filter((p) => p.trim().length > 0);
+  const chunks: string[] = [];
+  let currentChunk = "";
+
+  for (const para of paragraphs) {
+    const candidate = currentChunk ? `${currentChunk}\n\n${para}` : para;
+    if (candidate.length <= MAX_CHUNK_CHARS) {
+      currentChunk = candidate;
+    } else {
+      if (currentChunk) chunks.push(currentChunk);
+      if (para.length > MAX_CHUNK_CHARS) {
+        // Paragraph itself is too long — split by sentences
+        const sentences = para.split(/(?<=[.!?])\s+/);
+        let sentenceChunk = "";
+        for (const sent of sentences) {
+          const test = sentenceChunk ? `${sentenceChunk} ${sent}` : sent;
+          if (test.length <= MAX_CHUNK_CHARS) {
+            sentenceChunk = test;
+          } else {
+            if (sentenceChunk) chunks.push(sentenceChunk);
+            sentenceChunk = sent;
+          }
+        }
+        if (sentenceChunk) chunks.push(sentenceChunk);
+        currentChunk = "";
+      } else {
+        currentChunk = para;
+      }
+    }
+  }
+  if (currentChunk) chunks.push(currentChunk);
+  return chunks;
+}
+
+/**
+ * Synthesise a single chunk of text to an MP3 buffer.
+ */
+async function synthesizeChunk(
   text: string,
   lang: Lang,
-  voiceId?: string | null
+  voiceId: string | null | undefined
 ): Promise<Buffer> {
   const tts = new MsEdgeTTS();
   await tts.setMetadata(
@@ -73,4 +114,27 @@ export async function synthesizeNarration(
       reject(err);
     });
   });
+}
+
+/**
+ * Synthesise narration for the given text with the chosen neural voice (or the
+ * language default when none is stored) and return the MP3 bytes. Streams from
+ * Microsoft's endpoint and buffers the whole clip. For long articles, splits
+ * into multiple requests and concatenates the audio to avoid the Edge TTS
+ * character limit.
+ */
+export async function synthesizeNarration(
+  text: string,
+  lang: Lang,
+  voiceId?: string | null
+): Promise<Buffer> {
+  const chunks = splitIntoChunks(text);
+  if (chunks.length === 1) {
+    return synthesizeChunk(chunks[0], lang, voiceId);
+  }
+
+  const buffers = await Promise.all(
+    chunks.map((chunk) => synthesizeChunk(chunk, lang, voiceId))
+  );
+  return Buffer.concat(buffers);
 }
